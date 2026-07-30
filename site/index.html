@@ -755,10 +755,10 @@
           </div>
           <div class="calc-results">
             <div class="calc-result"><small>Daily Passive Yield</small><strong id="passiveDaily">₱30.00</strong></div>
-            <div class="calc-result"><small>60-Day Passive Yield</small><strong id="passiveCycle">₱1,800.00</strong></div>
+            <div class="calc-result"><small>60-Day Total Return</small><strong id="passiveCycle">₱1,800.00</strong></div>
             <div class="calc-result"><small>Welcome / Reload Bonus</small><strong id="passiveBonus">₱50.00</strong></div>
-            <div class="calc-result"><small>Projected Total Value</small><strong id="passiveTotal">₱2,850.00</strong></div>
-            <p class="calc-note">Projection uses the fixed 3% daily Passive Yield for 60 days. Direct and Network Yields depend on qualified referral activity and are not added to this personal investment projection.</p>
+            <div class="calc-result"><small>Projected Total Value</small><strong id="passiveTotal">₱1,850.00</strong></div>
+            <p class="calc-note">The 3% daily return already includes the gradual return of capital and profit over the 60-day term. The original capital is not added again. Direct and Network Yields depend on qualified referral activity and are not included here.</p>
           </div>
         </div>
       </div>
@@ -1169,7 +1169,7 @@
       document.getElementById("passiveDaily").textContent = peso(daily);
       document.getElementById("passiveCycle").textContent = peso(cycle);
       document.getElementById("passiveBonus").textContent = peso(bonus);
-      document.getElementById("passiveTotal").textContent = peso(amount + cycle + bonus);
+      document.getElementById("passiveTotal").textContent = peso(cycle + bonus);
     };
     passiveAmount?.addEventListener("input", updatePassive);
     depositSequence?.addEventListener("change", updatePassive);
