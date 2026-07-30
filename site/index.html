@@ -492,6 +492,62 @@
       .official-links,.footer-grid{grid-template-columns:1fr}
     }
 
+    .live-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0}
+    .live-stat{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 14px 35px rgba(6,26,68,.07)}
+    .live-stat strong{display:block;color:var(--navy);font-size:28px}
+    .live-stat span{display:block;color:var(--muted);font-size:13px;margin-top:6px}
+    .live-status{display:inline-flex;align-items:center;gap:8px;color:#cbdaf0}
+    .activity-track{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+    .activity-track .activity-card{position:relative;inset:auto;opacity:1;transform:none;min-height:185px}
+    .activity-empty{grid-column:1/-1;padding:28px;text-align:center;color:#dbe7f8;border:1px dashed rgba(255,255,255,.25);border-radius:18px}
+    .gallery-shell{position:relative;margin-top:30px}
+    .payout-gallery{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,32%);gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 2px 18px;scrollbar-width:thin}
+    .payout-card{scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:22px;padding:10px;box-shadow:0 14px 35px rgba(6,26,68,.08)}
+    .payout-card img{width:100%;height:330px;object-fit:cover;border-radius:15px;background:#edf3fb}
+    .payout-card small{display:block;color:var(--muted);padding:10px 4px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .gallery-controls{display:flex;justify-content:flex-end;gap:9px;margin-top:10px}
+    .gallery-controls button{width:46px;height:46px;border:0;border-radius:14px;background:var(--navy);color:#fff;font-size:22px;cursor:pointer}
+    .calc-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:18px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px}
+    .calc-inputs{display:grid;gap:14px}
+    .calc-inputs label{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-bottom:7px}
+    .calc-inputs input,.calc-inputs select{width:100%;border:1px solid var(--line);border-radius:13px;padding:13px;background:#fff;color:var(--navy)}
+    .calc-results{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .calc-result.wide{grid-column:1/-1}
+    .calc-note{grid-column:1/-1;margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+    .earning-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:34px}
+    .earning-card{position:relative;overflow:hidden;background:linear-gradient(160deg,#071d49,#0a3479);border:1px solid rgba(255,216,107,.32);border-radius:22px;padding:22px;color:#fff;box-shadow:0 18px 44px rgba(6,26,68,.15)}
+    .earning-card::after{content:"";position:absolute;width:100px;height:100px;border-radius:50%;right:-42px;top:-42px;background:rgba(255,216,107,.12)}
+    .earning-no{color:var(--gold2);font-size:12px;font-weight:900;letter-spacing:.12em}
+    .earning-card h3{margin:10px 0;color:#fff;font-size:20px}
+    .earning-rate{font-size:30px;font-weight:900;color:var(--gold2);margin:12px 0}
+    .earning-card p{color:#d8e5f7;font-size:13px;line-height:1.6}
+    .bonus-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}
+    .bonus-table td{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+    .bonus-table td:last-child{text-align:right;color:var(--gold2);font-weight:900}
+    .reserve-flow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:28px}
+    .reserve-step{text-align:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+    .reserve-step b{display:block;color:var(--navy);margin:8px 0 5px}
+    .reserve-step span{font-size:12px;color:var(--muted);line-height:1.45}
+    .faq-tools{max-width:900px;margin:28px auto 0}
+    .faq-search{width:100%;padding:15px 17px;border:1px solid var(--line);border-radius:16px;color:var(--navy);background:#fff;box-shadow:0 12px 30px rgba(6,26,68,.06)}
+    .faq-count{display:block;color:var(--muted);font-size:12px;margin-top:9px}
+    .api-warning{display:none;margin-top:14px;padding:12px 15px;border-radius:14px;background:#fff3cd;color:#725900;font-size:13px}
+    .api-warning.show{display:block}
+    @media(max-width:1050px){
+      .earning-grid{grid-template-columns:repeat(2,1fr)}
+      .reserve-flow{grid-template-columns:repeat(3,1fr)}
+      .activity-track{grid-template-columns:1fr 1fr}
+      .live-stats{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:700px){
+      .calc-grid,.activity-track{grid-template-columns:1fr}
+      .calc-results{grid-template-columns:1fr 1fr}
+      .earning-grid,.reserve-flow{grid-template-columns:1fr}
+      .payout-gallery{grid-auto-columns:88%}
+      .payout-card img{height:360px}
+      .activity-track .activity-card{min-height:170px}
+    }
+
   </style>
 </head>
 <body>
@@ -642,47 +698,39 @@
 
 
     <section class="section reveal">
-      <div class="section-kicker">Platform Activity Preview</div>
+      <div class="section-kicker">Live Platform Activity</div>
       <h2>A living platform experience.</h2>
-      <p class="section-lead">These sample cards demonstrate how recent activity can appear. They are marked as preview data until connected to live Google Sheets records.</p>
+      <p class="section-lead">Recent approved deposits, released withdrawals, active Capital Reserves, and approved reinvestments appear automatically from the Aquila platform.</p>
+      <div class="live-stats">
+        <div class="live-stat"><strong id="countDeposits">—</strong><span>Approved deposits today</span></div>
+        <div class="live-stat"><strong id="countWithdrawals">—</strong><span>Released withdrawals today</span></div>
+        <div class="live-stat"><strong id="countReserves">—</strong><span>Capital Reserves activated today</span></div>
+        <div class="live-stat"><strong id="countActivities">—</strong><span>Latest activities loaded</span></div>
+      </div>
       <div class="live-panel">
         <div class="live-head">
-          <div><span class="live-dot"></span><strong>Activity Preview</strong></div>
-          <small>Demo display • Not yet live data</small>
+          <div><span class="live-dot"></span><strong>Live Activity Feed</strong></div>
+          <small class="live-status" id="activityStatus">Connecting securely…</small>
         </div>
-        <div class="activity-slider">
-          <article class="activity-card active">
-            <small>Transaction update</small>
-            <h3>Withdrawal Released</h3>
-            <div class="amount">₱1,500.00</div>
-            <div class="meta"><span>Status: Released</span><span>Preview event</span></div>
-          </article>
-          <article class="activity-card">
-            <small>Account activity</small>
-            <h3>Capital Reserve Activated</h3>
-            <div class="amount">₱5,000.00</div>
-            <div class="meta"><span>Status: Active</span><span>Preview event</span></div>
-          </article>
-          <article class="activity-card">
-            <small>Member update</small>
-            <h3>Deposit Approved</h3>
-            <div class="amount">₱10,000.00</div>
-            <div class="meta"><span>Status: Approved</span><span>Preview event</span></div>
-          </article>
+        <div class="activity-track" id="activityTrack">
+          <div class="activity-empty">Loading the latest public-safe activities…</div>
         </div>
+        <div class="api-warning" id="apiWarning">Live information is temporarily unavailable. The page will retry automatically.</div>
       </div>
     </section>
 
     <section class="activity">
       <div class="section reveal">
-        <div class="section-kicker">Activity Transparency</div>
-        <h2>Important updates are delivered in a clear format.</h2>
-        <div class="activity-grid">
-          <div class="proof-shot"><img src="assets/withdrawal.jpg" alt="Telegram withdrawal released notification"></div>
-          <div class="feed">
-            <div class="feed-item"><div class="story-icon">✅</div><div><strong>Withdrawal Released</strong><p>Transaction ID, amount, type, date, status, and release channel are shown clearly.</p></div></div>
-            <div class="feed-item"><div class="story-icon">🧾</div><div><strong>Structured Transaction Details</strong><p>Consistent labels make updates easier to follow and verify.</p></div></div>
-            <div class="feed-item"><div class="story-icon">🌐</div><div><strong>Connected Back to the Platform</strong><p>Members can move from notification back to the Aquila website and dashboard.</p></div></div>
+        <div class="section-kicker">Released Withdrawal Gallery</div>
+        <h2>Latest payout photos, updated automatically.</h2>
+        <p class="section-lead">New images added to the official payout folder appear here automatically. Select any image to view the original file.</p>
+        <div class="gallery-shell">
+          <div class="payout-gallery" id="payoutGallery">
+            <div class="activity-empty" style="color:var(--muted);border-color:var(--line)">Loading payout photos…</div>
+          </div>
+          <div class="gallery-controls">
+            <button id="galleryPrev" type="button" aria-label="Previous payout image">←</button>
+            <button id="galleryNext" type="button" aria-label="Next payout image">→</button>
           </div>
         </div>
       </div>
@@ -700,41 +748,34 @@
       </div>
 
       <div class="option-panel active" id="option-passive">
-        <div class="mini-calc">
-          <div>
-            <label for="passiveAmount">Sample amount</label>
-            <input id="passiveAmount" type="number" min="1000" step="1000" value="1000">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <div><label for="passiveAmount">Investment amount</label><input id="passiveAmount" type="number" min="1000" step="1000" value="1000"></div>
+            <div><label for="depositSequence">Deposit sequence</label><select id="depositSequence"><option value="1">First deposit</option><option value="2">2nd–15th deposit</option><option value="16">16th deposit onward</option></select></div>
           </div>
-          <div>
-            <label>Fixed cycle</label>
-            <div class="calc-result"><small>Term</small><strong>60 days</strong></div>
-          </div>
-          <div>
-            <label>Sample daily display</label>
-            <div class="calc-result"><small>Using 3% illustration</small><strong id="passiveResult">₱30.00</strong></div>
+          <div class="calc-results">
+            <div class="calc-result"><small>Daily Passive Yield</small><strong id="passiveDaily">₱30.00</strong></div>
+            <div class="calc-result"><small>60-Day Passive Yield</small><strong id="passiveCycle">₱1,800.00</strong></div>
+            <div class="calc-result"><small>Welcome / Reload Bonus</small><strong id="passiveBonus">₱50.00</strong></div>
+            <div class="calc-result"><small>Projected Total Value</small><strong id="passiveTotal">₱2,850.00</strong></div>
+            <p class="calc-note">Projection uses the fixed 3% daily Passive Yield for 60 days. Direct and Network Yields depend on qualified referral activity and are not added to this personal investment projection.</p>
           </div>
         </div>
       </div>
 
       <div class="option-panel" id="option-reserve">
-        <div class="mini-calc">
-          <div>
-            <label for="reserveAmount">Reserve amount</label>
-            <input id="reserveAmount" type="number" min="300" step="100" value="5000">
+        <div class="calc-grid">
+          <div class="calc-inputs">
+            <div><label for="reserveAmount">Reserve amount</label><input id="reserveAmount" type="number" min="300" step="100" value="5000"></div>
+            <div><label for="reserveDays">Preferred maturity</label><select id="reserveDays"></select></div>
           </div>
-          <div>
-            <label for="reserveDays">Eligible maturity</label>
-            <select id="reserveDays">
-              <option value="15">15 days</option>
-              <option value="30">30 days</option>
-              <option value="45">45 days</option>
-              <option value="60">60 days</option>
-              <option value="90">90 days</option>
-            </select>
-          </div>
-          <div>
-            <label>Calculator status</label>
-            <div class="calc-result"><small>Selected setup</small><strong id="reserveResult">₱5,000 • 15 days</strong></div>
+          <div class="calc-results">
+            <div class="calc-result"><small>Growth Rate</small><strong id="reserveGrowth">23.77%</strong></div>
+            <div class="calc-result"><small>Multiplier</small><strong id="reserveMultiplier">1.238×</strong></div>
+            <div class="calc-result"><small>Net Growth</small><strong id="reserveProfit">₱1,190.00</strong></div>
+            <div class="calc-result"><small>Projected Maturity Value</small><strong id="reserveTotal">₱6,190.00</strong></div>
+            <div class="calc-result wide"><small>Projected Maturity Date</small><strong id="reserveDate">—</strong></div>
+            <p class="calc-note" id="reserveRule">For ₱5,000, the minimum eligible maturity is 15 days. You may choose a later maturity up to 365 days.</p>
           </div>
         </div>
       </div>
@@ -762,6 +803,37 @@
         </div>
       </div>
       <div class="plan-poster"><img src="assets/plans.jpg" alt="Passive Yield and Capital Reserve comparison"></div>
+    </section>
+
+    <section class="ecosystem" id="earnings">
+      <div class="section reveal">
+        <div class="section-kicker" style="color:#ffd86b">Five Earning Methods</div>
+        <h2>Five ways qualified members can earn.</h2>
+        <p class="section-lead">Each earning method follows its own eligibility rules and is recorded inside the member dashboard.</p>
+        <div class="earning-grid">
+          <article class="earning-card"><span class="earning-no">01</span><h3>Passive Yield</h3><div class="earning-rate">3% Daily</div><p>Based on the member’s actual total investment over a fixed 60-day term.</p></article>
+          <article class="earning-card"><span class="earning-no">02</span><h3>Direct Yield</h3><div class="earning-rate">5% Bonus</div><p>Earned on every qualified investment made by a directly invited member.</p></article>
+          <article class="earning-card"><span class="earning-no">03</span><h3>Network Yield</h3><div class="earning-rate">5%</div><p>Based on daily earnings generated by the qualified network, up to Level 5 only.</p></article>
+          <article class="earning-card"><span class="earning-no">04</span><h3>Welcome Bonus</h3><div class="earning-rate">5%–15%</div><p>Applied to the first deposit only, based on the deposit amount.</p>
+            <table class="bonus-table"><tr><td>₱1K–₱10K</td><td>5%</td></tr><tr><td>₱10,001–₱20K</td><td>6%</td></tr><tr><td>₱20,001–₱50K</td><td>7%</td></tr><tr><td>₱50,001–₱100K</td><td>8%</td></tr><tr><td>₱100,001–₱200K</td><td>9%</td></tr><tr><td>₱200,001–₱500K</td><td>10%</td></tr><tr><td>₱500,001+</td><td>15%</td></tr></table>
+          </article>
+          <article class="earning-card"><span class="earning-no">05</span><h3>Reload Bonus</h3><div class="earning-rate">5% Bonus</div><p>Applied to qualified deposits from the 2nd through the 15th deposit only. It no longer applies from the 16th deposit onward.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="reserve-guide">
+      <div class="section-kicker">How Capital Reserve Works</div>
+      <h2>Choose your amount and your eligible timeline.</h2>
+      <p class="section-lead">Minimum reserve is ₱300. The required minimum maturity depends on the reserve amount, while eligible members may select a later maturity up to 365 days.</p>
+      <div class="reserve-flow">
+        <div class="reserve-step">①<b>Choose Amount</b><span>Enter your preferred reserve amount.</span></div>
+        <div class="reserve-step">②<b>Select Maturity</b><span>Choose an eligible term from 7–365 days.</span></div>
+        <div class="reserve-step">③<b>Complete Payment</b><span>Submit the required payment details.</span></div>
+        <div class="reserve-step">④<b>Approval</b><span>The reserve becomes active after approval.</span></div>
+        <div class="reserve-step">⑤<b>Track Progress</b><span>Monitor everything inside the dashboard.</span></div>
+        <div class="reserve-step">⑥<b>Receive at Maturity</b><span>Receive capital and projected growth.</span></div>
+      </div>
     </section>
 
     <section class="section reveal" id="community">
@@ -818,11 +890,40 @@
     <section class="section reveal" id="faq">
       <div class="section-kicker">Frequently Asked Questions</div>
       <h2>Clear answers before you continue.</h2>
-      <div class="faq">
+      <div class="faq-tools">
+        <input class="faq-search" id="faqSearch" type="search" placeholder="Search questions, earnings, deposits, withdrawals, or Capital Reserve…" aria-label="Search frequently asked questions">
+        <small class="faq-count" id="faqCount">30 questions available</small>
+      </div>
+      <div class="faq" id="faqList">
         <details><summary>What is Aquila Crest Capital?</summary><p>Aquila Crest Capital is a digital member platform that centralizes account tools, transaction monitoring, Capital Reserve features, community access, and support resources.</p></details>
         <details><summary>Can I use the platform on mobile?</summary><p>Yes. The landing page and member dashboard are designed for phones, tablets, and desktop browsers.</p></details>
         <details><summary>How do I see my activity?</summary><p>Members can review deposit, withdrawal, reinvest, income, bonus, support, and Capital Reserve records inside the dashboard.</p></details>
+        <details><summary>What is Passive Yield?</summary><p>Passive Yield is 3% daily based on the member’s actual total investment over a fixed 60-day term.</p></details>
+        <details><summary>What is the minimum Passive Yield investment?</summary><p>The minimum investment is ₱1,000.</p></details>
+        <details><summary>How long is the Passive Yield term?</summary><p>The fixed term is 60 days.</p></details>
+        <details><summary>What is Direct Yield?</summary><p>Direct Yield is a 5% bonus on every qualified investment made by a directly invited member.</p></details>
+        <details><summary>What is Network Yield?</summary><p>Network Yield is 5% based on daily earnings generated by a qualified network, up to Level 5 only.</p></details>
+        <details><summary>What is the Welcome Bonus?</summary><p>The Welcome Bonus applies to the first deposit only. Its rate ranges from 5% to 15%, depending on the first deposit amount.</p></details>
+        <details><summary>What is the Reload Bonus?</summary><p>The Reload Bonus is 5% on qualified deposits from the 2nd through the 15th deposit. It no longer applies from the 16th deposit onward.</p></details>
+        <details><summary>Can I reinvest?</summary><p>Eligible members may submit reinvestment requests according to the schedule and rules displayed in the member portal.</p></details>
+        <details><summary>Where can I track my earnings?</summary><p>Passive, Direct, Network, bonus, reinvestment, and transaction histories are available inside the member dashboard.</p></details>
+        <details><summary>What is Capital Reserve?</summary><p>Capital Reserve allows eligible members to choose a reserve amount and an eligible maturity period, then review the projected growth before submission.</p></details>
         <details><summary>How does Capital Reserve work?</summary><p>The calculator applies the minimum maturity required for the entered amount. Members may choose an eligible later date up to the platform maximum and review the projection before proceeding.</p></details>
+        <details><summary>What is the minimum Capital Reserve amount?</summary><p>The minimum Capital Reserve amount is ₱300.</p></details>
+        <details><summary>What is the Capital Reserve maturity range?</summary><p>Eligible maturity selections range from 7 days up to 365 days, subject to the required minimum for the reserve amount.</p></details>
+        <details><summary>What is the minimum maturity for ₱300–₱4,999?</summary><p>The minimum maturity is 7 days.</p></details>
+        <details><summary>What is the minimum maturity for ₱5,000–₱9,999?</summary><p>The minimum maturity is 15 days.</p></details>
+        <details><summary>What is the minimum maturity for ₱10,000–₱24,999?</summary><p>The minimum maturity is 30 days.</p></details>
+        <details><summary>What is the minimum maturity for ₱25,000–₱49,999?</summary><p>The minimum maturity is 45 days.</p></details>
+        <details><summary>What is the minimum maturity for ₱50,000–₱99,999?</summary><p>The minimum maturity is 60 days.</p></details>
+        <details><summary>What is the minimum maturity for ₱100,000–₱249,999?</summary><p>The minimum maturity is 90 days.</p></details>
+        <details><summary>What is the minimum maturity for ₱250,000 and above?</summary><p>The minimum maturity is 120 days.</p></details>
+        <details><summary>Can I choose a later Capital Reserve maturity?</summary><p>Yes. You may choose any eligible later maturity up to 365 days.</p></details>
+        <details><summary>When does a Capital Reserve become active?</summary><p>It becomes active after payment review and approval.</p></details>
+        <details><summary>Where can I track my Capital Reserve?</summary><p>Active contracts, projections, remaining days, maturity, and status are available inside the member dashboard.</p></details>
+        <details><summary>Are the activity cards updated automatically?</summary><p>Yes. Public-safe approved deposits, released withdrawals, active Capital Reserves, and approved reinvestments are loaded automatically.</p></details>
+        <details><summary>Are withdrawal photos updated automatically?</summary><p>Yes. New images added to the official payout folder can appear automatically in the withdrawal gallery.</p></details>
+        <details><summary>How do I access the Member Portal?</summary><p>Use any official Member Login, Create Account, Get Started, or Open Member Portal button on this website.</p></details>
         <details><summary>Where do members get help?</summary><p>Support is available through the member dashboard and organized community channels.</p></details>
       </div>
     </section>
@@ -897,6 +998,7 @@
 
   <script>
     const DASHBOARD_URL = "https://script.google.com/macros/s/AKfycbwsX7fvxdza7pGepFtME77y0BK3D6AzQ8qIQMQOe51RfPk2rK-sCCbexo8PpdC2cpRG/exec";
+    const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzeXCQ9VZ9jQFbg86oKdcLrl-HuhRQFC-nN4G7QrY1rFtse63wJNAdJeRm0kVZ1wKf8FQ/exec";
 
     const nav = document.getElementById("nav");
     const progress = document.getElementById("progress");
@@ -963,16 +1065,6 @@
       setTimeout(() => intro && intro.classList.add("hide"), 1650);
     });
 
-    const activityCards = [...document.querySelectorAll(".activity-card")];
-    let activityIndex = 0;
-    if (activityCards.length) {
-      setInterval(() => {
-        activityCards[activityIndex].classList.remove("active");
-        activityIndex = (activityIndex + 1) % activityCards.length;
-        activityCards[activityIndex].classList.add("active");
-      }, 2800);
-    }
-
     document.querySelectorAll(".option-tab").forEach(tab => {
       tab.addEventListener("click", () => {
         document.querySelectorAll(".option-tab").forEach(t => t.classList.remove("active"));
@@ -983,23 +1075,175 @@
       });
     });
 
-    const peso = value => new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP"}).format(value);
+    const peso = value => new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP"}).format(Number(value || 0));
+    const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, character => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    })[character]);
+    const activityTrack = document.getElementById("activityTrack");
+    const payoutGallery = document.getElementById("payoutGallery");
+    const activityStatus = document.getElementById("activityStatus");
+    const apiWarning = document.getElementById("apiWarning");
+
+    const isTodayPH = value => {
+      const parsed = new Date(value);
+      if (Number.isNaN(parsed.getTime())) return false;
+      const format = date => new Intl.DateTimeFormat("en-CA",{
+        timeZone:"Asia/Manila",year:"numeric",month:"2-digit",day:"2-digit"
+      }).format(date);
+      return format(parsed) === format(new Date());
+    };
+
+    const renderActivities = activities => {
+      const list = Array.isArray(activities) ? activities : [];
+      document.getElementById("countActivities").textContent = list.length;
+      document.getElementById("countDeposits").textContent = list.filter(item => item.type === "Deposit" && isTodayPH(item.date)).length;
+      document.getElementById("countWithdrawals").textContent = list.filter(item => item.type === "Withdrawal" && isTodayPH(item.date)).length;
+      document.getElementById("countReserves").textContent = list.filter(item => item.type === "Capital Reserve" && isTodayPH(item.date)).length;
+      if (!list.length) {
+        activityTrack.innerHTML = '<div class="activity-empty">No public activity is available yet.</div>';
+        return;
+      }
+      activityTrack.innerHTML = list.slice(0,6).map(item => `
+        <article class="activity-card">
+          <small>${escapeHtml(item.type || "Platform activity")}</small>
+          <h3>${escapeHtml(item.title || "Activity Update")}</h3>
+          <div class="amount">${peso(item.amount)}</div>
+          <div class="meta"><span>${escapeHtml(item.displayName || "Aquila Member")}</span><span>${escapeHtml(item.status || "")}</span></div>
+          <div class="meta"><span>${escapeHtml(item.date || "")}</span><span>Live</span></div>
+        </article>`).join("");
+    };
+
+    const renderPayouts = payouts => {
+      const list = Array.isArray(payouts) ? payouts : [];
+      if (!list.length) {
+        payoutGallery.innerHTML = '<div class="activity-empty" style="color:var(--muted);border-color:var(--line)">No payout photos are available yet.</div>';
+        return;
+      }
+      payoutGallery.innerHTML = list.map(item => `
+        <a class="payout-card" href="${escapeHtml(item.viewUrl)}" target="_blank" rel="noopener">
+          <img src="${escapeHtml(item.imageUrl)}" alt="Released withdrawal proof" loading="lazy">
+          <small>${escapeHtml(item.name || "Released withdrawal")}</small>
+        </a>`).join("");
+    };
+
+    const loadLivePlatformData = async () => {
+      try {
+        activityStatus.textContent = "Refreshing…";
+        const response = await fetch(PUBLIC_API_URL + "?action=all&_=" + Date.now(),{cache:"no-store"});
+        if (!response.ok) throw new Error("API request failed");
+        const data = await response.json();
+        if (!data.ok) throw new Error(data.message || "API returned an error");
+        renderActivities(data.activities);
+        renderPayouts(data.payouts);
+        activityStatus.textContent = "Live • Updated " + new Intl.DateTimeFormat("en-PH",{timeZone:"Asia/Manila",hour:"numeric",minute:"2-digit"}).format(new Date());
+        apiWarning.classList.remove("show");
+      } catch (error) {
+        activityStatus.textContent = "Reconnecting…";
+        apiWarning.classList.add("show");
+      }
+    };
+    loadLivePlatformData();
+    setInterval(loadLivePlatformData,30000);
+
+    document.getElementById("galleryPrev")?.addEventListener("click",() => payoutGallery.scrollBy({left:-Math.max(260,payoutGallery.clientWidth*.8),behavior:"smooth"}));
+    document.getElementById("galleryNext")?.addEventListener("click",() => payoutGallery.scrollBy({left:Math.max(260,payoutGallery.clientWidth*.8),behavior:"smooth"}));
+
     const passiveAmount = document.getElementById("passiveAmount");
-    const passiveResult = document.getElementById("passiveResult");
+    const depositSequence = document.getElementById("depositSequence");
+    const welcomeRate = amount => {
+      if (amount < 1000) return 0;
+      if (amount <= 10000) return .05;
+      if (amount <= 20000) return .06;
+      if (amount <= 50000) return .07;
+      if (amount <= 100000) return .08;
+      if (amount <= 200000) return .09;
+      if (amount <= 500000) return .10;
+      return .15;
+    };
     const updatePassive = () => {
       const amount = Math.max(0, Number(passiveAmount?.value || 0));
-      if (passiveResult) passiveResult.textContent = peso(amount * .03);
+      const sequence = Number(depositSequence?.value || 1);
+      const daily = amount * .03;
+      const cycle = daily * 60;
+      const bonus = sequence === 1 ? amount * welcomeRate(amount) : sequence === 2 ? amount * .05 : 0;
+      document.getElementById("passiveDaily").textContent = peso(daily);
+      document.getElementById("passiveCycle").textContent = peso(cycle);
+      document.getElementById("passiveBonus").textContent = peso(bonus);
+      document.getElementById("passiveTotal").textContent = peso(amount + cycle + bonus);
     };
     passiveAmount?.addEventListener("input", updatePassive);
+    depositSequence?.addEventListener("change", updatePassive);
 
     const reserveAmount = document.getElementById("reserveAmount");
     const reserveDays = document.getElementById("reserveDays");
-    const reserveResult = document.getElementById("reserveResult");
-    const updateReserve = () => {
-      if (reserveResult) reserveResult.textContent = `${peso(Number(reserveAmount?.value || 0))} • ${reserveDays?.value || 0} days`;
+    const minimumReserveDays = amount => {
+      if (amount < 5000) return 7;
+      if (amount < 10000) return 15;
+      if (amount < 25000) return 30;
+      if (amount < 50000) return 45;
+      if (amount < 100000) return 60;
+      if (amount < 250000) return 90;
+      return 120;
     };
-    reserveAmount?.addEventListener("input", updateReserve);
+    const reserveSchedule = day => {
+      const d = Math.min(365,Math.max(7,Number(day || 7)));
+      let growth;
+      if (d <= 60) growth = 12 + (d - 7) * (78 / 53);
+      else if (d <= 120) growth = 90 + (d - 60) * 1.5;
+      else if (d <= 180) growth = 180 + (d - 120) * 1.8;
+      else growth = 288 + (d - 180) * (387 / 185);
+      const roundedGrowth = Math.round((growth + Number.EPSILON) * 100) / 100;
+      const multiplier = Math.round((1 + growth / 100 + Number.EPSILON) * 1000) / 1000;
+      return {growth:roundedGrowth,multiplier};
+    };
+    const rebuildReserveDays = () => {
+      const amount = Math.max(300,Number(reserveAmount?.value || 300));
+      const minimum = minimumReserveDays(amount);
+      const previous = Math.max(minimum,Number(reserveDays?.value || minimum));
+      reserveDays.innerHTML = "";
+      for (let day = minimum; day <= 365; day++) {
+        const option = document.createElement("option");
+        option.value = day;
+        option.textContent = day + (day === 1 ? " day" : " days");
+        if (day === previous) option.selected = true;
+        reserveDays.appendChild(option);
+      }
+    };
+    const updateReserve = () => {
+      const amount = Math.max(300,Number(reserveAmount?.value || 300));
+      const days = Number(reserveDays?.value || minimumReserveDays(amount));
+      const result = reserveSchedule(days);
+      const total = amount * result.multiplier;
+      const maturity = new Date();
+      maturity.setDate(maturity.getDate() + days);
+      document.getElementById("reserveGrowth").textContent = result.growth.toLocaleString("en-PH",{maximumFractionDigits:2}) + "%";
+      document.getElementById("reserveMultiplier").textContent = result.multiplier.toLocaleString("en-PH",{maximumFractionDigits:3}) + "×";
+      document.getElementById("reserveProfit").textContent = peso(total - amount);
+      document.getElementById("reserveTotal").textContent = peso(total);
+      document.getElementById("reserveDate").textContent = new Intl.DateTimeFormat("en-PH",{year:"numeric",month:"long",day:"numeric"}).format(maturity);
+      document.getElementById("reserveRule").textContent = `For ${peso(amount)}, the minimum eligible maturity is ${minimumReserveDays(amount)} days. You may choose a later maturity up to 365 days.`;
+    };
+    reserveAmount?.addEventListener("input",() => { rebuildReserveDays(); updateReserve(); });
     reserveDays?.addEventListener("change", updateReserve);
+    rebuildReserveDays();
+    updatePassive();
+    updateReserve();
+
+    const faqSearch = document.getElementById("faqSearch");
+    const faqItems = [...document.querySelectorAll("#faqList details")];
+    const faqCount = document.getElementById("faqCount");
+    const filterFaq = () => {
+      const query = String(faqSearch?.value || "").trim().toLowerCase();
+      let shown = 0;
+      faqItems.forEach(item => {
+        const matches = !query || item.textContent.toLowerCase().includes(query);
+        item.hidden = !matches;
+        if (matches) shown++;
+      });
+      faqCount.textContent = `${shown} question${shown === 1 ? "" : "s"} shown`;
+    };
+    faqSearch?.addEventListener("input",filterFaq);
+    filterFaq();
 
     const stickyConvert = document.getElementById("stickyConvert");
     window.addEventListener("scroll", () => {
