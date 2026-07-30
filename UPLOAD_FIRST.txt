@@ -1,0 +1,11 @@
+UPLOAD THESE ITEMS TO THE ROOT OF THE GITHUB REPOSITORY:
+
+1. site folder
+2. wrangler.jsonc
+3. package.json
+4. README.md
+5. .gitignore
+
+Do not upload this ZIP file itself. Extract it first, open the extracted folder, then drag all five items above into GitHub.
+
+Cloudflare deploy command: npx wrangler deploy

@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071d49">
+  <link rel="canonical" href="https://www.aquilacrestcapital.com/">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Aquila Crest">
+  <meta property="og:title" content="Aquila Crest Capital — Official Digital Member Platform">
+  <meta property="og:description" content="Access the official Aquila Crest Capital member ecosystem, community channels, platform information, and member portal.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.aquilacrestcapital.com/">
+  <meta property="og:image" content="https://www.aquilacrestcapital.com/assets/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Aquila Crest Capital — Digital Experience</title>
+  <meta name="description" content="The official Aquila Crest Capital digital member platform for organized account access, activity monitoring, capital tools, official updates, and community support.">
+  <style>
+    :root{
+      --navy:#061a44;
+      --navy2:#0a2f72;
+      --blue:#0f5bd8;
+      --blue2:#2a7fff;
+      --red:#d71d32;
+      --red2:#ff3b50;
+      --gold:#e9b72f;
+      --gold2:#ffd86b;
+      --cream:#fff8e5;
+      --white:#ffffff;
+      --ink:#11284e;
+      --muted:#687997;
+      --line:#dce6f3;
+      --panel:rgba(255,255,255,.82);
+      --shadow:0 25px 80px rgba(6,26,68,.18);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 0 0,rgba(255,216,107,.14),transparent 28%),
+        radial-gradient(circle at 100% 0,rgba(42,127,255,.12),transparent 30%),
+        linear-gradient(180deg,#f8fbff 0%,#fff 30%,#f5f8fd 100%);
+      overflow-x:hidden;
+    }
+
+    img{display:block;max-width:100%}
+    a{text-decoration:none;color:inherit}
+    button{font:inherit}
+
+    .progress{
+      position:fixed;left:0;top:0;height:3px;width:0;
+      background:linear-gradient(90deg,var(--gold2),var(--red2),var(--blue2));
+      z-index:100;
+    }
+
+    .nav{
+      position:fixed;left:0;right:0;top:0;z-index:90;
+      transition:.25s ease;
+      border-bottom:1px solid transparent;
+    }
+    .nav.scrolled{
+      backdrop-filter:blur(18px);
+      background:rgba(6,26,68,.84);
+      border-bottom-color:rgba(255,255,255,.12);
+      box-shadow:0 10px 30px rgba(0,0,0,.12);
+    }
+    .nav-inner{
+      max-width:1200px;margin:auto;padding:16px 22px;
+      display:flex;align-items:center;justify-content:space-between;gap:18px;
+    }
+    .brand{display:flex;align-items:center;gap:12px;color:#fff}
+    .brand img{width:50px;height:50px;object-fit:contain;background:#fff;border-radius:14px;padding:4px}
+    .brand strong{display:block;font-size:16px}
+    .brand span{display:block;color:#d9e7ff;font-size:12px;margin-top:2px}
+    .nav-links{display:flex;gap:22px;color:#eaf2ff;font-size:14px}
+    .nav-actions{display:flex;gap:10px}
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      border:0;border-radius:15px;padding:13px 18px;
+      font-weight:900;cursor:pointer;transition:.25s ease;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{
+      color:#2b1c00;background:linear-gradient(135deg,var(--gold2),var(--gold));
+      box-shadow:0 14px 30px rgba(233,183,47,.28);
+    }
+    .btn-dark{color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy))}
+    .btn-glass{color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18)}
+
+    .hero{
+      position:relative;min-height:100vh;overflow:hidden;color:#fff;
+      background:
+        linear-gradient(125deg,rgba(6,26,68,.98),rgba(10,59,139,.94) 48%,rgba(171,15,31,.92)),
+        url('assets/logo.jpg') center/cover;
+    }
+    .hero::before{
+      content:"";position:absolute;inset:0;
+      background:
+        radial-gradient(circle at 72% 23%,rgba(255,216,107,.30),transparent 22%),
+        radial-gradient(circle at 12% 80%,rgba(215,29,50,.20),transparent 18%),
+        repeating-linear-gradient(120deg,transparent 0 40px,rgba(255,255,255,.025) 41px 42px);
+    }
+    .hero::after{
+      content:"";position:absolute;inset:auto -8% -28% -8%;height:44%;
+      background:linear-gradient(180deg,transparent,rgba(255,255,255,.10));
+      transform:skewY(-5deg);
+    }
+    .hero-inner{
+      position:relative;z-index:3;max-width:1200px;margin:auto;
+      padding:140px 22px 90px;display:grid;grid-template-columns:1.02fr .98fr;
+      gap:58px;align-items:center;
+    }
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:9px;padding:9px 13px;
+      border-radius:999px;background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);font-size:13px;font-weight:800;color:#e8f2ff;
+    }
+    h1{
+      font-size:clamp(52px,7vw,88px);line-height:.94;letter-spacing:-.05em;
+      margin:22px 0;
+    }
+    .gold{color:var(--gold2)}
+    .hero p{font-size:18px;line-height:1.75;color:#dce8fa;max-width:650px}
+    .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 20px}
+    .micro-proof{display:flex;flex-wrap:wrap;gap:14px;color:#d9e7ff;font-size:13px}
+    .micro-proof span{display:flex;align-items:center;gap:7px}
+    .dot-check{width:20px;height:20px;border-radius:999px;background:rgba(92,232,158,.16);color:#7cf0b2;display:grid;place-items:center;font-weight:900}
+
+    .stage{position:relative;min-height:650px}
+    .glow{
+      position:absolute;width:360px;height:360px;border-radius:999px;
+      background:rgba(255,216,107,.20);filter:blur(45px);right:8%;top:9%;
+    }
+    .dashboard-frame{
+      position:absolute;inset:30px 0 0 46px;
+      background:linear-gradient(145deg,#fff,#dbe7f7);
+      border-radius:34px;padding:12px;box-shadow:0 40px 120px rgba(0,0,0,.38);
+      transform:perspective(1300px) rotateY(-8deg) rotateX(3deg) rotateZ(1deg);
+      transition:.25s ease;
+    }
+    .dashboard-frame img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:24px}
+    .glass-card{
+      position:absolute;z-index:4;background:rgba(255,255,255,.92);
+      color:var(--ink);border:1px solid rgba(255,255,255,.8);backdrop-filter:blur(16px);
+      border-radius:18px;padding:15px 17px;box-shadow:0 20px 50px rgba(0,0,0,.20);
+      animation:float 7s ease-in-out infinite;
+    }
+    .glass-card small{color:var(--muted)}
+    .glass-card strong{display:block;color:var(--red);font-size:20px;margin-top:4px}
+    .g1{left:0;top:72px}
+    .g2{right:-10px;top:44px;animation-delay:-2s}
+    .g3{left:8px;bottom:76px;animation-delay:-4s}
+    @keyframes float{50%{transform:translateY(-20px) translateX(6px)}}
+
+    .ticker{overflow:hidden;background:linear-gradient(90deg,var(--gold),#ffe99f,var(--gold));border-bottom:1px solid rgba(0,0,0,.06)}
+    .ticker-track{display:flex;gap:42px;width:max-content;padding:13px 0;animation:ticker 26s linear infinite;font-weight:900;color:#332200}
+    .ticker-track span{white-space:nowrap}
+    @keyframes ticker{to{transform:translateX(-50%)}}
+
+    .section{max-width:1200px;margin:auto;padding:100px 22px}
+    .section-kicker{color:var(--red);font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+    .section h2{font-size:clamp(36px,5vw,58px);line-height:1.03;letter-spacing:-.035em;margin:12px 0 16px;color:var(--navy)}
+    .section-lead{font-size:18px;line-height:1.75;color:var(--muted);max-width:760px}
+
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+    .stat{
+      background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px;
+      box-shadow:0 16px 40px rgba(6,26,68,.07);
+    }
+    .stat strong{display:block;color:var(--navy);font-size:26px}
+    .stat span{display:block;color:var(--muted);font-size:13px;margin-top:6px}
+
+    .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:38px}
+    .story-card{
+      background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px;
+      box-shadow:var(--shadow);
+    }
+    .story-card h3{font-size:25px;margin:12px 0 8px;color:var(--navy)}
+    .story-card p{color:var(--muted);line-height:1.65}
+    .story-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,#edf4ff,#fff3d7)}
+
+    .ecosystem{
+      background:
+        radial-gradient(circle at 14% 14%,rgba(255,216,107,.14),transparent 24%),
+        radial-gradient(circle at 85% 20%,rgba(42,127,255,.16),transparent 24%),
+        linear-gradient(180deg,#061a44,#0a2f72);
+      color:#fff;
+    }
+    .ecosystem .section h2{color:#fff}
+    .ecosystem .section-lead{color:#d7e4f8}
+    .eco-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+    .eco-card{
+      background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+      border-radius:20px;padding:20px;backdrop-filter:blur(10px);
+    }
+    .eco-card b{display:block;color:#fff;margin:12px 0 6px}
+    .eco-card p{margin:0;color:#cedbf0;line-height:1.55;font-size:14px}
+    .eco-no{color:var(--gold2);font-weight:900;font-size:12px;letter-spacing:.12em}
+
+    .showcase{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px;align-items:center;margin-top:44px}
+    .phone-stage{position:relative;min-height:680px}
+    .phone{
+      position:absolute;width:66%;background:#091a37;border-radius:34px;padding:12px;
+      box-shadow:0 30px 80px rgba(6,26,68,.22);
+    }
+    .phone img{width:100%;height:640px;object-fit:cover;object-position:top;border-radius:24px}
+    .phone.a{left:0;top:0;transform:rotate(-4deg)}
+    .phone.b{right:0;top:60px;transform:rotate(4deg)}
+    .feature-stack{display:grid;gap:14px}
+    .feature{
+      display:grid;grid-template-columns:50px 1fr;gap:14px;
+      background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;
+    }
+    .feature b{color:var(--navy)}
+    .feature p{margin:4px 0 0;color:var(--muted);line-height:1.55;font-size:14px}
+
+    .activity{
+      background:linear-gradient(180deg,#fff8df,#fff);
+    }
+    .activity-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;margin-top:36px}
+    .proof-shot{background:#fff;border:1px solid #ebd896;border-radius:26px;padding:12px;box-shadow:var(--shadow)}
+    .proof-shot img{border-radius:18px}
+    .feed{display:grid;gap:12px}
+    .feed-item{
+      display:grid;grid-template-columns:46px 1fr;gap:13px;background:#fff;border:1px solid var(--line);
+      border-radius:18px;padding:16px;
+    }
+    .feed-item strong{color:var(--navy)}
+    .feed-item p{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.55}
+
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px}
+    .compare-card{border-radius:26px;padding:26px;color:#fff;box-shadow:var(--shadow)}
+    .compare-card.blue{background:linear-gradient(135deg,#0d55bd,#061a44)}
+    .compare-card.red{background:linear-gradient(135deg,#df263b,#7d0715)}
+    .compare-card h3{font-size:30px;margin:0 0 8px}
+    .compare-card p{color:rgba(255,255,255,.84);line-height:1.6}
+    .compare-card ul{padding-left:18px;line-height:1.85}
+    .plan-poster{margin-top:24px;background:#fff;border:1px solid #ead7a0;border-radius:26px;padding:10px;box-shadow:var(--shadow)}
+    .plan-poster img{border-radius:18px}
+
+    .community-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px}
+    .community-card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:16px;box-shadow:var(--shadow)}
+    .community-card img{width:100%;height:520px;object-fit:cover;object-position:top;border-radius:18px}
+    .community-card h3{margin:16px 8px 8px;color:var(--navy);font-size:24px}
+    .community-card p{margin:0 8px 10px;color:var(--muted);line-height:1.6}
+
+    .faq{max-width:900px;margin:36px auto 0}
+    details{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px 20px;margin-bottom:12px}
+    summary{cursor:pointer;font-weight:900;color:var(--navy)}
+    details p{color:var(--muted);line-height:1.7;margin-bottom:0}
+
+    .cta{
+      margin:34px 22px 0;border-radius:34px;overflow:hidden;position:relative;color:#fff;
+      background:linear-gradient(130deg,#061a44,#0f5bd8 52%,#b3152a);
+    }
+    .cta::before{
+      content:"";position:absolute;inset:0;
+      background:radial-gradient(circle at 76% 30%,rgba(255,216,107,.24),transparent 22%);
+    }
+    .cta-inner{
+      position:relative;z-index:2;max-width:1120px;margin:auto;padding:82px 30px;
+      display:grid;grid-template-columns:1fr 320px;gap:34px;align-items:center;
+    }
+    .cta h2{color:#fff;margin-top:8px}
+    .cta p{color:#dce8f9;line-height:1.7}
+    .cta-logo{background:#fff;border-radius:28px;padding:18px;box-shadow:0 24px 60px rgba(0,0,0,.24)}
+
+    footer{padding:36px 20px 50px;text-align:center;color:#72809a;font-size:13px}
+    footer strong{color:var(--navy)}
+
+    .reveal{opacity:0;transform:translateY(28px);transition:.85s ease}
+    .reveal.visible{opacity:1;transform:none}
+
+    @media(max-width:980px){
+      .nav-links{display:none}
+      .hero-inner,.showcase,.activity-grid,.cta-inner{grid-template-columns:1fr}
+      .stage{min-height:580px}
+      .stats,.eco-grid{grid-template-columns:repeat(2,1fr)}
+      .story-grid,.compare,.community-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:640px){
+      .nav-inner{padding:11px 13px}
+      .brand div{display:none}
+      .nav-actions .btn-glass{display:none}
+      .btn{padding:12px 14px;font-size:13px}
+      .hero-inner{padding:118px 16px 54px;gap:34px}
+      h1{font-size:50px}
+      .hero p,.section-lead{font-size:16px}
+      .stage{min-height:500px}
+      .dashboard-frame{inset:44px 8px 0 34px}
+      .g1{top:12px}
+      .g2{right:0;top:106px}
+      .g3{bottom:22px}
+      .section{padding:74px 16px}
+      .stats,.eco-grid{grid-template-columns:1fr}
+      .phone-stage{min-height:560px}
+      .phone{width:72%}
+      .phone img{height:520px}
+      .community-card img{height:420px}
+      .cta{margin:20px 12px 0}
+      .cta-inner{padding:60px 20px}
+    }
+  
+    .intro{
+      position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
+      background:
+        radial-gradient(circle at 50% 42%,rgba(255,216,107,.22),transparent 20%),
+        linear-gradient(135deg,#020817,#061a44 58%,#2b0710);
+      transition:opacity .7s ease,visibility .7s ease;
+    }
+    .intro.hide{opacity:0;visibility:hidden}
+    .intro-core{text-align:center;color:#fff;animation:introRise 1.4s ease both}
+    .intro-core img{
+      width:150px;height:150px;object-fit:contain;border-radius:32px;background:#fff;padding:8px;
+      box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 80px rgba(255,216,107,.30);
+      animation:introPulse 1.8s ease-in-out infinite;
+    }
+    .intro-core h2{margin:22px 0 6px;font-size:28px;letter-spacing:.12em;color:#fff}
+    .intro-core p{margin:0;color:#c9d8f1;letter-spacing:.22em;font-size:11px}
+    .intro-line{width:0;height:2px;margin:24px auto 0;background:linear-gradient(90deg,transparent,#ffd86b,transparent);animation:introLine 1.7s ease forwards}
+    @keyframes introRise{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+    @keyframes introPulse{50%{transform:scale(1.035)}}
+    @keyframes introLine{to{width:230px}}
+
+    .journey{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:38px;position:relative;
+    }
+    .journey::before{
+      content:"";position:absolute;left:8%;right:8%;top:31px;height:2px;
+      background:linear-gradient(90deg,var(--gold),var(--red),var(--blue));opacity:.35;
+    }
+    .journey-step{position:relative;text-align:center}
+    .journey-icon{
+      width:62px;height:62px;margin:0 auto 14px;border-radius:20px;display:grid;place-items:center;
+      background:#fff;border:1px solid var(--line);box-shadow:0 14px 35px rgba(6,26,68,.09);
+      font-size:25px;position:relative;z-index:2;
+    }
+    .journey-step b{display:block;color:var(--navy);margin-bottom:6px}
+    .journey-step span{display:block;color:var(--muted);font-size:13px;line-height:1.5}
+
+    .live-panel{
+      border-radius:28px;padding:28px;background:linear-gradient(145deg,#061a44,#0a2f72);
+      color:#fff;box-shadow:var(--shadow);overflow:hidden;position:relative;
+    }
+    .live-panel::before{
+      content:"";position:absolute;width:240px;height:240px;border-radius:999px;
+      background:rgba(255,216,107,.13);right:-60px;top:-60px;filter:blur(15px);
+    }
+    .live-head{display:flex;justify-content:space-between;align-items:center;gap:14px;position:relative}
+    .live-dot{display:inline-block;width:9px;height:9px;border-radius:99px;background:#58e39b;box-shadow:0 0 0 6px rgba(88,227,155,.12);margin-right:8px}
+    .activity-slider{margin-top:22px;position:relative;min-height:175px}
+    .activity-card{
+      position:absolute;inset:0;padding:22px;border-radius:21px;
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+      opacity:0;transform:translateY(18px) scale(.98);transition:.55s ease;
+    }
+    .activity-card.active{opacity:1;transform:none}
+    .activity-card small{color:#cbdaf0}
+    .activity-card h3{margin:10px 0 8px;font-size:26px;color:#fff}
+    .activity-card .amount{font-size:34px;font-weight:900;color:#ffd86b}
+    .activity-card .meta{display:flex;justify-content:space-between;gap:12px;color:#d9e6f7;font-size:13px;margin-top:16px}
+
+    .option-tabs{display:flex;gap:10px;margin:26px 0 20px;flex-wrap:wrap}
+    .option-tab{
+      border:1px solid var(--line);background:#fff;color:var(--navy);padding:12px 17px;border-radius:14px;font-weight:900;cursor:pointer;
+    }
+    .option-tab.active{color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy))}
+    .option-panel{display:none}
+    .option-panel.active{display:block}
+    .mini-calc{
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:18px;
+      background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;
+    }
+    .mini-calc label{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-bottom:7px}
+    .mini-calc input,.mini-calc select{
+      width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--navy);background:#fff;
+    }
+    .calc-result{border-radius:16px;background:linear-gradient(135deg,#fff6d7,#fff);padding:14px;border:1px solid #efd994}
+    .calc-result small{color:var(--muted)}
+    .calc-result strong{display:block;color:var(--navy);font-size:22px;margin-top:5px}
+
+    .sticky-convert{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(120px);
+      z-index:88;width:min(720px,calc(100% - 24px));padding:12px 14px;border-radius:18px;
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      background:rgba(6,26,68,.94);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(18px);
+      color:#fff;box-shadow:0 18px 55px rgba(0,0,0,.28);transition:.45s ease;
+    }
+    .sticky-convert.show{transform:translateX(-50%) translateY(0)}
+    .sticky-convert small{display:block;color:#c9d8ee;margin-top:3px}
+    .support-orb{
+      position:fixed;right:18px;bottom:88px;z-index:89;width:58px;height:58px;border-radius:999px;
+      display:grid;place-items:center;border:0;cursor:pointer;color:#fff;font-size:23px;
+      background:linear-gradient(135deg,var(--red),var(--blue));box-shadow:0 15px 35px rgba(6,26,68,.25);
+    }
+    .support-menu{
+      position:fixed;right:18px;bottom:156px;z-index:89;width:230px;padding:12px;border-radius:18px;
+      background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);display:none;
+    }
+    .support-menu.show{display:grid;gap:8px}
+    .support-menu a,.support-menu button{
+      border:0;background:#f5f8fd;border-radius:12px;padding:12px;text-align:left;color:var(--navy);font-weight:800;cursor:pointer;
+    }
+
+    @media(max-width:800px){
+      .journey{grid-template-columns:1fr 1fr}
+      .journey::before{display:none}
+      .mini-calc{grid-template-columns:1fr}
+    }
+
+  
+    .about-prose{
+      margin-top:30px;max-width:920px;display:grid;gap:14px;
+    }
+    .about-prose p{
+      margin:0;padding:20px 22px;border-left:4px solid var(--gold);
+      background:rgba(255,255,255,.72);border-radius:0 18px 18px 0;
+      color:var(--muted);line-height:1.78;
+    }
+    .about-prose strong{color:var(--navy)}
+    .official-links{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px;
+    }
+    .official-link{
+      display:flex;flex-direction:column;gap:8px;padding:20px;border-radius:20px;
+      background:#fff;border:1px solid var(--line);box-shadow:0 14px 35px rgba(6,26,68,.07);
+      transition:.25s ease;
+    }
+    .official-link:hover{transform:translateY(-4px);border-color:#b9cce8}
+    .official-link b{color:var(--navy)}
+    .official-link span{color:var(--muted);font-size:13px;line-height:1.5}
+    .official-badge{
+      display:inline-flex;width:max-content;padding:6px 9px;border-radius:999px;
+      background:#edf4ff;color:var(--blue);font-size:11px;font-weight:900;
+    }
+    .policy-note{
+      margin-top:26px;padding:18px 20px;border-radius:18px;
+      background:#fff8df;border:1px solid #ebd896;color:#6e5712;line-height:1.65;
+    }
+    .footer-grid{
+      max-width:1120px;margin:auto;display:grid;grid-template-columns:1.3fr repeat(3,1fr);
+      gap:28px;text-align:left;padding-bottom:28px;
+    }
+    .footer-col h4{color:var(--navy);margin:0 0 12px}
+    .footer-col a{display:block;margin:9px 0;color:#65738c}
+    .footer-col a:hover{color:var(--blue)}
+    .footer-brand p{line-height:1.65;max-width:360px}
+    .legal-line{max-width:1120px;margin:auto;border-top:1px solid var(--line);padding-top:22px}
+    .install-btn{
+      display:none;position:fixed;left:18px;bottom:88px;z-index:89;border:0;border-radius:15px;
+      padding:13px 16px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy));
+      box-shadow:0 15px 35px rgba(6,26,68,.25);cursor:pointer;
+    }
+    .install-btn.show{display:block}
+    @media(max-width:900px){
+      .official-links{grid-template-columns:1fr 1fr}
+      .footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:600px){
+      .official-links,.footer-grid{grid-template-columns:1fr}
+    }
+
+  </style>
+</head>
+<body>
+  <div class="intro" id="intro">
+    <div class="intro-core">
+      <img src="assets/logo.jpg" alt="Aquila Crest Capital logo">
+      <h2>AQUILA CREST CAPITAL</h2>
+      <p>DIGITAL MEMBER EXPERIENCE</p>
+      <div class="intro-line"></div>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top">
+        <img src="assets/logo.jpg" alt="Aquila Crest Capital logo">
+        <div><strong>Aquila Crest Capital</strong><span>Digital Member Platform</span></div>
+      </a>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#platform">Platform</a>
+        <a href="#options">Options</a>
+        <a href="#community">Community</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-glass" data-dashboard>Member Login</button>
+        <button class="btn btn-primary" data-dashboard>Get Started</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">🦅 Built for the modern Filipino digital community</div>
+        <h1>Rise with <span class="gold">strength.</span><br>Grow with <span class="gold">confidence.</span></h1>
+        <p>
+          One connected experience for account access, capital tools, transaction monitoring,
+          community updates, and member support.
+        </p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-dashboard>CREATE ACCOUNT</button>
+          <a class="btn btn-glass" href="#platform">EXPLORE PLATFORM</a>
+        </div>
+        <div class="micro-proof">
+          <span><i class="dot-check">✓</i> Mobile-ready dashboard</span>
+          <span><i class="dot-check">✓</i> Real-time activity updates</span>
+          <span><i class="dot-check">✓</i> Organized member support</span>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+        <div class="glow"></div>
+        <div class="dashboard-frame" id="dashboardFrame">
+          <img src="assets/dashboard1.jpg" alt="Aquila member dashboard preview">
+        </div>
+        <div class="glass-card g1"><small>Active Capital Reserve</small><strong>₱5,000.00</strong></div>
+        <div class="glass-card g2"><small>Withdrawal Status</small><strong style="color:#12965a">RELEASED</strong></div>
+        <div class="glass-card g3"><small>Member Access</small><strong>24/7</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="ticker">
+    <div class="ticker-track">
+      <span>SECURE MEMBER PORTAL</span><span>•</span><span>CAPITAL RESERVE</span><span>•</span><span>TELEGRAM UPDATES</span><span>•</span><span>DISCORD COMMUNITY</span><span>•</span><span>MOBILE READY</span><span>•</span>
+      <span>SECURE MEMBER PORTAL</span><span>•</span><span>CAPITAL RESERVE</span><span>•</span><span>TELEGRAM UPDATES</span><span>•</span><span>DISCORD COMMUNITY</span><span>•</span><span>MOBILE READY</span><span>•</span>
+    </div>
+  </div>
+
+  <main>
+    <section class="section reveal" id="about">
+      <div class="section-kicker">Why Aquila</div>
+      <h2>A connected platform, not just a login page.</h2>
+      <p class="section-lead">
+        Aquila combines account tools, dashboard monitoring, Capital Reserve features,
+        transaction visibility, Telegram updates, Discord resources, and support into one member experience.
+      </p>
+
+      
+      <div class="about-prose">
+        <p><strong>Aquila Crest Capital</strong> was created to make the member experience clearer, more organized, and easier to access. The platform brings together the established Aquila system, member records, account activity, capital options, official announcements, and support channels in one connected digital environment.</p>
+        <p>Our focus is not to replace the system our members already know. It is to strengthen it through better presentation, improved accessibility, clearer records, and a consistent mobile-first experience. Existing platform rules, member processes, and operational workflows remain aligned with the current Aquila structure.</p>
+        <p>More than a website, Aquila is a growing community built around organization, communication, and continuous improvement. As the platform develops, every enhancement is designed to support the same trusted member journey while making the experience more professional, responsive, and ready for the future.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><strong data-count="24">0</strong><span>Dashboard access, every day</span></div>
+        <div class="stat"><strong data-count="1">0</strong><span>Connected member ecosystem</span></div>
+        <div class="stat"><strong data-count="7">0</strong><span>Core transaction histories</span></div>
+        <div class="stat"><strong data-count="2">0</strong><span>Community communication hubs</span></div>
+      </div>
+
+      <div class="story-grid">
+        <div class="story-card"><div class="story-icon">📊</div><h3>Clarity first</h3><p>Members can review balances, activity, history, projections, and account details without jumping between disconnected tools.</p></div>
+        <div class="story-card"><div class="story-icon">🔔</div><h3>Updates that follow the activity</h3><p>Important events can appear through dashboard history, Telegram notifications, and Discord transaction channels.</p></div>
+      </div>
+    </section>
+
+
+    <section class="section reveal" id="journey">
+      <div class="section-kicker">How It Works</div>
+      <h2>A simple path from registration to account monitoring.</h2>
+      <p class="section-lead">The goal is to make every next step easy to understand before a visitor enters the member portal.</p>
+      <div class="journey">
+        <div class="journey-step"><div class="journey-icon">👤</div><b>Create Account</b><span>Register and secure your member access.</span></div>
+        <div class="journey-step"><div class="journey-icon">🔐</div><b>Open Dashboard</b><span>Access your account tools and activity view.</span></div>
+        <div class="journey-step"><div class="journey-icon">⚖️</div><b>Choose an Option</b><span>Review Passive Yield or Capital Reserve details.</span></div>
+        <div class="journey-step"><div class="journey-icon">📊</div><b>Monitor Activity</b><span>Track records, balances, and status updates.</span></div>
+        <div class="journey-step"><div class="journey-icon">🔔</div><b>Receive Updates</b><span>Follow notifications and community announcements.</span></div>
+      </div>
+    </section>
+
+    <section class="ecosystem" id="platform">
+      <div class="section reveal">
+        <div class="section-kicker" style="color:#ffd86b">Aquila Ecosystem</div>
+        <h2>Everything works together.</h2>
+        <p class="section-lead">
+          Each part of the platform supports the next step—from account access to monitoring, support, and transaction updates.
+        </p>
+        <div class="eco-grid">
+          <div class="eco-card"><div class="eco-no">01</div><b>Member Dashboard</b><p>Balances, account details, history, rankings, and summaries in one place.</p></div>
+          <div class="eco-card"><div class="eco-no">02</div><b>Capital Reserve</b><p>Flexible eligible maturity selection with projection review before submission.</p></div>
+          <div class="eco-card"><div class="eco-no">03</div><b>Transaction Tracking</b><p>Deposit, withdrawal, reinvest, income, and reserve records inside the portal.</p></div>
+          <div class="eco-card"><div class="eco-no">04</div><b>Community Access</b><p>Telegram updates plus Discord guides, FAQs, logs, support, and leader channels.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-kicker">Dashboard Experience</div>
+      <h2>Designed to make important information easier to understand.</h2>
+      <div class="showcase">
+        <div class="phone-stage">
+          <div class="phone a"><img src="assets/dashboard1.jpg" alt="Aquila dashboard overview"></div>
+          <div class="phone b"><img src="assets/dashboard2.jpg" alt="Aquila financial and investment summaries"></div>
+        </div>
+        <div class="feature-stack">
+          <div class="feature"><div class="story-icon">💼</div><div><b>Financial Summary</b><p>View account totals, balances, withdrawals, and reserve information.</p></div></div>
+          <div class="feature"><div class="story-icon">👑</div><div><b>Capital Reserve Tools</b><p>Use the calculator, review projections, track active contracts, and monitor maturity.</p></div></div>
+          <div class="feature"><div class="story-icon">📈</div><div><b>Investment & Income Tracking</b><p>Review active investment, passive information, direct and network income, and history.</p></div></div>
+          <div class="feature"><div class="story-icon">🏆</div><div><b>Community Highlights</b><p>See rankings, milestones, company performance, and member activity.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section reveal">
+      <div class="section-kicker">Platform Activity Preview</div>
+      <h2>A living platform experience.</h2>
+      <p class="section-lead">These sample cards demonstrate how recent activity can appear. They are marked as preview data until connected to live Google Sheets records.</p>
+      <div class="live-panel">
+        <div class="live-head">
+          <div><span class="live-dot"></span><strong>Activity Preview</strong></div>
+          <small>Demo display • Not yet live data</small>
+        </div>
+        <div class="activity-slider">
+          <article class="activity-card active">
+            <small>Transaction update</small>
+            <h3>Withdrawal Released</h3>
+            <div class="amount">₱1,500.00</div>
+            <div class="meta"><span>Status: Released</span><span>Preview event</span></div>
+          </article>
+          <article class="activity-card">
+            <small>Account activity</small>
+            <h3>Capital Reserve Activated</h3>
+            <div class="amount">₱5,000.00</div>
+            <div class="meta"><span>Status: Active</span><span>Preview event</span></div>
+          </article>
+          <article class="activity-card">
+            <small>Member update</small>
+            <h3>Deposit Approved</h3>
+            <div class="amount">₱10,000.00</div>
+            <div class="meta"><span>Status: Approved</span><span>Preview event</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="activity">
+      <div class="section reveal">
+        <div class="section-kicker">Activity Transparency</div>
+        <h2>Important updates are delivered in a clear format.</h2>
+        <div class="activity-grid">
+          <div class="proof-shot"><img src="assets/withdrawal.jpg" alt="Telegram withdrawal released notification"></div>
+          <div class="feed">
+            <div class="feed-item"><div class="story-icon">✅</div><div><strong>Withdrawal Released</strong><p>Transaction ID, amount, type, date, status, and release channel are shown clearly.</p></div></div>
+            <div class="feed-item"><div class="story-icon">🧾</div><div><strong>Structured Transaction Details</strong><p>Consistent labels make updates easier to follow and verify.</p></div></div>
+            <div class="feed-item"><div class="story-icon">🌐</div><div><strong>Connected Back to the Platform</strong><p>Members can move from notification back to the Aquila website and dashboard.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="options">
+      <div class="section-kicker">Choose Your Approach</div>
+      <h2>Two platform options for different preferences.</h2>
+      <p class="section-lead">
+        Members can review the rules, compare the structures, and choose the option that best matches their preferred monitoring and maturity setup.
+      </p>
+      <div class="option-tabs" role="tablist">
+        <button class="option-tab active" data-option="passive" type="button">Passive Yield</button>
+        <button class="option-tab" data-option="reserve" type="button">Capital Reserve</button>
+      </div>
+
+      <div class="option-panel active" id="option-passive">
+        <div class="mini-calc">
+          <div>
+            <label for="passiveAmount">Sample amount</label>
+            <input id="passiveAmount" type="number" min="1000" step="1000" value="1000">
+          </div>
+          <div>
+            <label>Fixed cycle</label>
+            <div class="calc-result"><small>Term</small><strong>60 days</strong></div>
+          </div>
+          <div>
+            <label>Sample daily display</label>
+            <div class="calc-result"><small>Using 3% illustration</small><strong id="passiveResult">₱30.00</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="option-panel" id="option-reserve">
+        <div class="mini-calc">
+          <div>
+            <label for="reserveAmount">Reserve amount</label>
+            <input id="reserveAmount" type="number" min="300" step="100" value="5000">
+          </div>
+          <div>
+            <label for="reserveDays">Eligible maturity</label>
+            <select id="reserveDays">
+              <option value="15">15 days</option>
+              <option value="30">30 days</option>
+              <option value="45">45 days</option>
+              <option value="60">60 days</option>
+              <option value="90">90 days</option>
+            </select>
+          </div>
+          <div>
+            <label>Calculator status</label>
+            <div class="calc-result"><small>Selected setup</small><strong id="reserveResult">₱5,000 • 15 days</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="compare-card blue">
+          <h3>Passive Yield</h3>
+          <p>For members who prefer a fixed cycle with daily earning visibility in the dashboard.</p>
+          <ul>
+            <li>Minimum: ₱1,000</li>
+            <li>3% daily passive yield</li>
+            <li>Fixed 60-day maturity</li>
+            <li>Daily earnings visible in dashboard</li>
+          </ul>
+        </div>
+        <div class="compare-card red">
+          <h3>Capital Reserve</h3>
+          <p>For members who prefer eligible flexible maturity selection and an upfront projection.</p>
+          <ul>
+            <li>Minimum: ₱300</li>
+            <li>Choose eligible maturity date</li>
+            <li>From 7 days up to 1 year</li>
+            <li>Projected return shown before deposit</li>
+          </ul>
+        </div>
+      </div>
+      <div class="plan-poster"><img src="assets/plans.jpg" alt="Passive Yield and Capital Reserve comparison"></div>
+    </section>
+
+    <section class="section reveal" id="community">
+      <div class="section-kicker">Community & Support</div>
+      <h2>Guides, logs, and updates—organized for members.</h2>
+      <div class="community-grid">
+        <div class="community-card">
+          <img src="assets/telegram.jpg" alt="Aquila Telegram community updates">
+          <h3>Telegram Updates</h3><a class="btn btn-dark" href="https://t.me/aquilacrestcapital" target="_blank" rel="noopener">JOIN TELEGRAM</a>
+          <p>Transaction activity and member updates appear in a clear, easy-to-read format.</p>
+        </div>
+        <div class="community-card">
+          <img src="assets/discord.jpg" alt="Aquila Discord server channels">
+          <h3>Discord Knowledge Hub</h3><a class="btn btn-dark" href="https://discord.gg/9JHYkPZkXS" target="_blank" rel="noopener">JOIN DISCORD</a>
+          <p>Members can access guides, FAQs, support, transaction logs, and leader resources through organized channels.</p>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section class="section reveal" id="corporate">
+      <div class="section-kicker">Aquila Corporate Center</div>
+      <h2>Official leadership, news, and transparency.</h2>
+      <p class="section-lead">The corporate center strengthens Aquila’s public presentation while preserving the existing Member Portal and familiar member system.</p>
+      <div class="feature-grid">
+        <a class="feature-card" href="leadership.html"><span class="feature-icon">👔</span><h3>Leadership Center</h3><p>View official Aquila leadership profiles, beginning with the Philippine Country Manager.</p></a>
+        <a class="feature-card" href="news.html"><span class="feature-icon">📰</span><h3>News & Announcements</h3><p>Read verified public platform and leadership updates.</p></a>
+        <a class="feature-card" href="transparency.html"><span class="feature-icon">✓</span><h3>Transparency Center</h3><p>See what was improved publicly and what remains unchanged in the member system.</p></a>
+      </div>
+    </section>
+
+    <section class="section reveal" id="official-channels">
+      <div class="section-kicker">Official Aquila Channels</div>
+      <h2>Connect only through verified Aquila links.</h2>
+      <p class="section-lead">For account access, announcements, community discussions, and support, use the official channels listed below.</p>
+      <div class="official-links">
+        <a class="official-link" href="https://script.google.com/macros/s/AKfycbwsX7fvxdza7pGepFtME77y0BK3D6AzQ8qIQMQOe51RfPk2rK-sCCbexo8PpdC2cpRG/exec" target="_blank" rel="noopener">
+          <span class="official-badge">MEMBER ACCESS</span><b>Member Portal</b><span>Secure access to the existing Aquila member system.</span>
+        </a>
+        <a class="official-link" href="https://t.me/aquilacrestcapital" target="_blank" rel="noopener">
+          <span class="official-badge">OFFICIAL</span><b>Telegram Community</b><span>Platform announcements and member updates.</span>
+        </a>
+        <a class="official-link" href="https://m.me/j/AbYdk_yzq3OXYb5o/?send_source=gc%3Acopy_invite_link_t" target="_blank" rel="noopener">
+          <span class="official-badge">COMMUNITY</span><b>Facebook Group Chat</b><span>Official community conversation and coordination.</span>
+        </a>
+        <a class="official-link" href="https://discord.gg/9JHYkPZkXS" target="_blank" rel="noopener">
+          <span class="official-badge">KNOWLEDGE HUB</span><b>Discord Server</b><span>Guides, channels, resources, and organized support.</span>
+        </a>
+      </div>
+      <div class="policy-note"><strong>Security reminder:</strong> Aquila representatives will never ask you to disclose your password through public comments or unofficial channels. Always verify the website address and use the official links above.</div>
+    </section>
+
+    <section class="section reveal" id="faq">
+      <div class="section-kicker">Frequently Asked Questions</div>
+      <h2>Clear answers before you continue.</h2>
+      <div class="faq">
+        <details><summary>What is Aquila Crest Capital?</summary><p>Aquila Crest Capital is a digital member platform that centralizes account tools, transaction monitoring, Capital Reserve features, community access, and support resources.</p></details>
+        <details><summary>Can I use the platform on mobile?</summary><p>Yes. The landing page and member dashboard are designed for phones, tablets, and desktop browsers.</p></details>
+        <details><summary>How do I see my activity?</summary><p>Members can review deposit, withdrawal, reinvest, income, bonus, support, and Capital Reserve records inside the dashboard.</p></details>
+        <details><summary>How does Capital Reserve work?</summary><p>The calculator applies the minimum maturity required for the entered amount. Members may choose an eligible later date up to the platform maximum and review the projection before proceeding.</p></details>
+        <details><summary>Where do members get help?</summary><p>Support is available through the member dashboard and organized community channels.</p></details>
+      </div>
+    </section>
+
+    <section class="cta reveal">
+      <div class="cta-inner">
+        <div>
+          <div class="section-kicker" style="color:#ffd86b">Your Next Step</div>
+          <h2>Ready to experience the Aquila platform?</h2>
+          <p>Enter the member portal to create your account, access your dashboard, and explore the tools available inside the Aquila ecosystem.</p>
+          <div class="hero-cta">
+            <button class="btn btn-primary" data-dashboard>CREATE ACCOUNT</button>
+            <button class="btn btn-glass" data-dashboard>MEMBER LOGIN</button>
+          </div>
+        </div>
+        <div class="cta-logo"><img src="assets/logo.jpg" alt="Aquila Crest Capital emblem"></div>
+      </div>
+    </section>
+  </main>
+
+
+  <div class="sticky-convert" id="stickyConvert">
+    <div><strong>Ready to explore the member portal?</strong><small>Create an account or sign in to continue.</small></div>
+    <button class="btn btn-primary" data-dashboard>GET STARTED</button>
+  </div>
+
+  <button class="install-btn" id="installBtn" type="button">INSTALL AQUILA</button>
+
+  <button class="support-orb" id="supportOrb" aria-label="Open support options">💬</button>
+  <div class="support-menu" id="supportMenu">
+    <button type="button" data-dashboard>Open Member Portal</button>
+    <a href="#faq">Read FAQ</a>
+    <a href="#community">Community Channels</a>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-col footer-brand">
+        <h4>AQUILA CREST CAPITAL</h4>
+        <p>The official digital gateway to the existing Aquila member system, platform information, community channels, and support resources.</p>
+        <a href="mailto:capitalaquilacrest@gmail.com">capitalaquilacrest@gmail.com</a>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="https://script.google.com/macros/s/AKfycbwsX7fvxdza7pGepFtME77y0BK3D6AzQ8qIQMQOe51RfPk2rK-sCCbexo8PpdC2cpRG/exec" target="_blank" rel="noopener">Member Portal</a>
+        <a href="#about">About Aquila</a>
+        <a href="leadership.html">Leadership Center</a>
+        <a href="news.html">News & Announcements</a>
+        <a href="transparency.html">Transparency Center</a>
+        <a href="#platform">Platform Features</a>
+        <a href="#faq">Frequently Asked Questions</a>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://t.me/aquilacrestcapital" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://m.me/j/AbYdk_yzq3OXYb5o/?send_source=gc%3Acopy_invite_link_t" target="_blank" rel="noopener">Facebook Group Chat</a>
+        <a href="https://discord.gg/9JHYkPZkXS" target="_blank" rel="noopener">Discord Server</a>
+        <a href="mailto:capitalaquilacrest@gmail.com">Email Support</a>
+      </div>
+      <div class="footer-col">
+        <h4>Policies</h4>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-of-use.html">Terms of Use</a>
+        <a href="disclaimer.html">Disclaimer</a>
+      </div>
+    </div>
+    <div class="legal-line">
+      <strong>Aquila Crest Capital & Renewable Inc.</strong><br>
+      © 2026 Aquila Crest Capital. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    const DASHBOARD_URL = "https://script.google.com/macros/s/AKfycbwsX7fvxdza7pGepFtME77y0BK3D6AzQ8qIQMQOe51RfPk2rK-sCCbexo8PpdC2cpRG/exec";
+
+    const nav = document.getElementById("nav");
+    const progress = document.getElementById("progress");
+    const frame = document.getElementById("dashboardFrame");
+    const stage = document.getElementById("stage");
+
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + "%";
+      nav.classList.toggle("scrolled", scrollTop > 24);
+    });
+
+    if (stage && frame) {
+      stage.addEventListener("mousemove", (e) => {
+        const r = stage.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - .5;
+        const y = (e.clientY - r.top) / r.height - .5;
+        frame.style.transform =
+          `perspective(1300px) rotateY(${(-8 + x * 7).toFixed(2)}deg) rotateX(${(3 - y * 5).toFixed(2)}deg) rotateZ(1deg)`;
+      });
+
+      stage.addEventListener("mouseleave", () => {
+        frame.style.transform = "perspective(1300px) rotateY(-8deg) rotateX(3deg) rotateZ(1deg)";
+      });
+    }
+
+    document.querySelectorAll("[data-dashboard]").forEach(button => {
+      button.addEventListener("click", () => {
+        if (!DASHBOARD_URL || DASHBOARD_URL.includes("PASTE_YOUR")) {
+          alert("Dashboard link is not connected yet. Add the current Google Apps Script web app URL to DASHBOARD_URL.");
+          return;
+        }
+        window.location.href = DASHBOARD_URL;
+      });
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+
+          entry.target.querySelectorAll("[data-count]").forEach(counter => {
+            const target = Number(counter.dataset.count || 0);
+            let current = 0;
+            const step = Math.max(1, Math.ceil(target / 30));
+            const timer = setInterval(() => {
+              current += step;
+              if (current >= target) {
+                current = target;
+                clearInterval(timer);
+              }
+              counter.textContent = target === 24 ? current + "/7" : current;
+            }, 35);
+          });
+        }
+      });
+    }, {threshold:.12});
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+    const intro = document.getElementById("intro");
+    window.addEventListener("load", () => {
+      setTimeout(() => intro && intro.classList.add("hide"), 1650);
+    });
+
+    const activityCards = [...document.querySelectorAll(".activity-card")];
+    let activityIndex = 0;
+    if (activityCards.length) {
+      setInterval(() => {
+        activityCards[activityIndex].classList.remove("active");
+        activityIndex = (activityIndex + 1) % activityCards.length;
+        activityCards[activityIndex].classList.add("active");
+      }, 2800);
+    }
+
+    document.querySelectorAll(".option-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".option-tab").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll(".option-panel").forEach(p => p.classList.remove("active"));
+        tab.classList.add("active");
+        const panel = document.getElementById("option-" + tab.dataset.option);
+        if (panel) panel.classList.add("active");
+      });
+    });
+
+    const peso = value => new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP"}).format(value);
+    const passiveAmount = document.getElementById("passiveAmount");
+    const passiveResult = document.getElementById("passiveResult");
+    const updatePassive = () => {
+      const amount = Math.max(0, Number(passiveAmount?.value || 0));
+      if (passiveResult) passiveResult.textContent = peso(amount * .03);
+    };
+    passiveAmount?.addEventListener("input", updatePassive);
+
+    const reserveAmount = document.getElementById("reserveAmount");
+    const reserveDays = document.getElementById("reserveDays");
+    const reserveResult = document.getElementById("reserveResult");
+    const updateReserve = () => {
+      if (reserveResult) reserveResult.textContent = `${peso(Number(reserveAmount?.value || 0))} • ${reserveDays?.value || 0} days`;
+    };
+    reserveAmount?.addEventListener("input", updateReserve);
+    reserveDays?.addEventListener("change", updateReserve);
+
+    const stickyConvert = document.getElementById("stickyConvert");
+    window.addEventListener("scroll", () => {
+      if (!stickyConvert) return;
+      const threshold = document.documentElement.scrollHeight * .52;
+      stickyConvert.classList.toggle("show", window.scrollY > threshold && window.scrollY < document.documentElement.scrollHeight - window.innerHeight - 450);
+    });
+
+    const supportOrb = document.getElementById("supportOrb");
+    const supportMenu = document.getElementById("supportMenu");
+    supportOrb?.addEventListener("click", () => supportMenu?.classList.toggle("show"));
+
+  
+    let deferredInstallPrompt = null;
+    const installBtn = document.getElementById("installBtn");
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      installBtn?.classList.add("show");
+    });
+    installBtn?.addEventListener("click", async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      installBtn.classList.remove("show");
+    });
+    window.addEventListener("appinstalled", () => installBtn?.classList.remove("show"));
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
+    }
+
+  </script>
+</body>
+</html>
