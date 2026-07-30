@@ -1,12 +1,11 @@
-# Aquila Platform V6
+# Aquila Platform V7
 
-Production-ready static corporate website for Cloudflare Workers Static Assets.
+Production static website for Cloudflare Workers Static Assets.
 
-## Cloudflare settings
-- Repository: `aquila-platform`
-- Production branch: `main`
-- Build command: leave blank
+## Deployment
+- Build command: None
 - Deploy command: `npx wrangler deploy`
 - Root directory: `/`
+- Production branch: `main`
 
-The existing Google Apps Script Member Portal is linked from the website and is not modified by this repository.
+The existing Google Apps Script Member Portal remains separate and unchanged.

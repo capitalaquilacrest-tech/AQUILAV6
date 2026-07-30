@@ -1,0 +1,11 @@
+IMPORTANT: EXTRACT THE ZIP FIRST.
+
+Upload the CONTENTS of this folder to the repository root:
+- site folder
+- package.json
+- wrangler.jsonc
+- README.md
+- .gitignore
+
+Do not upload the ZIP itself.
+Inside site, the assets folder must appear alongside index.html.

@@ -1,9 +1,10 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "aquilav6",
   "compatibility_date": "2026-07-30",
+  "workers_dev": true,
+  "preview_urls": true,
   "assets": {
-    "directory": "./site",
-    "not_found_handling": "single-page-application"
+    "directory": "./site"
   }
 }

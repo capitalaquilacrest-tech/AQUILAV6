@@ -1,6 +1,6 @@
 {
-  "name": "aquila-platform",
-  "version": "6.0.0",
+  "name": "aquila-platform-v7",
+  "version": "7.0.0",
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
