@@ -438,7 +438,7 @@
     .chat-main{min-height:0;position:relative;background:linear-gradient(180deg,#f4f8fe,#fff);overflow:hidden}
     .chat-messages{height:100%;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
     .chat-empty{margin:auto;padding:26px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.55}.chat-empty strong{display:block;color:var(--navy);font-size:17px;margin-bottom:7px}
-    .chat-row{display:flex;flex-direction:column;align-items:flex-start;max-width:86%;transition:.25s}.chat-row.admin{align-self:stretch;max-width:94%}.chat-row.chat-highlight{filter:drop-shadow(0 0 8px rgba(219,168,43,.55));transform:translateX(3px)}.chat-meta{font-size:10px;color:#7c8ba4;margin:0 8px 4px}.chat-meta b{color:var(--navy)}.chat-edited{font-style:italic}.chat-admin-badge{display:inline-block;margin-left:4px;padding:2px 5px;border-radius:6px;background:#e8f1ff;color:var(--blue);font-size:8px;font-weight:950}.chat-bubble{padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:13px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);overflow-wrap:anywhere}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-quote{display:block;width:100%;margin:0 0 7px;padding:7px 9px;border:0;border-left:3px solid var(--gold);border-radius:8px;background:rgba(6,26,68,.07);color:#53657f;text-align:left;font-size:10px;line-height:1.35;cursor:pointer;overflow:hidden}.chat-row.admin .chat-quote{background:rgba(255,255,255,.12);color:#e5edfb}.chat-quote b,.chat-quote span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-quote b{color:var(--navy);margin-bottom:2px}.chat-row.admin .chat-quote b{color:#fff}.chat-message-actions{display:flex;align-items:center;gap:8px;margin:4px 6px 0;flex-wrap:wrap}.chat-message-actions button{border:0;background:none;padding:2px;color:#72829a;font-size:9px;font-weight:850;cursor:pointer}.chat-message-actions button:hover{color:var(--blue)}.chat-message-actions .chat-unsend{color:#ad2637}.chat-reaction-picker{display:none;gap:3px;padding:4px;border:1px solid #dbe5f1;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(6,26,68,.13)}.chat-reaction-picker.show{display:flex}.chat-reaction-picker button{width:27px;height:27px;padding:0;border-radius:50%;font-size:15px}.chat-reaction-picker button:hover{background:#edf4ff}.chat-reaction-summary{display:flex;gap:4px;flex-wrap:wrap;margin:4px 5px 0}.chat-reaction-pill{border:1px solid #dce6f3;border-radius:20px;padding:3px 7px;background:#fff;color:#465d7d;font-size:10px;cursor:pointer}.chat-reaction-pill.mine{border-color:#6fa3ef;background:#eaf2ff;color:#174e9f}.chat-mod-actions{display:none;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:8px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
+    .chat-row{display:flex;flex-direction:column;align-items:flex-start;max-width:86%;transition:.25s}.chat-row.admin{align-self:stretch;max-width:94%}.chat-row.chat-highlight{filter:drop-shadow(0 0 8px rgba(219,168,43,.55));transform:translateX(3px)}.chat-row.chat-action-pending{opacity:.5;pointer-events:none}.chat-meta{font-size:10px;color:#7c8ba4;margin:0 8px 4px}.chat-meta b{color:var(--navy)}.chat-edited{font-style:italic}.chat-admin-badge{display:inline-block;margin-left:4px;padding:2px 5px;border-radius:6px;background:#e8f1ff;color:var(--blue);font-size:8px;font-weight:950}.chat-bubble{padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:13px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);overflow-wrap:anywhere}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-quote{display:block;width:100%;margin:0 0 7px;padding:7px 9px;border:0;border-left:3px solid var(--gold);border-radius:8px;background:rgba(6,26,68,.07);color:#53657f;text-align:left;font-size:10px;line-height:1.35;cursor:pointer;overflow:hidden}.chat-row.admin .chat-quote{background:rgba(255,255,255,.12);color:#e5edfb}.chat-quote b,.chat-quote span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-quote b{color:var(--navy);margin-bottom:2px}.chat-row.admin .chat-quote b{color:#fff}.chat-message-actions{display:flex;align-items:center;gap:8px;margin:4px 6px 0;flex-wrap:wrap}.chat-message-actions button{border:0;background:none;padding:2px;color:#72829a;font-size:9px;font-weight:850;cursor:pointer}.chat-message-actions button:hover{color:var(--blue)}.chat-message-actions .chat-unsend{color:#ad2637}.chat-reaction-picker{display:none;gap:3px;padding:4px;border:1px solid #dbe5f1;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(6,26,68,.13)}.chat-reaction-picker.show{display:flex}.chat-reaction-picker button{width:27px;height:27px;padding:0;border-radius:50%;font-size:15px}.chat-reaction-picker button:hover{background:#edf4ff}.chat-reaction-summary{display:flex;gap:4px;flex-wrap:wrap;margin:4px 5px 0}.chat-reaction-pill{border:1px solid #dce6f3;border-radius:20px;padding:3px 7px;background:#fff;color:#465d7d;font-size:10px;cursor:pointer}.chat-reaction-pill.mine{border-color:#6fa3ef;background:#eaf2ff;color:#174e9f}.chat-mod-actions{display:none;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:8px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
     .chat-notice{align-self:center;width:94%;padding:9px 12px;border-radius:12px;text-align:center;font-size:11px;line-height:1.4;background:#eaf2ff;color:#194d9d;border:1px solid #cfe0fb;transition:.25s}.chat-notice.warning{background:#fff2f2;color:#a32635;border-color:#ffd2d8}.chat-notice.fade{opacity:0;transform:translateY(-5px)}
     .chat-name-gate{position:absolute;inset:0;z-index:2;background:rgba(247,250,255,.97);padding:24px 20px;display:grid;place-content:center;text-align:center}.chat-name-gate.hidden{display:none}.chat-name-gate h3{margin:0;color:var(--navy);font-size:20px}.chat-name-gate p{color:var(--muted);font-size:12px;line-height:1.55;margin:8px 0 15px}.chat-name-gate input,.chat-login input,.chat-composer textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:13px;padding:12px;outline:none}.chat-name-gate input+input{margin-top:8px}.chat-name-gate input:focus,.chat-composer textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(15,91,216,.1)}.chat-name-gate button{width:100%;margin-top:9px;border:0;border-radius:13px;padding:12px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--red),var(--blue));cursor:pointer}.chat-admin-password{display:none}.chat-admin-password.show{display:block}.chat-private-note{min-height:18px;margin-top:8px;color:#ae2e3d;font-size:11px}
     .chat-media{display:block;max-width:100%;margin-top:7px}.chat-media-image{width:min(250px,100%);max-height:300px;border-radius:12px;object-fit:cover;cursor:zoom-in;background:#eaf0f8}.chat-media-audio{width:min(260px,100%);height:38px}.chat-media-status{font-size:10px;opacity:.72}.chat-row.admin .chat-media-audio{filter:invert(1) hue-rotate(180deg)}
@@ -1305,7 +1305,7 @@
       stickyConvert.classList.toggle("show", window.scrollY > threshold && window.scrollY < document.documentElement.scrollHeight - window.innerHeight - 450);
     });
 
-    // AQUILA PUBLIC LIVE CHAT V3
+    // AQUILA PUBLIC LIVE CHAT V4.1
     // Paste the Project URL and Publishable/Anon Key from Supabase > Project Settings > API.
     const AQUILA_CHAT_CONFIG = Object.freeze({
       supabaseUrl: "https://jkewnkgkcjiszwvszkkw.supabase.co",
@@ -1565,16 +1565,30 @@
         renderChatNotice("Message edited.","info",3500);await reloadChatMessages();
       }catch(error){renderChatNotice("Hindi ma-edit ang message ngayon. Subukan ulit.","warning",6000);console.error("Edit own message:",error)}
     }
+    function chatMessageActionError(error,action){
+      const raw=String(error?.message||error?.details||error?.hint||error||"");
+      const value=raw.toLowerCase();
+      if(value.includes("could not find the function")||value.includes("schema cache")||value.includes("chat_unsend_own_message")||value.includes("chat_admin_delete_message")){
+        return `Hindi pa updated ang message controls sa database. I-run muna ang Message Actions SQL Fix, saka subukan ulit ang ${action}.`;
+      }
+      if(value.includes("admin required")||value.includes("permission")||value.includes("unauthorized")||value.includes("jwt")){
+        return action==="admin delete"?"Na-expire ang admin session. Mag-login ulit bilang ACC Admin, saka subukan muli.":"Hindi makumpirma na ikaw ang may-ari ng message. Isara at buksan ulit ang chat.";
+      }
+      return `Hindi natuloy ang ${action}. Subukan ulit pagkatapos i-refresh ang chat.`;
+    }
     async function unsendOwnMessage(message){
       if(!chatDb||message?.sender_id!==chatSession?.user?.id)return;
       if(!window.confirm("Unsend this message for everyone? Hindi na ito makikita sa public chat."))return;
+      const row=chatMessages?.querySelector(`[data-message-id="${CSS.escape(String(message.id))}"]`);
+      row?.classList.add("chat-action-pending");
       try{
         const {data,error}=await chatDb.rpc("chat_unsend_own_message",{p_message_id:message.id});
         if(error)throw error;if(!data?.ok){renderChatNotice(data?.notice||"Hindi ma-unsend ang message.","warning",6000);return;}
         const mediaPath=data.media_path||message.media_path;
         if(mediaPath){const removal=await chatDb.storage.from("chat-media").remove([mediaPath]);if(!removal.error)mediaUrlCache.delete(mediaPath);}
-        removeChatMessage(message.id);renderChatNotice("Message unsent for everyone.","info",3500);
-      }catch(error){renderChatNotice("Hindi ma-unsend ang message ngayon. Subukan ulit.","warning",6000);console.error("Unsend own message:",error)}
+        removeChatMessage(message.id);renderChatNotice("Message unsent for everyone.","info",3500);await reconcileChatMessages();
+      }catch(error){renderChatNotice(chatMessageActionError(error,"unsend"),"warning",7500);console.error("Unsend own message:",error)}
+      finally{row?.classList.remove("chat-action-pending")}
     }
     function renderChatMessage(message,countUnread=true){
       if(!message?.id || message.status!=="visible" || renderedMessageIds.has(message.id)) return;
@@ -1774,13 +1788,17 @@
       if(!window.confirm(`ACC Admin: ${label}?`))return;
       try{
         if(action==="delete"){
-          const {error}=await chatDb.rpc("chat_admin_delete_message",{p_message_id:message.id,p_reason:"Removed from inline ACC moderation"});if(error)throw error;
-          if(message.media_path)await chatDb.storage.from("chat-media").remove([message.media_path]);
+          const {data,error}=await chatDb.rpc("chat_admin_delete_message",{p_message_id:message.id,p_reason:"Removed from inline ACC moderation"});if(error)throw error;
+          const deleted=typeof data==="boolean"?data:data?.ok;
+          if(!deleted){renderChatNotice(data?.notice||"Hindi na-delete ang message. Maaaring deleted na ito o hindi na visible.","warning",6000);return;}
+          const mediaPath=data?.media_path||message.media_path;
+          if(mediaPath){const removal=await chatDb.storage.from("chat-media").remove([mediaPath]);if(!removal.error)mediaUrlCache.delete(mediaPath);}
+          removeChatMessage(message.id);
         }else{
           const {error}=await chatDb.rpc("chat_admin_moderate_user",{p_user_id:message.sender_id,p_action:action,p_minutes:15,p_reason:"Inline ACC moderation"});if(error)throw error;
         }
         renderChatNotice(action==="delete"?"Message removed.":`Visitor ${action} action completed.`,"info",5000);await reloadChatMessages();
-      }catch(error){renderChatNotice("Hindi nagawa ang moderation action. Please try again.","warning");console.error(error)}
+      }catch(error){renderChatNotice(action==="delete"?chatMessageActionError(error,"admin delete"):"Hindi nagawa ang moderation action. Please try again.","warning",7500);console.error(error)}
     }
     async function logoutInlineAdmin(){
       if(!chatDb)return;
