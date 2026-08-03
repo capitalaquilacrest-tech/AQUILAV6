@@ -995,6 +995,7 @@
         <button class="chat-tool" id="chatPhotoButton" type="button" aria-label="Attach photo" title="Attach photo" disabled>📷</button>
         <button class="chat-tool" id="chatVoiceButton" type="button" aria-label="Record voice message" title="Record voice message" disabled>🎤</button>
         <input id="chatPhotoInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+        <input id="chatVoiceInput" type="file" accept="audio/*,.m4a,.mp3,.wav,.ogg,.webm,.aac,.3gp" capture="user" hidden>
         <textarea id="chatInput" rows="1" maxlength="500" placeholder="Ask about Aquila Crest…" aria-label="Chat message" disabled></textarea>
         <button class="chat-send" id="chatSend" type="button" aria-label="Send message" disabled>➤</button>
       </div>
@@ -1337,6 +1338,7 @@
     const chatPhotoButton = document.getElementById("chatPhotoButton");
     const chatVoiceButton = document.getElementById("chatVoiceButton");
     const chatPhotoInput = document.getElementById("chatPhotoInput");
+    const chatVoiceInput = document.getElementById("chatVoiceInput");
     let chatDb = null;
     let chatSession = null;
     let chatProfile = null;
@@ -1350,6 +1352,7 @@
     let voiceChunks = [];
     let voiceStartedAt = 0;
     let voiceTimer = null;
+    let voiceFallbackNext = false;
     const reactionState = new Map();
     const mediaUrlCache = new Map();
     const allowedReactions = ["👍","❤️","😂","😮","😢"];
@@ -1402,7 +1405,7 @@
     function mediaLabel(message){return message?.media_kind==="image"?"📷 Photo":message?.media_kind==="audio"?"🎤 Voice message":message?.body||"Message";}
     function clearPendingMedia(){
       if(pendingMedia?.previewUrl)URL.revokeObjectURL(pendingMedia.previewUrl);
-      pendingMedia=null;if(chatPhotoInput)chatPhotoInput.value="";chatMediaPreview?.classList.remove("show");
+      pendingMedia=null;if(chatPhotoInput)chatPhotoInput.value="";if(chatVoiceInput)chatVoiceInput.value="";chatMediaPreview?.classList.remove("show");
       if(chatMediaVisual)chatMediaVisual.textContent="";if(chatMediaTitle)chatMediaTitle.textContent="";if(chatMediaDetail)chatMediaDetail.textContent="";
     }
     function showPendingMedia(file,kind,duration=null){
@@ -1413,32 +1416,78 @@
         else{const audio=document.createElement("audio");audio.src=previewUrl;audio.controls=true;audio.preload="metadata";chatMediaVisual.append(audio);}
       }
       if(chatMediaTitle)chatMediaTitle.textContent=kind==="image"?"Photo ready":"Voice message ready";
-      if(chatMediaDetail)chatMediaDetail.textContent=kind==="image"?`${file.name} · ${readableBytes(file.size)}`:`${duration}s · ${readableBytes(file.size)}`;
+      if(chatMediaDetail)chatMediaDetail.textContent=kind==="image"?`${file.name} · ${readableBytes(file.size)}`:`${duration?`${duration}s · `:""}${readableBytes(file.size)}`;
       chatMediaPreview?.classList.add("show");chatInput?.focus();
     }
     function choosePhoto(file){
       if(!file)return;if(!["image/jpeg","image/png","image/webp","image/gif"].includes(file.type)){renderChatNotice("JPG, PNG, WEBP, or GIF images only.","warning",5000);return;}
       if(file.size>5242880){renderChatNotice("Maximum photo size is 5 MB.","warning",5000);return;}showPendingMedia(file,"image");
     }
+    function normalizedAudioFile(file){
+      const ext=(file?.name?.split(".").pop()||"").toLowerCase();
+      const mimeByExt={m4a:"audio/mp4",mp4:"audio/mp4",mp3:"audio/mpeg",wav:"audio/wav",ogg:"audio/ogg",oga:"audio/ogg",webm:"audio/webm",aac:"audio/aac","3gp":"audio/3gpp"};
+      const allowed=["audio/webm","audio/mp4","audio/mpeg","audio/ogg","audio/wav","audio/aac","audio/x-m4a","audio/3gpp"];
+      const mime=allowed.includes(file?.type)?file.type:mimeByExt[ext];
+      return mime?new File([file],file.name||`voice-${Date.now()}.${ext||"m4a"}`,{type:mime,lastModified:file.lastModified||Date.now()}):null;
+    }
+    function audioDuration(file){
+      return new Promise(resolve=>{const url=URL.createObjectURL(file);const audio=document.createElement("audio");let done=false;const finish=value=>{if(done)return;done=true;URL.revokeObjectURL(url);resolve(value)};audio.preload="metadata";audio.onloadedmetadata=()=>finish(Number.isFinite(audio.duration)?Math.max(1,Math.round(audio.duration)):null);audio.onerror=()=>finish(null);audio.src=url;setTimeout(()=>finish(null),3500)});
+    }
+    async function chooseVoiceFile(rawFile){
+      if(!rawFile)return;const file=normalizedAudioFile(rawFile);
+      if(!file){renderChatNotice("Please select an M4A, MP3, WAV, OGG, WEBM, AAC, or 3GP audio file.","warning",6000);return;}
+      if(file.size>5242880){renderChatNotice("Maximum voice-message size is 5 MB.","warning",5000);return;}
+      const duration=await audioDuration(file);if(!duration){renderChatNotice("The duration of this audio could not be read. Please record or choose another clip.","warning",6000);return;}if(duration>60){renderChatNotice("Voice messages can be up to 60 seconds only.","warning",6000);return;}showPendingMedia(file,"audio",duration);
+    }
+    function openVoiceFallback(message){
+      if(message)renderChatNotice(message,"info",6500);voiceFallbackNext=false;chatVoiceInput?.click();
+    }
     function stopVoiceTracks(){if(mediaRecorderStream){mediaRecorderStream.getTracks().forEach(track=>track.stop());mediaRecorderStream=null;}if(voiceTimer){clearTimeout(voiceTimer);voiceTimer=null;}}
+    function isAppleMobileBrowser(){
+      return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+    }
+    function createCompatibleMediaRecorder(stream){
+      const apple=isAppleMobileBrowser();
+      const candidates=apple
+        ? ["audio/mp4;codecs=mp4a.40.2","audio/mp4"]
+        : ["audio/webm;codecs=opus","audio/webm","audio/mp4;codecs=mp4a.40.2","audio/mp4"];
+      for(const type of candidates){
+        try{
+          if(MediaRecorder.isTypeSupported?.(type))return new MediaRecorder(stream,{mimeType:type});
+        }catch(error){console.warn("Voice recorder format unavailable:",type,error)}
+      }
+      return new MediaRecorder(stream);
+    }
     async function toggleVoiceRecording(){
       if(mediaRecorder?.state==="recording"){mediaRecorder.stop();return;}
-      if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){renderChatNotice("Voice recording is not supported in this browser. Open the site in Chrome or Safari.","warning",6000);return;}
+      if(voiceFallbackNext){openVoiceFallback("Choose or record an audio clip from your phone.");return;}
+      if(!window.isSecureContext){openVoiceFallback("Direct microphone recording requires HTTPS. Choose or record an audio clip instead.");return;}
+      if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){openVoiceFallback("This browser blocks direct microphone recording. Choose or record an audio clip instead.");return;}
       try{
-        clearPendingMedia();mediaRecorderStream=await navigator.mediaDevices.getUserMedia({audio:true});voiceChunks=[];voiceStartedAt=Date.now();
-        const preferred=["audio/webm;codecs=opus","audio/mp4","audio/webm"].find(type=>MediaRecorder.isTypeSupported?.(type));
-        mediaRecorder=new MediaRecorder(mediaRecorderStream,preferred?{mimeType:preferred}:undefined);
+        clearPendingMedia();mediaRecorderStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});voiceChunks=[];voiceStartedAt=Date.now();
+        mediaRecorder=createCompatibleMediaRecorder(mediaRecorderStream);
         mediaRecorder.addEventListener("dataavailable",event=>{if(event.data?.size)voiceChunks.push(event.data)});
-        mediaRecorder.addEventListener("stop",()=>{
+        mediaRecorder.addEventListener("stop",async()=>{
           const duration=Math.max(1,Math.min(60,Math.round((Date.now()-voiceStartedAt)/1000)));const mime=(mediaRecorder.mimeType||voiceChunks[0]?.type||"audio/webm").split(";")[0];
           const blob=new Blob(voiceChunks,{type:mime});stopVoiceTracks();chatVoiceButton?.classList.remove("recording");if(chatVoiceButton){chatVoiceButton.textContent="🎤";chatVoiceButton.title="Record voice message";}
+          if(!blob.size){renderChatNotice("No audio was captured. Check the iPhone microphone permission and try again.","warning",6500);return;}
           if(blob.size>5242880){renderChatNotice("Voice recording is larger than 5 MB.","warning",5000);return;}
           const ext=mime.includes("mp4")?"m4a":mime.includes("mpeg")?"mp3":mime.includes("ogg")?"ogg":mime.includes("wav")?"wav":"webm";
-          showPendingMedia(new File([blob],`voice-${Date.now()}.${ext}`,{type:mime}),"audio",duration);
+          const file=new File([blob],`voice-${Date.now()}.${ext}`,{type:mime});
+          const readableDuration=await audioDuration(file);
+          if(!readableDuration){renderChatNotice("The iPhone recording could not be prepared for playback. Tap 🎤 again and use the phone recorder fallback.","warning",7000);voiceFallbackNext=true;return;}
+          showPendingMedia(file,"audio",Math.min(60,readableDuration||duration));
         },{once:true});
-        mediaRecorder.start(250);chatVoiceButton?.classList.add("recording");if(chatVoiceButton){chatVoiceButton.textContent="■";chatVoiceButton.title="Stop recording";}
+        // Do not use a timeslice for MP4/AAC. On iPhone, concatenated MP4 fragments can
+        // produce a file with a duration but silent playback. A single finalized blob is reliable.
+        mediaRecorder.start();chatVoiceButton?.classList.add("recording");if(chatVoiceButton){chatVoiceButton.textContent="■";chatVoiceButton.title="Stop recording";}
         voiceTimer=setTimeout(()=>{if(mediaRecorder?.state==="recording")mediaRecorder.stop()},60000);
-      }catch(error){stopVoiceTracks();chatVoiceButton?.classList.remove("recording");if(chatVoiceButton)chatVoiceButton.textContent="🎤";renderChatNotice("Microphone permission is needed to record a voice message.","warning",6000);console.error(error)}
+      }catch(error){
+        stopVoiceTracks();chatVoiceButton?.classList.remove("recording");if(chatVoiceButton)chatVoiceButton.textContent="🎤";
+        const denied=error?.name==="NotAllowedError"||error?.name==="SecurityError";voiceFallbackNext=denied;
+        renderChatNotice(denied?"Microphone access is blocked. Allow Mic permission in browser settings, or tap 🎤 again to choose/record an audio clip.":"The microphone could not start. Tap 🎤 again to choose or record an audio clip.","warning",7500);
+        if(!denied)voiceFallbackNext=true;console.error(error);
+      }
     }
     async function signedMediaUrl(path){
       if(mediaUrlCache.has(path))return mediaUrlCache.get(path);const {data,error}=await chatDb.storage.from("chat-media").createSignedUrl(path,3600);if(error)throw error;mediaUrlCache.set(path,data.signedUrl);return data.signedUrl;
@@ -1697,6 +1746,7 @@
     chatMediaCancel?.addEventListener("click",clearPendingMedia);
     chatPhotoButton?.addEventListener("click",()=>chatPhotoInput?.click());
     chatPhotoInput?.addEventListener("change",()=>choosePhoto(chatPhotoInput.files?.[0]));
+    chatVoiceInput?.addEventListener("change",()=>chooseVoiceFile(chatVoiceInput.files?.[0]));
     chatVoiceButton?.addEventListener("click",toggleVoiceRecording);
     chatSend?.addEventListener("click",sendLiveChatMessage);
     chatInput?.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendLiveChatMessage()}});
