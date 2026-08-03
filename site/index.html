@@ -1793,6 +1793,23 @@
       if(chatInput)chatInput.disabled=true;if(chatSend)chatSend.disabled=true;if(chatPhotoButton)chatPhotoButton.disabled=true;if(chatVoiceButton)chatVoiceButton.disabled=true;if(chatDisplayName)chatDisplayName.value="";syncAdminGate();
       subscribeToLiveChat(data.user.id);await reloadChatMessages();
     }
+    function createChatUploadId(){
+      if(globalThis.crypto?.randomUUID)return globalThis.crypto.randomUUID();
+      const bytes=new Uint8Array(16);
+      if(globalThis.crypto?.getRandomValues)globalThis.crypto.getRandomValues(bytes);
+      else for(let i=0;i<bytes.length;i++)bytes[i]=Math.floor(Math.random()*256);
+      bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;
+      const hex=[...bytes].map(value=>value.toString(16).padStart(2,"0")).join("");
+      return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
+    }
+    function chatUploadFailureNotice(error){
+      const message=String(error?.message||error||"").toLowerCase();
+      if(message.includes("bucket")&&message.includes("not found"))return "Hindi ma-upload: hindi pa naka-setup ang chat media storage.";
+      if(message.includes("row-level security")||message.includes("unauthorized")||message.includes("permission"))return "Hindi ma-upload: expired o kulang ang upload permission. Isara at buksan ulit ang chat, saka subukan muli.";
+      if(message.includes("mime")||message.includes("content type")||message.includes("unsupported"))return "Hindi suportado ang format ng file na ito. Gumamit ng JPG, PNG, WEBP, o GIF.";
+      if(message.includes("maximum")||message.includes("too large")||message.includes("size"))return "Hindi ma-upload: maximum file size ay 5 MB.";
+      return navigator.onLine?"Hindi natuloy ang photo upload. Subukan ulit o buksan ang website sa Safari/Chrome.":"Nawala ang internet connection. Kumonekta at subukan muli.";
+    }
     async function sendLiveChatMessage(){
       const body=chatInput?.value.trim()||""; if((!body&&!pendingMedia)||!chatDb) return;
       chatSend.disabled=true;if(chatPhotoButton)chatPhotoButton.disabled=true;if(chatVoiceButton)chatVoiceButton.disabled=true;
@@ -1801,7 +1818,7 @@
         let data,error;
         if(pendingMedia){
           const media=pendingMedia;const ext=(media.file.name.split(".").pop()|| (media.kind==="image"?"jpg":"webm")).toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,6)||"bin";
-          uploadedPath=`${chatSession.user.id}/${crypto.randomUUID()}.${ext}`;
+          uploadedPath=`${chatSession.user.id}/${createChatUploadId()}.${ext}`;
           const upload=await chatDb.storage.from("chat-media").upload(uploadedPath,media.file,{cacheControl:"3600",contentType:media.file.type,upsert:false});
           if(upload.error)throw upload.error;
           ({data,error}=await chatDb.rpc("chat_send_media",{p_kind:media.kind,p_path:uploadedPath,p_mime_type:media.file.type,p_size:media.file.size,p_duration:media.kind==="audio"?media.duration:null,p_caption:body||null,p_reply_to:replyingTo?.id||null}));
@@ -1816,7 +1833,7 @@
           return;
         }
         chatInput.value=""; chatInput.style.height="auto";clearPendingMedia();cancelReply();
-      }catch(error){if(uploadedPath)await chatDb.storage.from("chat-media").remove([uploadedPath]);renderChatNotice("Hindi naipadala. Check your connection and try again.","warning");console.error(error)}
+      }catch(error){if(uploadedPath)await chatDb.storage.from("chat-media").remove([uploadedPath]);renderChatNotice(chatUploadFailureNotice(error),"warning");console.error("Live chat send failed:",error)}
       finally{chatSend.disabled=false;if(chatPhotoButton)chatPhotoButton.disabled=false;if(chatVoiceButton)chatVoiceButton.disabled=false;}
     }
     supportOrb?.addEventListener("click",()=>setChatOpen(!chatPanel?.classList.contains("show")));
