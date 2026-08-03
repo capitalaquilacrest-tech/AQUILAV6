@@ -432,12 +432,13 @@
     .chat-panel.show{display:grid;grid-template-rows:auto auto 1fr auto;animation:chatRise .22s ease-out}
     @keyframes chatRise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
     .chat-head{padding:16px 17px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .chat-title{display:flex;align-items:center;gap:11px}.chat-mark{width:38px;height:38px;border-radius:12px;background:#fff;padding:5px;object-fit:contain}.chat-title strong{display:block;font-size:15px}.chat-title small{display:flex;align-items:center;gap:6px;color:#d6e4fb;font-size:11px;margin-top:3px}.chat-dot{width:8px;height:8px;border-radius:50%;background:#ffb020}.chat-dot.online{background:#32d583}.chat-close{border:0;background:rgba(255,255,255,.1);color:#fff;width:34px;height:34px;border-radius:11px;cursor:pointer;font-size:18px}
+    .chat-title{display:flex;align-items:center;gap:11px;min-width:0}.chat-title-copy{min-width:0}.chat-mark{width:38px;height:38px;border-radius:12px;background:#fff;padding:5px;object-fit:contain}.chat-title strong{display:block;font-size:15px}.chat-title small{display:flex;align-items:center;gap:6px;color:#d6e4fb;font-size:11px;margin-top:3px}.chat-dot{width:8px;height:8px;border-radius:50%;background:#ffb020}.chat-dot.online{background:#32d583}.chat-close{border:0;background:rgba(255,255,255,.1);color:#fff;width:34px;height:34px;border-radius:11px;cursor:pointer;font-size:18px;flex:0 0 34px}
+    .chat-identity-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px}.chat-identity-top .chat-state{color:#fff;font-size:10px;font-weight:850}.chat-identity-top .chat-change-name{display:inline-flex;align-items:center;border:1px solid rgba(255,255,255,.55);border-radius:999px;background:#fff;padding:5px 9px;color:var(--blue);font-size:9px;font-weight:950;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.12)}.chat-identity-top .chat-change-name:hover{background:#fff6d8;color:var(--navy)}.chat-panel.admin-mode .chat-identity-top .chat-change-name{display:none}
     .chat-rules{padding:10px 14px;background:#fff9e8;border-bottom:1px solid #f2e2aa;color:#69551d;font-size:11px;line-height:1.45}.chat-rules b{color:var(--navy)}
     .chat-main{min-height:0;position:relative;background:linear-gradient(180deg,#f4f8fe,#fff);overflow:hidden}
     .chat-messages{height:100%;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
     .chat-empty{margin:auto;padding:26px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.55}.chat-empty strong{display:block;color:var(--navy);font-size:17px;margin-bottom:7px}
-    .chat-row{display:flex;flex-direction:column;align-items:flex-start;max-width:86%;transition:.25s}.chat-row.admin{align-self:stretch;max-width:94%}.chat-row.chat-highlight{filter:drop-shadow(0 0 8px rgba(219,168,43,.55));transform:translateX(3px)}.chat-meta{font-size:10px;color:#7c8ba4;margin:0 8px 4px}.chat-meta b{color:var(--navy)}.chat-admin-badge{display:inline-block;margin-left:4px;padding:2px 5px;border-radius:6px;background:#e8f1ff;color:var(--blue);font-size:8px;font-weight:950}.chat-bubble{padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:13px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);overflow-wrap:anywhere}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-quote{display:block;width:100%;margin:0 0 7px;padding:7px 9px;border:0;border-left:3px solid var(--gold);border-radius:8px;background:rgba(6,26,68,.07);color:#53657f;text-align:left;font-size:10px;line-height:1.35;cursor:pointer;overflow:hidden}.chat-row.admin .chat-quote{background:rgba(255,255,255,.12);color:#e5edfb}.chat-quote b,.chat-quote span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-quote b{color:var(--navy);margin-bottom:2px}.chat-row.admin .chat-quote b{color:#fff}.chat-message-actions{display:flex;align-items:center;gap:8px;margin:4px 6px 0}.chat-message-actions button{border:0;background:none;padding:2px;color:#72829a;font-size:9px;font-weight:850;cursor:pointer}.chat-message-actions button:hover{color:var(--blue)}.chat-reaction-picker{display:none;gap:3px;padding:4px;border:1px solid #dbe5f1;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(6,26,68,.13)}.chat-reaction-picker.show{display:flex}.chat-reaction-picker button{width:27px;height:27px;padding:0;border-radius:50%;font-size:15px}.chat-reaction-picker button:hover{background:#edf4ff}.chat-reaction-summary{display:flex;gap:4px;flex-wrap:wrap;margin:4px 5px 0}.chat-reaction-pill{border:1px solid #dce6f3;border-radius:20px;padding:3px 7px;background:#fff;color:#465d7d;font-size:10px;cursor:pointer}.chat-reaction-pill.mine{border-color:#6fa3ef;background:#eaf2ff;color:#174e9f}.chat-mod-actions{display:none;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:8px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
+    .chat-row{display:flex;flex-direction:column;align-items:flex-start;max-width:86%;transition:.25s}.chat-row.admin{align-self:stretch;max-width:94%}.chat-row.chat-highlight{filter:drop-shadow(0 0 8px rgba(219,168,43,.55));transform:translateX(3px)}.chat-meta{font-size:10px;color:#7c8ba4;margin:0 8px 4px}.chat-meta b{color:var(--navy)}.chat-edited{font-style:italic}.chat-admin-badge{display:inline-block;margin-left:4px;padding:2px 5px;border-radius:6px;background:#e8f1ff;color:var(--blue);font-size:8px;font-weight:950}.chat-bubble{padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:13px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);overflow-wrap:anywhere}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-quote{display:block;width:100%;margin:0 0 7px;padding:7px 9px;border:0;border-left:3px solid var(--gold);border-radius:8px;background:rgba(6,26,68,.07);color:#53657f;text-align:left;font-size:10px;line-height:1.35;cursor:pointer;overflow:hidden}.chat-row.admin .chat-quote{background:rgba(255,255,255,.12);color:#e5edfb}.chat-quote b,.chat-quote span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-quote b{color:var(--navy);margin-bottom:2px}.chat-row.admin .chat-quote b{color:#fff}.chat-message-actions{display:flex;align-items:center;gap:8px;margin:4px 6px 0;flex-wrap:wrap}.chat-message-actions button{border:0;background:none;padding:2px;color:#72829a;font-size:9px;font-weight:850;cursor:pointer}.chat-message-actions button:hover{color:var(--blue)}.chat-message-actions .chat-unsend{color:#ad2637}.chat-reaction-picker{display:none;gap:3px;padding:4px;border:1px solid #dbe5f1;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(6,26,68,.13)}.chat-reaction-picker.show{display:flex}.chat-reaction-picker button{width:27px;height:27px;padding:0;border-radius:50%;font-size:15px}.chat-reaction-picker button:hover{background:#edf4ff}.chat-reaction-summary{display:flex;gap:4px;flex-wrap:wrap;margin:4px 5px 0}.chat-reaction-pill{border:1px solid #dce6f3;border-radius:20px;padding:3px 7px;background:#fff;color:#465d7d;font-size:10px;cursor:pointer}.chat-reaction-pill.mine{border-color:#6fa3ef;background:#eaf2ff;color:#174e9f}.chat-mod-actions{display:none;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:8px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
     .chat-notice{align-self:center;width:94%;padding:9px 12px;border-radius:12px;text-align:center;font-size:11px;line-height:1.4;background:#eaf2ff;color:#194d9d;border:1px solid #cfe0fb;transition:.25s}.chat-notice.warning{background:#fff2f2;color:#a32635;border-color:#ffd2d8}.chat-notice.fade{opacity:0;transform:translateY(-5px)}
     .chat-name-gate{position:absolute;inset:0;z-index:2;background:rgba(247,250,255,.97);padding:24px 20px;display:grid;place-content:center;text-align:center}.chat-name-gate.hidden{display:none}.chat-name-gate h3{margin:0;color:var(--navy);font-size:20px}.chat-name-gate p{color:var(--muted);font-size:12px;line-height:1.55;margin:8px 0 15px}.chat-name-gate input,.chat-login input,.chat-composer textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:13px;padding:12px;outline:none}.chat-name-gate input+input{margin-top:8px}.chat-name-gate input:focus,.chat-composer textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(15,91,216,.1)}.chat-name-gate button{width:100%;margin-top:9px;border:0;border-radius:13px;padding:12px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--red),var(--blue));cursor:pointer}.chat-admin-password{display:none}.chat-admin-password.show{display:block}.chat-private-note{min-height:18px;margin-top:8px;color:#ae2e3d;font-size:11px}
     .chat-media{display:block;max-width:100%;margin-top:7px}.chat-media-image{width:min(250px,100%);max-height:300px;border-radius:12px;object-fit:cover;cursor:zoom-in;background:#eaf0f8}.chat-media-audio{width:min(260px,100%);height:38px}.chat-media-status{font-size:10px;opacity:.72}.chat-row.admin .chat-media-audio{filter:invert(1) hue-rotate(180deg)}
@@ -968,7 +969,11 @@
     <header class="chat-head">
       <div class="chat-title">
         <img class="chat-mark" src="assets/logo.jpg" alt="Aquila Crest logo">
-        <div><strong>Aquila Community Live Chat</strong><small><span class="chat-dot" id="chatStatusDot"></span><span id="chatStatusText">Connecting…</span> · <span id="chatOnlineCount">0 online</span></small></div>
+        <div class="chat-title-copy">
+          <strong>Aquila Community Live Chat</strong>
+          <small><span class="chat-dot" id="chatStatusDot"></span><span id="chatStatusText">Connecting…</span> · <span id="chatOnlineCount">0 online</span></small>
+          <div class="chat-identity-top"><span class="chat-state" id="chatPrivateState">Chatting as visitor</span><button class="chat-change-name" id="chatChangeName" type="button">✎ EDIT NAME</button></div>
+        </div>
       </div>
       <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">×</button>
     </header>
@@ -999,7 +1004,7 @@
         <textarea id="chatInput" rows="1" maxlength="500" placeholder="Ask about Aquila Crest…" aria-label="Chat message" disabled></textarea>
         <button class="chat-send" id="chatSend" type="button" aria-label="Send message" disabled>➤</button>
       </div>
-      <div class="chat-footline"><span><span class="chat-state" id="chatPrivateState">Official admins carry a verified badge.</span> <button class="chat-admin-logout" id="chatAdminLogout" type="button">SIGN OUT ADMIN</button></span><span><a href="#faq">FAQ</a> · <a href="#community">Official channels</a></span></div>
+      <div class="chat-footline"><span><button class="chat-admin-logout" id="chatAdminLogout" type="button">SIGN OUT ADMIN</button></span><span><a href="#faq">FAQ</a> · <a href="#community">Official channels</a></span></div>
     </footer>
   </aside>
 
@@ -1326,6 +1331,7 @@
     const chatStatusText = document.getElementById("chatStatusText");
     const chatOnlineCount = document.getElementById("chatOnlineCount");
     const chatAdminLogout = document.getElementById("chatAdminLogout");
+    const chatChangeName = document.getElementById("chatChangeName");
     const chatReplyPreview = document.getElementById("chatReplyPreview");
     const chatReplyName = document.getElementById("chatReplyName");
     const chatReplyBody = document.getElementById("chatReplyBody");
@@ -1347,9 +1353,14 @@
     let unreadCount = 0;
     let replyingTo = null;
     let pendingMedia = null;
-    let mediaRecorder = null;
     let mediaRecorderStream = null;
-    let voiceChunks = [];
+    let voiceAudioContext = null;
+    let voiceSource = null;
+    let voiceProcessor = null;
+    let voiceSilentGain = null;
+    let voiceSamples = [];
+    let voiceSampleRate = 44100;
+    let voiceRecording = false;
     let voiceStartedAt = 0;
     let voiceTimer = null;
     let voiceFallbackNext = false;
@@ -1390,8 +1401,9 @@
     }
     function setInlineAdminMode(enabled){
       chatPanel?.classList.toggle("admin-mode",enabled);
+      chatPanel?.classList.toggle("visitor-mode",!enabled&&chatProfile?.role==="visitor");
       if(chatInput) chatInput.placeholder=enabled?"Reply as verified ACC Admin…":"Ask about Aquila Crest…";
-      if(chatPrivateState) chatPrivateState.textContent=enabled?"ACC Admin ✓ · Moderation controls enabled.":`Chatting as ${chatProfile?.public_name||"visitor"} · Private warnings are visible only to you.`;
+      if(chatPrivateState) chatPrivateState.textContent=enabled?"ACC Admin ✓":`Chatting as ${chatProfile?.public_name||"visitor"}`;
     }
     function startReply(message){
       replyingTo=message;
@@ -1443,47 +1455,49 @@
       if(message)renderChatNotice(message,"info",6500);voiceFallbackNext=false;chatVoiceInput?.click();
     }
     function stopVoiceTracks(){if(mediaRecorderStream){mediaRecorderStream.getTracks().forEach(track=>track.stop());mediaRecorderStream=null;}if(voiceTimer){clearTimeout(voiceTimer);voiceTimer=null;}}
-    function isAppleMobileBrowser(){
-      return /iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-    }
-    function createCompatibleMediaRecorder(stream){
-      const apple=isAppleMobileBrowser();
-      const candidates=apple
-        ? ["audio/mp4;codecs=mp4a.40.2","audio/mp4"]
-        : ["audio/webm;codecs=opus","audio/webm","audio/mp4;codecs=mp4a.40.2","audio/mp4"];
-      for(const type of candidates){
-        try{
-          if(MediaRecorder.isTypeSupported?.(type))return new MediaRecorder(stream,{mimeType:type});
-        }catch(error){console.warn("Voice recorder format unavailable:",type,error)}
+    function mergeVoiceSamples(chunks){const length=chunks.reduce((sum,item)=>sum+item.length,0);const merged=new Float32Array(length);let offset=0;for(const item of chunks){merged.set(item,offset);offset+=item.length;}return merged;}
+    function resampleVoice(input,inputRate,outputRate=16000){
+      if(!input.length||inputRate===outputRate)return input;
+      const ratio=inputRate/outputRate;const output=new Float32Array(Math.max(1,Math.round(input.length/ratio)));
+      for(let i=0;i<output.length;i++){
+        const start=Math.floor(i*ratio);const end=Math.min(input.length,Math.max(start+1,Math.floor((i+1)*ratio)));let sum=0;
+        for(let j=start;j<end;j++)sum+=input[j];output[i]=sum/(end-start);
       }
-      return new MediaRecorder(stream);
+      return output;
+    }
+    function encodeVoiceWav(samples,sampleRate=16000){
+      const buffer=new ArrayBuffer(44+samples.length*2);const view=new DataView(buffer);const write=(offset,value)=>{for(let i=0;i<value.length;i++)view.setUint8(offset+i,value.charCodeAt(i));};
+      write(0,"RIFF");view.setUint32(4,36+samples.length*2,true);write(8,"WAVE");write(12,"fmt ");view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,sampleRate,true);view.setUint32(28,sampleRate*2,true);view.setUint16(32,2,true);view.setUint16(34,16,true);write(36,"data");view.setUint32(40,samples.length*2,true);
+      let offset=44;for(let i=0;i<samples.length;i++,offset+=2){const sample=Math.max(-1,Math.min(1,samples[i]));view.setInt16(offset,sample<0?sample*32768:sample*32767,true);}return new Blob([view],{type:"audio/wav"});
+    }
+    async function finishVoiceRecording(){
+      if(!voiceRecording)return;voiceRecording=false;
+      if(voiceProcessor){voiceProcessor.onaudioprocess=null;try{voiceProcessor.disconnect();}catch(_){}voiceProcessor=null;}
+      if(voiceSource){try{voiceSource.disconnect();}catch(_){}voiceSource=null;}
+      if(voiceSilentGain){try{voiceSilentGain.disconnect();}catch(_){}voiceSilentGain=null;}
+      if(voiceAudioContext){try{await voiceAudioContext.close();}catch(_){}voiceAudioContext=null;}
+      stopVoiceTracks();chatVoiceButton?.classList.remove("recording");if(chatVoiceButton){chatVoiceButton.textContent="🎤";chatVoiceButton.title="Record voice message";}
+      const duration=Math.max(1,Math.min(60,Math.round((Date.now()-voiceStartedAt)/1000)));const merged=mergeVoiceSamples(voiceSamples);voiceSamples=[];
+      if(!merged.length){renderChatNotice("No audio was captured. Check microphone permission and try again.","warning",6500);return;}
+      const wav=encodeVoiceWav(resampleVoice(merged,voiceSampleRate),16000);const file=new File([wav],`voice-${Date.now()}.wav`,{type:"audio/wav"});
+      if(file.size>5242880){renderChatNotice("Voice recording is larger than 5 MB.","warning",5000);return;}
+      showPendingMedia(file,"audio",duration);
     }
     async function toggleVoiceRecording(){
-      if(mediaRecorder?.state==="recording"){mediaRecorder.stop();return;}
+      if(voiceRecording){await finishVoiceRecording();return;}
       if(voiceFallbackNext){openVoiceFallback("Choose or record an audio clip from your phone.");return;}
       if(!window.isSecureContext){openVoiceFallback("Direct microphone recording requires HTTPS. Choose or record an audio clip instead.");return;}
-      if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){openVoiceFallback("This browser blocks direct microphone recording. Choose or record an audio clip instead.");return;}
+      const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+      if(!navigator.mediaDevices?.getUserMedia||!AudioContextClass){openVoiceFallback("This browser blocks direct microphone recording. Choose or record an audio clip instead.");return;}
       try{
-        clearPendingMedia();mediaRecorderStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});voiceChunks=[];voiceStartedAt=Date.now();
-        mediaRecorder=createCompatibleMediaRecorder(mediaRecorderStream);
-        mediaRecorder.addEventListener("dataavailable",event=>{if(event.data?.size)voiceChunks.push(event.data)});
-        mediaRecorder.addEventListener("stop",async()=>{
-          const duration=Math.max(1,Math.min(60,Math.round((Date.now()-voiceStartedAt)/1000)));const mime=(mediaRecorder.mimeType||voiceChunks[0]?.type||"audio/webm").split(";")[0];
-          const blob=new Blob(voiceChunks,{type:mime});stopVoiceTracks();chatVoiceButton?.classList.remove("recording");if(chatVoiceButton){chatVoiceButton.textContent="🎤";chatVoiceButton.title="Record voice message";}
-          if(!blob.size){renderChatNotice("No audio was captured. Check the iPhone microphone permission and try again.","warning",6500);return;}
-          if(blob.size>5242880){renderChatNotice("Voice recording is larger than 5 MB.","warning",5000);return;}
-          const ext=mime.includes("mp4")?"m4a":mime.includes("mpeg")?"mp3":mime.includes("ogg")?"ogg":mime.includes("wav")?"wav":"webm";
-          const file=new File([blob],`voice-${Date.now()}.${ext}`,{type:mime});
-          const readableDuration=await audioDuration(file);
-          if(!readableDuration){renderChatNotice("The iPhone recording could not be prepared for playback. Tap 🎤 again and use the phone recorder fallback.","warning",7000);voiceFallbackNext=true;return;}
-          showPendingMedia(file,"audio",Math.min(60,readableDuration||duration));
-        },{once:true});
-        // Do not use a timeslice for MP4/AAC. On iPhone, concatenated MP4 fragments can
-        // produce a file with a duration but silent playback. A single finalized blob is reliable.
-        mediaRecorder.start();chatVoiceButton?.classList.add("recording");if(chatVoiceButton){chatVoiceButton.textContent="■";chatVoiceButton.title="Stop recording";}
-        voiceTimer=setTimeout(()=>{if(mediaRecorder?.state==="recording")mediaRecorder.stop()},60000);
+        clearPendingMedia();mediaRecorderStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+        voiceAudioContext=new AudioContextClass();await voiceAudioContext.resume();voiceSampleRate=voiceAudioContext.sampleRate;voiceSamples=[];voiceStartedAt=Date.now();voiceRecording=true;
+        voiceSource=voiceAudioContext.createMediaStreamSource(mediaRecorderStream);voiceProcessor=voiceAudioContext.createScriptProcessor(4096,1,1);voiceSilentGain=voiceAudioContext.createGain();voiceSilentGain.gain.value=0;
+        voiceProcessor.onaudioprocess=event=>{if(voiceRecording)voiceSamples.push(new Float32Array(event.inputBuffer.getChannelData(0)));};voiceSource.connect(voiceProcessor);voiceProcessor.connect(voiceSilentGain);voiceSilentGain.connect(voiceAudioContext.destination);
+        chatVoiceButton?.classList.add("recording");if(chatVoiceButton){chatVoiceButton.textContent="■";chatVoiceButton.title="Stop recording";}
+        voiceTimer=setTimeout(()=>finishVoiceRecording(),60000);
       }catch(error){
-        stopVoiceTracks();chatVoiceButton?.classList.remove("recording");if(chatVoiceButton)chatVoiceButton.textContent="🎤";
+        voiceRecording=false;stopVoiceTracks();if(voiceAudioContext){try{await voiceAudioContext.close();}catch(_){}voiceAudioContext=null;}chatVoiceButton?.classList.remove("recording");if(chatVoiceButton)chatVoiceButton.textContent="🎤";
         const denied=error?.name==="NotAllowedError"||error?.name==="SecurityError";voiceFallbackNext=denied;
         renderChatNotice(denied?"Microphone access is blocked. Allow Mic permission in browser settings, or tap 🎤 again to choose/record an audio clip.":"The microphone could not start. Tap 🎤 again to choose or record an audio clip.","warning",7500);
         if(!denied)voiceFallbackNext=true;console.error(error);
@@ -1525,6 +1539,27 @@
       const {data,error}=await chatDb.rpc("chat_toggle_reaction",{p_message_id:messageId,p_emoji:emoji});
       if(error||!data?.ok){renderChatNotice(data?.notice||"Hindi na-save ang reaction.","warning",4000);return;}await reloadReactions();
     }
+    async function editOwnMessage(message){
+      if(!chatDb||message?.sender_id!==chatSession?.user?.id)return;
+      const requested=window.prompt(message.media_kind?"Edit the caption of your message:":"Edit your message:",message.body||"");
+      if(requested===null)return;const body=requested.trim();if(body===message.body)return;
+      try{
+        const {data,error}=await chatDb.rpc("chat_edit_own_message",{p_message_id:message.id,p_body:body});
+        if(error)throw error;if(!data?.ok){renderChatNotice(data?.notice||"Hindi ma-edit ang message.","warning",6000);return;}
+        renderChatNotice("Message edited.","info",3500);await reloadChatMessages();
+      }catch(error){renderChatNotice("Hindi ma-edit ang message ngayon. Subukan ulit.","warning",6000);console.error("Edit own message:",error)}
+    }
+    async function unsendOwnMessage(message){
+      if(!chatDb||message?.sender_id!==chatSession?.user?.id)return;
+      if(!window.confirm("Unsend this message for everyone? Hindi na ito makikita sa public chat."))return;
+      try{
+        const {data,error}=await chatDb.rpc("chat_unsend_own_message",{p_message_id:message.id});
+        if(error)throw error;if(!data?.ok){renderChatNotice(data?.notice||"Hindi ma-unsend ang message.","warning",6000);return;}
+        const mediaPath=data.media_path||message.media_path;
+        if(mediaPath){const removal=await chatDb.storage.from("chat-media").remove([mediaPath]);if(!removal.error)mediaUrlCache.delete(mediaPath);}
+        removeChatMessage(message.id);renderChatNotice("Message unsent for everyone.","info",3500);
+      }catch(error){renderChatNotice("Hindi ma-unsend ang message ngayon. Subukan ulit.","warning",6000);console.error("Unsend own message:",error)}
+    }
     function renderChatMessage(message,countUnread=true){
       if(!message?.id || message.status!=="visible" || renderedMessageIds.has(message.id)) return;
       renderedMessageIds.add(message.id); removeChatEmpty();
@@ -1536,6 +1571,7 @@
         const badge=document.createElement("span"); badge.className="chat-admin-badge"; badge.textContent="VERIFIED ✓"; meta.append(badge);
       }
       meta.append(document.createTextNode(` · ${formatChatTime(message.created_at)}`));
+      if(message.edited_at){const edited=document.createElement("span");edited.className="chat-edited";edited.textContent=" · Edited";meta.append(edited);}
       const bubble=document.createElement("div"); bubble.className="chat-bubble";
       if(message.reply_to){const quote=document.createElement("button");quote.type="button";quote.className="chat-quote";const qName=document.createElement("b");qName.textContent=message.reply_to_display_name||"Original message";const qBody=document.createElement("span");qBody.textContent=message.reply_to_body||"Message";quote.append(qName,qBody);quote.addEventListener("click",()=>jumpToMessage(message.reply_to));bubble.append(quote)}
       if(message.body)bubble.append(document.createTextNode(message.body));
@@ -1544,6 +1580,11 @@
       const replyButton=document.createElement("button");replyButton.type="button";replyButton.textContent="↩ Reply";replyButton.addEventListener("click",()=>startReply(message));
       const reactButton=document.createElement("button");reactButton.type="button";reactButton.textContent="☺ React";
       const picker=document.createElement("div");picker.className="chat-reaction-picker";allowedReactions.forEach(emoji=>{const button=document.createElement("button");button.type="button";button.textContent=emoji;button.setAttribute("aria-label",`React ${emoji}`);button.addEventListener("click",async()=>{picker.classList.remove("show");await toggleReaction(message.id,emoji)});picker.append(button)});reactButton.addEventListener("click",()=>picker.classList.toggle("show"));messageActions.append(replyButton,reactButton,picker);
+      if(message.sender_id===chatSession?.user?.id){
+        const editButton=document.createElement("button");editButton.type="button";editButton.textContent="✎ Edit";editButton.addEventListener("click",()=>editOwnMessage(message));
+        const unsendButton=document.createElement("button");unsendButton.type="button";unsendButton.className="chat-unsend";unsendButton.textContent="Unsend";unsendButton.addEventListener("click",()=>unsendOwnMessage(message));
+        messageActions.append(editButton,unsendButton);
+      }
       const reactionSummary=document.createElement("div");reactionSummary.className="chat-reaction-summary";
       const actions=document.createElement("div"); actions.className="chat-mod-actions";
       if(message.sender_role!=="admin"&&message.sender_id){
@@ -1590,7 +1631,7 @@
         const userId=chatSession.user.id;
         const [{data:profile},{data:messages},{data:notices},{data:support}]=await Promise.all([
           chatDb.from("chat_profiles").select("user_id,public_name,role,strikes,mute_until,banned_at").eq("user_id",userId).maybeSingle(),
-          chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit),
+          chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,edited_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit),
           chatDb.from("chat_notices").select("id,body,notice_type,expires_at").gt("expires_at",new Date().toISOString()).order("created_at",{ascending:true}),
           chatDb.from("chat_support_status").select("is_online,status_text").eq("id",1).maybeSingle()
         ]);
@@ -1635,7 +1676,7 @@
     }
     async function reconcileChatMessages(){
       if(!chatDb) return;
-      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
+      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,edited_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
       if(!data) return;
       const visibleIds=new Set(data.map(item=>item.id));
       renderedMessageIds.forEach(id=>{if(!visibleIds.has(id)) removeChatMessage(id)});
@@ -1655,6 +1696,18 @@
         chatProfile={...(chatProfile||{}),public_name:data.public_name,role:"visitor"}; chatNameNotice.textContent=""; unlockComposer(); chatInput?.focus();
       }catch(error){chatNameNotice.textContent="Hindi ma-save ang name ngayon. Subukan ulit.";console.error(error)}
       finally{chatJoin.disabled=false;}
+    }
+    async function changeVisitorName(){
+      if(!chatDb||chatProfile?.role!=="visitor")return;
+      const requested=window.prompt("Ilagay ang tamang pangalan na gusto mong makita sa public chat:",chatProfile.public_name||"");
+      if(requested===null)return;const name=requested.trim();if(!name||name===chatProfile.public_name)return;
+      if(chatChangeName)chatChangeName.disabled=true;
+      try{
+        const {data,error}=await chatDb.rpc("chat_set_display_name",{p_display_name:name});if(error)throw error;
+        if(!data?.ok){renderChatNotice(data?.notice||"Hindi puwedeng gamitin ang pangalang ito.","warning",6000);return;}
+        chatProfile={...chatProfile,public_name:data.public_name};if(chatDisplayName)chatDisplayName.value=data.public_name;setInlineAdminMode(false);await reloadChatMessages();renderChatNotice(`Name changed to ${data.public_name}.`,"info",5000);
+      }catch(error){renderChatNotice("Hindi mapalitan ang name ngayon. Subukan ulit.","warning",6000);console.error("Change chat name:",error)}
+      finally{if(chatChangeName)chatChangeName.disabled=false;}
     }
     async function loginInlineAdmin(){
       const password=chatAdminPassword?.value||"";
@@ -1681,7 +1734,7 @@
       subscribeToLiveChat(userId);
     }
     async function reloadChatMessages(){
-      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
+      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,edited_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
       if(!data)return;chatMessages.textContent="";renderedMessageIds.clear();data.reverse().forEach(renderChatMessage);await reloadReactions();
     }
     async function moderateInlineMessage(action,message){
@@ -1705,7 +1758,7 @@
       const {data,error}=await chatDb.auth.signInAnonymously();
       if(error){location.reload();return;}
       chatSession=data.session;chatProfile=null;setInlineAdminMode(false);chatNameGate?.classList.remove("hidden");
-      if(mediaRecorder?.state==="recording")mediaRecorder.stop();stopVoiceTracks();clearPendingMedia();cancelReply();
+      if(voiceRecording)await finishVoiceRecording();stopVoiceTracks();clearPendingMedia();cancelReply();
       if(chatInput)chatInput.disabled=true;if(chatSend)chatSend.disabled=true;if(chatPhotoButton)chatPhotoButton.disabled=true;if(chatVoiceButton)chatVoiceButton.disabled=true;if(chatDisplayName)chatDisplayName.value="";syncAdminGate();
       subscribeToLiveChat(data.user.id);await reloadChatMessages();
     }
@@ -1742,6 +1795,7 @@
     chatDisplayName?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
     chatAdminPassword?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
     chatAdminLogout?.addEventListener("click",logoutInlineAdmin);
+    chatChangeName?.addEventListener("click",changeVisitorName);
     chatReplyCancel?.addEventListener("click",cancelReply);
     chatMediaCancel?.addEventListener("click",clearPendingMedia);
     chatPhotoButton?.addEventListener("click",()=>chatPhotoInput?.click());
