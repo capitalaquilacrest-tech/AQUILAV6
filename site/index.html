@@ -26,7 +26,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071d49">
-  <link rel="canonical" href="https://www.aquilacrestcapital.com/">
+  <link rel="canonical" href="https://aquilacrestcapital.com/">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
@@ -36,8 +36,8 @@
   <meta property="og:title" content="Aquila Crest Capital — Official Digital Member Platform">
   <meta property="og:description" content="Access the official Aquila Crest Capital member ecosystem, community channels, platform information, and member portal.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.aquilacrestcapital.com/">
-  <meta property="og:image" content="https://www.aquilacrestcapital.com/assets/og-cover.png">
+  <meta property="og:url" content="https://aquilacrestcapital.com/">
+  <meta property="og:image" content="https://aquilacrestcapital.com/assets/og-cover.png">
   <meta name="twitter:card" content="summary_large_image">
   
   <title>Aquila Crest Capital — Digital Experience</title>
@@ -420,10 +420,34 @@
     }
     .sticky-convert.show{transform:translateX(-50%) translateY(0)}
     .sticky-convert small{display:block;color:#c9d8ee;margin-top:3px}
+    .support-orb{
+      position:fixed;right:18px;bottom:88px;z-index:89;width:58px;height:58px;border-radius:999px;
+      display:grid;place-items:center;border:0;cursor:pointer;color:#fff;font-size:23px;
+      background:linear-gradient(135deg,var(--red),var(--blue));box-shadow:0 15px 35px rgba(6,26,68,.25);
+    }
+    .support-orb::after{content:"";position:absolute;right:3px;top:3px;width:12px;height:12px;border-radius:50%;background:#32d583;border:2px solid #fff}
+    .chat-unread{position:absolute;right:-4px;top:-7px;min-width:22px;height:22px;padding:0 6px;border-radius:20px;background:var(--gold);color:var(--navy);font-size:11px;font-weight:950;display:none;place-items:center;border:2px solid #fff}
+    .chat-unread.show{display:grid}
+    .chat-panel{position:fixed;right:18px;bottom:158px;z-index:96;width:min(408px,calc(100vw - 24px));height:min(680px,calc(100vh - 184px));background:#fff;border:1px solid rgba(6,26,68,.12);border-radius:26px;box-shadow:0 28px 90px rgba(6,26,68,.28);display:none;overflow:hidden}
+    .chat-panel.show{display:grid;grid-template-rows:auto auto 1fr auto;animation:chatRise .22s ease-out}
+    @keyframes chatRise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+    .chat-head{padding:16px 17px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .chat-title{display:flex;align-items:center;gap:11px}.chat-mark{width:38px;height:38px;border-radius:12px;background:#fff;padding:5px;object-fit:contain}.chat-title strong{display:block;font-size:15px}.chat-title small{display:flex;align-items:center;gap:6px;color:#d6e4fb;font-size:11px;margin-top:3px}.chat-dot{width:8px;height:8px;border-radius:50%;background:#ffb020}.chat-dot.online{background:#32d583}.chat-close{border:0;background:rgba(255,255,255,.1);color:#fff;width:34px;height:34px;border-radius:11px;cursor:pointer;font-size:18px}
+    .chat-rules{padding:10px 14px;background:#fff9e8;border-bottom:1px solid #f2e2aa;color:#69551d;font-size:11px;line-height:1.45}.chat-rules b{color:var(--navy)}
+    .chat-main{min-height:0;position:relative;background:linear-gradient(180deg,#f4f8fe,#fff);overflow:hidden}
+    .chat-messages{height:100%;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+    .chat-empty{margin:auto;padding:26px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.55}.chat-empty strong{display:block;color:var(--navy);font-size:17px;margin-bottom:7px}
+    .chat-row{display:flex;flex-direction:column;align-items:flex-start;max-width:86%}.chat-row.admin{align-self:stretch;max-width:94%}.chat-meta{font-size:10px;color:#7c8ba4;margin:0 8px 4px}.chat-meta b{color:var(--navy)}.chat-admin-badge{display:inline-block;margin-left:4px;padding:2px 5px;border-radius:6px;background:#e8f1ff;color:var(--blue);font-size:8px;font-weight:950}.chat-bubble{padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:13px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);overflow-wrap:anywhere}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-mod-actions{display:none;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:8px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
+    .chat-notice{align-self:center;width:94%;padding:9px 12px;border-radius:12px;text-align:center;font-size:11px;line-height:1.4;background:#eaf2ff;color:#194d9d;border:1px solid #cfe0fb;transition:.25s}.chat-notice.warning{background:#fff2f2;color:#a32635;border-color:#ffd2d8}.chat-notice.fade{opacity:0;transform:translateY(-5px)}
+    .chat-name-gate{position:absolute;inset:0;z-index:2;background:rgba(247,250,255,.97);padding:24px 20px;display:grid;place-content:center;text-align:center}.chat-name-gate.hidden{display:none}.chat-name-gate h3{margin:0;color:var(--navy);font-size:20px}.chat-name-gate p{color:var(--muted);font-size:12px;line-height:1.55;margin:8px 0 15px}.chat-name-gate input,.chat-login input,.chat-composer textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:13px;padding:12px;outline:none}.chat-name-gate input+input{margin-top:8px}.chat-name-gate input:focus,.chat-composer textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(15,91,216,.1)}.chat-name-gate button{width:100%;margin-top:9px;border:0;border-radius:13px;padding:12px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--red),var(--blue));cursor:pointer}.chat-admin-password{display:none}.chat-admin-password.show{display:block}.chat-private-note{min-height:18px;margin-top:8px;color:#ae2e3d;font-size:11px}
+    .chat-foot{padding:11px 12px;border-top:1px solid var(--line);background:#fff}.chat-composer{display:flex;align-items:flex-end;gap:8px}.chat-composer textarea{min-height:44px;max-height:105px;resize:none;font:inherit;font-size:13px}.chat-send{flex:0 0 44px;width:44px;height:44px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--red),var(--blue));color:#fff;cursor:pointer;font-weight:950}.chat-send:disabled{opacity:.45;cursor:not-allowed}.chat-footline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;font-size:9px;color:#8996aa}.chat-footline a{color:var(--blue);font-weight:850}.chat-state{font-weight:800}.chat-admin-logout{display:none;border:0;background:none;padding:0;color:#ad2637;font-size:9px;font-weight:950;cursor:pointer}.chat-panel.admin-mode .chat-admin-logout{display:inline}
+
     @media(max-width:800px){
       .journey{grid-template-columns:1fr 1fr}
       .journey::before{display:none}
       .mini-calc{grid-template-columns:1fr}
+      .chat-panel{right:12px;bottom:84px;height:min(72vh,680px);border-radius:22px}
+      .support-orb{right:14px;bottom:20px}
     }
 
   
@@ -910,7 +934,7 @@
         <details><summary>Where can I track my Capital Reserve?</summary><p>Active contracts, projections, remaining days, maturity, and status are available inside the member dashboard.</p></details>
         <details><summary>Are the activity cards updated automatically?</summary><p>Yes. Public-safe approved deposits, released withdrawals, active Capital Reserves, and approved reinvestments are loaded automatically.</p></details>
         <details><summary>Are withdrawal photos updated automatically?</summary><p>Yes. New images added to the official payout folder can appear automatically in the withdrawal gallery.</p></details>
-        <details><summary>How do I access the Member Portal?</summary><p>Use the official Login Dashboard or Create Account button on this website.</p></details>
+        <details><summary>How do I access the Member Portal?</summary><p>Select LOGIN DASHBOARD anywhere on this website. New members may also use CREATE ACCOUNT to begin.</p></details>
         <details><summary>Where do members get help?</summary><p>Support is available through the member dashboard and organized community channels.</p></details>
       </div>
     </section>
@@ -937,6 +961,40 @@
   </div>
 
   <button class="install-btn" id="installBtn" type="button">INSTALL AQUILA</button>
+
+  <button class="support-orb" id="supportOrb" type="button" aria-label="Open Aquila Community Live Chat" aria-expanded="false">💬<span class="chat-unread" id="chatUnread">0</span></button>
+  <aside class="chat-panel" id="chatPanel" aria-label="Aquila Community Live Chat" aria-hidden="true">
+    <header class="chat-head">
+      <div class="chat-title">
+        <img class="chat-mark" src="assets/logo.jpg" alt="Aquila Crest logo">
+        <div><strong>Aquila Community Live Chat</strong><small><span class="chat-dot" id="chatStatusDot"></span><span id="chatStatusText">Connecting…</span> · <span id="chatOnlineCount">0 online</span></small></div>
+      </div>
+      <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">×</button>
+    </header>
+    <div class="chat-rules"><b>Community rules:</b> Aquila-related and respectful messages only. Never share passwords, OTPs, PINs, phone numbers, or account details.</div>
+    <div class="chat-main">
+      <div class="chat-messages" id="chatMessages" aria-live="polite">
+        <div class="chat-empty" id="chatEmpty"><strong>Welcome to Aquila Live Chat</strong>Read real questions and verified answers from the community. Enter your name to join the conversation.</div>
+      </div>
+      <div class="chat-name-gate" id="chatNameGate">
+        <div>
+          <h3>Join the conversation</h3>
+          <p>Enter a display name before sending your first message. Your public name will be partially masked for privacy.</p>
+          <input id="chatDisplayName" type="text" minlength="2" maxlength="30" autocomplete="name" placeholder="Your name" aria-label="Display name">
+          <input class="chat-admin-password" id="chatAdminPassword" type="password" autocomplete="current-password" placeholder="Admin password" aria-label="Admin password">
+          <button id="chatJoin" type="button">ENTER LIVE CHAT</button>
+          <div class="chat-private-note" id="chatNameNotice" role="alert"></div>
+        </div>
+      </div>
+    </div>
+    <footer class="chat-foot">
+      <div class="chat-composer">
+        <textarea id="chatInput" rows="1" maxlength="500" placeholder="Ask about Aquila Crest…" aria-label="Chat message" disabled></textarea>
+        <button class="chat-send" id="chatSend" type="button" aria-label="Send message" disabled>➤</button>
+      </div>
+      <div class="chat-footline"><span><span class="chat-state" id="chatPrivateState">Official admins carry a verified badge.</span> <button class="chat-admin-logout" id="chatAdminLogout" type="button">SIGN OUT ADMIN</button></span><span><a href="#faq">FAQ</a> · <a href="#community">Official channels</a></span></div>
+    </footer>
+  </aside>
 
   <footer>
     <div class="footer-grid">
@@ -976,6 +1034,7 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const DASHBOARD_URL = "https://script.google.com/macros/s/AKfycbwsX7fvxdza7pGepFtME77y0BK3D6AzQ8qIQMQOe51RfPk2rK-sCCbexo8PpdC2cpRG/exec";
     const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzeXCQ9VZ9jQFbg86oKdcLrl-HuhRQFC-nN4G7QrY1rFtse63wJNAdJeRm0kVZ1wKf8FQ/exec";
@@ -1233,6 +1292,269 @@
       stickyConvert.classList.toggle("show", window.scrollY > threshold && window.scrollY < document.documentElement.scrollHeight - window.innerHeight - 450);
     });
 
+    // AQUILA PUBLIC LIVE CHAT V1
+    // Paste the Project URL and Publishable/Anon Key from Supabase > Project Settings > API.
+    const AQUILA_CHAT_CONFIG = Object.freeze({
+      supabaseUrl: "PASTE_SUPABASE_PROJECT_URL_HERE",
+      supabaseKey: "PASTE_SUPABASE_PUBLISHABLE_OR_ANON_KEY_HERE",
+      adminEmail: "capitalaquilacrest@gmail.com",
+      historyLimit: 80
+    });
+
+    const supportOrb = document.getElementById("supportOrb");
+    const chatPanel = document.getElementById("chatPanel");
+    const chatClose = document.getElementById("chatClose");
+    const chatMessages = document.getElementById("chatMessages");
+    const chatEmpty = document.getElementById("chatEmpty");
+    const chatUnread = document.getElementById("chatUnread");
+    const chatNameGate = document.getElementById("chatNameGate");
+    const chatDisplayName = document.getElementById("chatDisplayName");
+    const chatAdminPassword = document.getElementById("chatAdminPassword");
+    const chatJoin = document.getElementById("chatJoin");
+    const chatNameNotice = document.getElementById("chatNameNotice");
+    const chatInput = document.getElementById("chatInput");
+    const chatSend = document.getElementById("chatSend");
+    const chatPrivateState = document.getElementById("chatPrivateState");
+    const chatStatusDot = document.getElementById("chatStatusDot");
+    const chatStatusText = document.getElementById("chatStatusText");
+    const chatOnlineCount = document.getElementById("chatOnlineCount");
+    const chatAdminLogout = document.getElementById("chatAdminLogout");
+    let chatDb = null;
+    let chatSession = null;
+    let chatProfile = null;
+    let chatChannel = null;
+    let chatReady = false;
+    let unreadCount = 0;
+    const renderedMessageIds = new Set();
+
+    function chatConfigured(){
+      return AQUILA_CHAT_CONFIG.supabaseUrl.startsWith("https://") && !AQUILA_CHAT_CONFIG.supabaseUrl.includes("PASTE_") && !AQUILA_CHAT_CONFIG.supabaseKey.includes("PASTE_");
+    }
+    function setChatOpen(open){
+      chatPanel?.classList.toggle("show",open);
+      chatPanel?.setAttribute("aria-hidden",String(!open));
+      supportOrb?.setAttribute("aria-expanded",String(open));
+      if(open){ unreadCount=0; updateUnread(); initLiveChat(); setTimeout(()=>chatInput?.focus(),180); }
+    }
+    function updateUnread(){
+      if(!chatUnread) return;
+      chatUnread.textContent=String(Math.min(unreadCount,99));
+      chatUnread.classList.toggle("show",unreadCount>0);
+    }
+    function setConnection(label,online=false){
+      if(chatStatusText) chatStatusText.textContent=label;
+      chatStatusDot?.classList.toggle("online",online);
+    }
+    function formatChatTime(value){
+      try{return new Intl.DateTimeFormat("en-PH",{hour:"numeric",minute:"2-digit"}).format(new Date(value));}catch(_){return "";}
+    }
+    function removeChatEmpty(){ chatEmpty?.remove(); }
+    function isAdminName(value){return String(value||"").trim().replace(/\s+/g," ").toUpperCase()==="ACC ADMIN";}
+    function syncAdminGate(){
+      const adminAttempt=isAdminName(chatDisplayName?.value);
+      chatAdminPassword?.classList.toggle("show",adminAttempt);
+      if(chatJoin) chatJoin.textContent=adminAttempt?"VERIFY ADMIN":"ENTER LIVE CHAT";
+      if(!adminAttempt&&chatAdminPassword) chatAdminPassword.value="";
+      if(chatNameNotice) chatNameNotice.textContent=adminAttempt?"Enter the verified ACC Admin password.":"";
+    }
+    function setInlineAdminMode(enabled){
+      chatPanel?.classList.toggle("admin-mode",enabled);
+      if(chatInput) chatInput.placeholder=enabled?"Reply as verified ACC Admin…":"Ask about Aquila Crest…";
+      if(chatPrivateState) chatPrivateState.textContent=enabled?"ACC Admin ✓ · Moderation controls enabled.":`Chatting as ${chatProfile?.public_name||"visitor"} · Private warnings are visible only to you.`;
+    }
+    function renderChatMessage(message){
+      if(!message?.id || message.status!=="visible" || renderedMessageIds.has(message.id)) return;
+      renderedMessageIds.add(message.id); removeChatEmpty();
+      const row=document.createElement("div"); row.className=`chat-row ${message.sender_role==="admin"?"admin":""}`; row.dataset.messageId=message.id;
+      const meta=document.createElement("div"); meta.className="chat-meta";
+      const name=document.createElement("b"); name.textContent=message.sender_role==="admin"?"ACC Admin":message.display_name;
+      meta.append(name);
+      if(message.sender_role==="admin"){
+        const badge=document.createElement("span"); badge.className="chat-admin-badge"; badge.textContent="VERIFIED ✓"; meta.append(badge);
+      }
+      meta.append(document.createTextNode(` · ${formatChatTime(message.created_at)}`));
+      const bubble=document.createElement("div"); bubble.className="chat-bubble"; bubble.textContent=message.body;
+      const actions=document.createElement("div"); actions.className="chat-mod-actions";
+      if(message.sender_role!=="admin"&&message.sender_id){
+        [["DELETE","delete"],["MUTE 15M","mute"],["BAN","ban"]].forEach(([label,action])=>{const button=document.createElement("button");button.type="button";button.dataset.action=action;button.textContent=label;button.addEventListener("click",()=>moderateInlineMessage(action,message));actions.append(button);});
+      }
+      row.append(meta,bubble,actions); chatMessages?.append(row); chatMessages.scrollTop=chatMessages.scrollHeight;
+      if(!chatPanel?.classList.contains("show")){ unreadCount+=1; updateUnread(); }
+    }
+    function removeChatMessage(id){
+      chatMessages?.querySelector(`[data-message-id="${CSS.escape(String(id))}"]`)?.remove();
+      renderedMessageIds.delete(id);
+    }
+    function renderChatNotice(noticeOrText,type="info",milliseconds=20000){
+      const data=typeof noticeOrText==="string"?{body:noticeOrText,notice_type:type,expires_at:new Date(Date.now()+milliseconds).toISOString()}:noticeOrText;
+      if(!data?.body) return;
+      const node=document.createElement("div"); node.className=`chat-notice ${data.notice_type==="warning"?"warning":""}`; node.textContent=(data.notice_type==="warning"||data.notice_type==="welcome")?`ACC Admin ✓: ${data.body}`:data.body;
+      chatMessages?.append(node); chatMessages.scrollTop=chatMessages.scrollHeight;
+      const remaining=Math.max(1500,Math.min(20000,new Date(data.expires_at||Date.now()+milliseconds).getTime()-Date.now()));
+      setTimeout(()=>{node.classList.add("fade");setTimeout(()=>node.remove(),260)},remaining);
+    }
+    function unlockComposer(){
+      chatNameGate?.classList.add("hidden");
+      if(chatInput) chatInput.disabled=false;
+      if(chatSend) chatSend.disabled=false;
+      setInlineAdminMode(chatProfile?.role==="admin");
+    }
+    async function initLiveChat(){
+      if(chatReady) return;
+      if(!chatConfigured() || !window.supabase){
+        setConnection("Chat setup required",false);
+        if(chatNameNotice) chatNameNotice.textContent="Live chat activation is being completed. You may use the FAQ or official community links below.";
+        return;
+      }
+      chatReady=true;
+      try{
+        chatDb=window.supabase.createClient(AQUILA_CHAT_CONFIG.supabaseUrl,AQUILA_CHAT_CONFIG.supabaseKey,{auth:{persistSession:true,autoRefreshToken:true}});
+        let sessionResult=await chatDb.auth.getSession(); chatSession=sessionResult.data.session;
+        if(!chatSession){
+          const signed=await chatDb.auth.signInAnonymously();
+          if(signed.error) throw signed.error; chatSession=signed.data.session;
+        }
+        const userId=chatSession.user.id;
+        const [{data:profile},{data:messages},{data:notices},{data:support}]=await Promise.all([
+          chatDb.from("chat_profiles").select("user_id,public_name,role,strikes,mute_until,banned_at").eq("user_id",userId).maybeSingle(),
+          chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit),
+          chatDb.from("chat_notices").select("id,body,notice_type,expires_at").gt("expires_at",new Date().toISOString()).order("created_at",{ascending:true}),
+          chatDb.from("chat_support_status").select("is_online,status_text").eq("id",1).maybeSingle()
+        ]);
+        chatProfile=profile||null;
+        (messages||[]).reverse().forEach(renderChatMessage);
+        (notices||[]).forEach(n=>renderChatNotice(n));
+        if(chatProfile) unlockComposer();
+        if(support){ setConnection(support.status_text|| (support.is_online?"Support online":"Support offline"),support.is_online); }
+        subscribeToLiveChat(userId);
+      }catch(error){
+        chatReady=false; setConnection("Connection unavailable",false);
+        if(chatNameNotice) chatNameNotice.textContent="Hindi makakonekta sa live chat ngayon. Refresh the page or use the official community links.";
+        console.error("Aquila live chat init:",error);
+      }
+    }
+    function subscribeToLiveChat(userId){
+      if(chatChannel) return;
+      chatChannel=chatDb.channel("aquila-public-chat",{config:{presence:{key:userId}}})
+        .on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},payload=>{
+          if(payload.eventType==="INSERT") renderChatMessage(payload.new);
+          else if(payload.eventType==="UPDATE") payload.new.status==="visible"?renderChatMessage(payload.new):removeChatMessage(payload.new.id);
+          else if(payload.old?.id) removeChatMessage(payload.old.id);
+        })
+        .on("postgres_changes",{event:"INSERT",schema:"public",table:"chat_notices"},payload=>renderChatNotice(payload.new))
+        .on("postgres_changes",{event:"UPDATE",schema:"public",table:"chat_support_status"},payload=>setConnection(payload.new.status_text,payload.new.is_online))
+        .on("presence",{event:"sync"},()=>{
+          const count=Object.values(chatChannel.presenceState()).reduce((total,list)=>total+list.length,0);
+          if(chatOnlineCount) chatOnlineCount.textContent=`${count} online`;
+        })
+        .subscribe(async status=>{
+          if(status==="SUBSCRIBED"){
+            await chatChannel.track({online_at:new Date().toISOString()});
+            if(chatStatusText?.textContent==="Connecting…") setConnection("Community connected",true);
+            window.setInterval(reconcileChatMessages,30000);
+          }
+        });
+    }
+    async function reconcileChatMessages(){
+      if(!chatDb) return;
+      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
+      if(!data) return;
+      const visibleIds=new Set(data.map(item=>item.id));
+      renderedMessageIds.forEach(id=>{if(!visibleIds.has(id)) removeChatMessage(id)});
+      data.reverse().forEach(renderChatMessage);
+    }
+    async function joinLiveChat(){
+      const name=chatDisplayName?.value.trim();
+      if(!name){chatNameNotice.textContent="Maglagay muna ng pangalan.";return;}
+      if(isAdminName(name)){await loginInlineAdmin();return;}
+      chatJoin.disabled=true; chatNameNotice.textContent="Checking name…";
+      try{
+        await initLiveChat();
+        const {data,error}=await chatDb.rpc("chat_set_display_name",{p_display_name:name});
+        if(error) throw error;
+        if(!data?.ok){chatNameNotice.textContent=data?.notice||"Hindi puwedeng gamitin ang pangalang ito.";return;}
+        chatProfile={...(chatProfile||{}),public_name:data.public_name,role:"visitor"}; chatNameNotice.textContent=""; unlockComposer(); chatInput?.focus();
+      }catch(error){chatNameNotice.textContent="Hindi ma-save ang name ngayon. Subukan ulit.";console.error(error)}
+      finally{chatJoin.disabled=false;}
+    }
+    async function loginInlineAdmin(){
+      const password=chatAdminPassword?.value||"";
+      if(!password){chatNameNotice.textContent="Ilagay ang admin password.";chatAdminPassword?.focus();return;}
+      chatJoin.disabled=true;chatNameNotice.textContent="Verifying ACC Admin…";
+      try{
+        await initLiveChat();
+        const {data,error}=await chatDb.auth.signInWithPassword({email:AQUILA_CHAT_CONFIG.adminEmail,password});
+        if(error) throw error;
+        const {data:profile,error:profileError}=await chatDb.from("chat_profiles").select("user_id,public_name,role,strikes,mute_until,banned_at").eq("user_id",data.user.id).maybeSingle();
+        if(profileError||profile?.role!=="admin"){
+          await chatDb.auth.signOut();
+          const restored=await chatDb.auth.signInAnonymously();
+          if(!restored.error) chatSession=restored.data.session;
+          throw new Error("This account is not assigned as an ACC chat admin.");
+        }
+        chatSession=data.session;chatProfile=profile;chatAdminPassword.value="";chatNameNotice.textContent="";
+        await resetChatSubscription(data.user.id);unlockComposer();await reloadChatMessages();chatInput?.focus();
+      }catch(error){chatNameNotice.textContent="Maling password o hindi verified ang admin account.";console.error("ACC admin login:",error)}
+      finally{chatJoin.disabled=false;}
+    }
+    async function resetChatSubscription(userId){
+      if(chatChannel){await chatDb.removeChannel(chatChannel);chatChannel=null;}
+      subscribeToLiveChat(userId);
+    }
+    async function reloadChatMessages(){
+      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
+      if(!data)return;chatMessages.textContent="";renderedMessageIds.clear();data.reverse().forEach(renderChatMessage);
+    }
+    async function moderateInlineMessage(action,message){
+      if(chatProfile?.role!=="admin")return;
+      const label=action==="delete"?"delete this message":`${action} ${message.display_name}`;
+      if(!window.confirm(`ACC Admin: ${label}?`))return;
+      try{
+        if(action==="delete"){
+          const {error}=await chatDb.rpc("chat_admin_delete_message",{p_message_id:message.id,p_reason:"Removed from inline ACC moderation"});if(error)throw error;
+        }else{
+          const {error}=await chatDb.rpc("chat_admin_moderate_user",{p_user_id:message.sender_id,p_action:action,p_minutes:15,p_reason:"Inline ACC moderation"});if(error)throw error;
+        }
+        renderChatNotice(action==="delete"?"Message removed.":`Visitor ${action} action completed.`,"info",5000);await reloadChatMessages();
+      }catch(error){renderChatNotice("Hindi nagawa ang moderation action. Please try again.","warning");console.error(error)}
+    }
+    async function logoutInlineAdmin(){
+      if(!chatDb)return;
+      if(chatChannel){await chatDb.removeChannel(chatChannel);chatChannel=null;}
+      await chatDb.auth.signOut();
+      const {data,error}=await chatDb.auth.signInAnonymously();
+      if(error){location.reload();return;}
+      chatSession=data.session;chatProfile=null;setInlineAdminMode(false);chatNameGate?.classList.remove("hidden");
+      if(chatInput)chatInput.disabled=true;if(chatSend)chatSend.disabled=true;if(chatDisplayName)chatDisplayName.value="";syncAdminGate();
+      subscribeToLiveChat(data.user.id);await reloadChatMessages();
+    }
+    async function sendLiveChatMessage(){
+      const body=chatInput?.value.trim(); if(!body||!chatDb) return;
+      chatSend.disabled=true;
+      try{
+        const {data,error}=await chatDb.rpc("chat_send_message",{p_body:body});
+        if(error) throw error;
+        if(!data?.ok){
+          renderChatNotice(data?.notice||"Hindi naipadala ang message.","warning");
+          if(chatPrivateState) chatPrivateState.textContent=data?.mute_until?"Naka-pause muna ang chat mo dahil sa repeated violations.":"Private warning · message not posted publicly.";
+          return;
+        }
+        chatInput.value=""; chatInput.style.height="auto";
+      }catch(error){renderChatNotice("Hindi naipadala. Check your connection and try again.","warning");console.error(error)}
+      finally{chatSend.disabled=false;}
+    }
+    supportOrb?.addEventListener("click",()=>setChatOpen(!chatPanel?.classList.contains("show")));
+    chatClose?.addEventListener("click",()=>setChatOpen(false));
+    chatJoin?.addEventListener("click",joinLiveChat);
+    chatDisplayName?.addEventListener("input",syncAdminGate);
+    chatDisplayName?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
+    chatAdminPassword?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
+    chatAdminLogout?.addEventListener("click",logoutInlineAdmin);
+    chatSend?.addEventListener("click",sendLiveChatMessage);
+    chatInput?.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendLiveChatMessage()}});
+    chatInput?.addEventListener("input",()=>{chatInput.style.height="auto";chatInput.style.height=`${Math.min(chatInput.scrollHeight,105)}px`});
+
+  
     let deferredInstallPrompt = null;
     const installBtn = document.getElementById("installBtn");
     window.addEventListener("beforeinstallprompt", event => {
