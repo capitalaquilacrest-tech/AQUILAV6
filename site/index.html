@@ -437,10 +437,10 @@
     .chat-main{min-height:0;position:relative;background:linear-gradient(180deg,#f4f8fe,#fff);overflow:hidden}
     .chat-messages{height:100%;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
     .chat-empty{margin:auto;padding:26px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.55}.chat-empty strong{display:block;color:var(--navy);font-size:17px;margin-bottom:7px}
-    .chat-row{display:flex;flex-direction:column;align-items:flex-start;max-width:86%}.chat-row.admin{align-self:stretch;max-width:94%}.chat-meta{font-size:10px;color:#7c8ba4;margin:0 8px 4px}.chat-meta b{color:var(--navy)}.chat-admin-badge{display:inline-block;margin-left:4px;padding:2px 5px;border-radius:6px;background:#e8f1ff;color:var(--blue);font-size:8px;font-weight:950}.chat-bubble{padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:13px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);overflow-wrap:anywhere}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-mod-actions{display:none;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:8px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
+    .chat-row{display:flex;flex-direction:column;align-items:flex-start;max-width:86%;transition:.25s}.chat-row.admin{align-self:stretch;max-width:94%}.chat-row.chat-highlight{filter:drop-shadow(0 0 8px rgba(219,168,43,.55));transform:translateX(3px)}.chat-meta{font-size:10px;color:#7c8ba4;margin:0 8px 4px}.chat-meta b{color:var(--navy)}.chat-admin-badge{display:inline-block;margin-left:4px;padding:2px 5px;border-radius:6px;background:#e8f1ff;color:var(--blue);font-size:8px;font-weight:950}.chat-bubble{padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:13px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);overflow-wrap:anywhere}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-quote{display:block;width:100%;margin:0 0 7px;padding:7px 9px;border:0;border-left:3px solid var(--gold);border-radius:8px;background:rgba(6,26,68,.07);color:#53657f;text-align:left;font-size:10px;line-height:1.35;cursor:pointer;overflow:hidden}.chat-row.admin .chat-quote{background:rgba(255,255,255,.12);color:#e5edfb}.chat-quote b,.chat-quote span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-quote b{color:var(--navy);margin-bottom:2px}.chat-row.admin .chat-quote b{color:#fff}.chat-message-actions{display:flex;align-items:center;gap:8px;margin:4px 6px 0}.chat-message-actions button{border:0;background:none;padding:2px;color:#72829a;font-size:9px;font-weight:850;cursor:pointer}.chat-message-actions button:hover{color:var(--blue)}.chat-reaction-picker{display:none;gap:3px;padding:4px;border:1px solid #dbe5f1;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(6,26,68,.13)}.chat-reaction-picker.show{display:flex}.chat-reaction-picker button{width:27px;height:27px;padding:0;border-radius:50%;font-size:15px}.chat-reaction-picker button:hover{background:#edf4ff}.chat-reaction-summary{display:flex;gap:4px;flex-wrap:wrap;margin:4px 5px 0}.chat-reaction-pill{border:1px solid #dce6f3;border-radius:20px;padding:3px 7px;background:#fff;color:#465d7d;font-size:10px;cursor:pointer}.chat-reaction-pill.mine{border-color:#6fa3ef;background:#eaf2ff;color:#174e9f}.chat-mod-actions{display:none;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:8px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
     .chat-notice{align-self:center;width:94%;padding:9px 12px;border-radius:12px;text-align:center;font-size:11px;line-height:1.4;background:#eaf2ff;color:#194d9d;border:1px solid #cfe0fb;transition:.25s}.chat-notice.warning{background:#fff2f2;color:#a32635;border-color:#ffd2d8}.chat-notice.fade{opacity:0;transform:translateY(-5px)}
     .chat-name-gate{position:absolute;inset:0;z-index:2;background:rgba(247,250,255,.97);padding:24px 20px;display:grid;place-content:center;text-align:center}.chat-name-gate.hidden{display:none}.chat-name-gate h3{margin:0;color:var(--navy);font-size:20px}.chat-name-gate p{color:var(--muted);font-size:12px;line-height:1.55;margin:8px 0 15px}.chat-name-gate input,.chat-login input,.chat-composer textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:13px;padding:12px;outline:none}.chat-name-gate input+input{margin-top:8px}.chat-name-gate input:focus,.chat-composer textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(15,91,216,.1)}.chat-name-gate button{width:100%;margin-top:9px;border:0;border-radius:13px;padding:12px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--red),var(--blue));cursor:pointer}.chat-admin-password{display:none}.chat-admin-password.show{display:block}.chat-private-note{min-height:18px;margin-top:8px;color:#ae2e3d;font-size:11px}
-    .chat-foot{padding:11px 12px;border-top:1px solid var(--line);background:#fff}.chat-composer{display:flex;align-items:flex-end;gap:8px}.chat-composer textarea{min-height:44px;max-height:105px;resize:none;font:inherit;font-size:13px}.chat-send{flex:0 0 44px;width:44px;height:44px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--red),var(--blue));color:#fff;cursor:pointer;font-weight:950}.chat-send:disabled{opacity:.45;cursor:not-allowed}.chat-footline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;font-size:9px;color:#8996aa}.chat-footline a{color:var(--blue);font-weight:850}.chat-state{font-weight:800}.chat-admin-logout{display:none;border:0;background:none;padding:0;color:#ad2637;font-size:9px;font-weight:950;cursor:pointer}.chat-panel.admin-mode .chat-admin-logout{display:inline}
+    .chat-foot{padding:11px 12px;border-top:1px solid var(--line);background:#fff}.chat-reply-preview{display:none;align-items:center;gap:8px;margin-bottom:8px;padding:8px 10px;border-radius:11px;background:#eef4fc;border-left:3px solid var(--blue);font-size:10px;color:#526681}.chat-reply-preview.show{display:flex}.chat-reply-preview .copy{min-width:0;flex:1}.chat-reply-preview b,.chat-reply-preview span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-reply-preview b{color:var(--navy);margin-bottom:2px}.chat-reply-cancel{border:0;background:none;color:#7a8ba4;font-size:18px;cursor:pointer}.chat-composer{display:flex;align-items:flex-end;gap:8px}.chat-composer textarea{min-height:44px;max-height:105px;resize:none;font:inherit;font-size:13px}.chat-send{flex:0 0 44px;width:44px;height:44px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--red),var(--blue));color:#fff;cursor:pointer;font-weight:950}.chat-send:disabled{opacity:.45;cursor:not-allowed}.chat-footline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;font-size:9px;color:#8996aa}.chat-footline a{color:var(--blue);font-weight:850}.chat-state{font-weight:800}.chat-admin-logout{display:none;border:0;background:none;padding:0;color:#ad2637;font-size:9px;font-weight:950;cursor:pointer}.chat-panel.admin-mode .chat-admin-logout{display:inline}
 
     @media(max-width:800px){
       .journey{grid-template-columns:1fr 1fr}
@@ -988,6 +988,7 @@
       </div>
     </div>
     <footer class="chat-foot">
+      <div class="chat-reply-preview" id="chatReplyPreview"><div class="copy"><b id="chatReplyName"></b><span id="chatReplyBody"></span></div><button class="chat-reply-cancel" id="chatReplyCancel" type="button" aria-label="Cancel reply">×</button></div>
       <div class="chat-composer">
         <textarea id="chatInput" rows="1" maxlength="500" placeholder="Ask about Aquila Crest…" aria-label="Chat message" disabled></textarea>
         <button class="chat-send" id="chatSend" type="button" aria-label="Send message" disabled>➤</button>
@@ -1319,12 +1320,19 @@
     const chatStatusText = document.getElementById("chatStatusText");
     const chatOnlineCount = document.getElementById("chatOnlineCount");
     const chatAdminLogout = document.getElementById("chatAdminLogout");
+    const chatReplyPreview = document.getElementById("chatReplyPreview");
+    const chatReplyName = document.getElementById("chatReplyName");
+    const chatReplyBody = document.getElementById("chatReplyBody");
+    const chatReplyCancel = document.getElementById("chatReplyCancel");
     let chatDb = null;
     let chatSession = null;
     let chatProfile = null;
     let chatChannel = null;
     let chatReady = false;
     let unreadCount = 0;
+    let replyingTo = null;
+    const reactionState = new Map();
+    const allowedReactions = ["👍","❤️","😂","😮","😢"];
     const renderedMessageIds = new Set();
 
     function chatConfigured(){
@@ -1362,7 +1370,43 @@
       if(chatInput) chatInput.placeholder=enabled?"Reply as verified ACC Admin…":"Ask about Aquila Crest…";
       if(chatPrivateState) chatPrivateState.textContent=enabled?"ACC Admin ✓ · Moderation controls enabled.":`Chatting as ${chatProfile?.public_name||"visitor"} · Private warnings are visible only to you.`;
     }
-    function renderChatMessage(message){
+    function startReply(message){
+      replyingTo=message;
+      if(chatReplyName) chatReplyName.textContent=`Replying to ${message.sender_role==="admin"?"ACC Admin":message.display_name}`;
+      if(chatReplyBody) chatReplyBody.textContent=message.body;
+      chatReplyPreview?.classList.add("show");
+      chatInput?.focus();
+    }
+    function cancelReply(){replyingTo=null;chatReplyPreview?.classList.remove("show")}
+    function jumpToMessage(id){
+      const target=chatMessages?.querySelector(`[data-message-id="${CSS.escape(String(id))}"]`);
+      if(!target)return;target.scrollIntoView({behavior:"smooth",block:"center"});target.classList.add("chat-highlight");setTimeout(()=>target.classList.remove("chat-highlight"),1400);
+    }
+    function updateReactionSummary(messageId){
+      const row=chatMessages?.querySelector(`[data-message-id="${CSS.escape(String(messageId))}"]`);if(!row)return;
+      const box=row.querySelector(".chat-reaction-summary");if(!box)return;box.textContent="";
+      const list=reactionState.get(messageId)||[];
+      allowedReactions.forEach(emoji=>{
+        const matches=list.filter(item=>item.emoji===emoji);if(!matches.length)return;
+        const pill=document.createElement("button");pill.type="button";pill.className="chat-reaction-pill";pill.textContent=`${emoji} ${matches.length}`;
+        if(matches.some(item=>item.user_id===chatSession?.user?.id))pill.classList.add("mine");
+        pill.addEventListener("click",()=>toggleReaction(messageId,emoji));box.append(pill);
+      });
+    }
+    function setReactionRows(rows){
+      reactionState.clear();(rows||[]).forEach(item=>{const list=reactionState.get(item.message_id)||[];list.push(item);reactionState.set(item.message_id,list)});
+      renderedMessageIds.forEach(updateReactionSummary);
+    }
+    async function reloadReactions(){
+      if(!chatDb)return;const ids=[...renderedMessageIds];if(!ids.length){setReactionRows([]);return;}
+      const {data,error}=await chatDb.from("chat_reactions").select("message_id,user_id,emoji,created_at").in("message_id",ids);if(!error)setReactionRows(data);
+    }
+    async function toggleReaction(messageId,emoji){
+      if(!chatProfile){renderChatNotice("Enter your name first before reacting.","info",4000);return;}
+      const {data,error}=await chatDb.rpc("chat_toggle_reaction",{p_message_id:messageId,p_emoji:emoji});
+      if(error||!data?.ok){renderChatNotice(data?.notice||"Hindi na-save ang reaction.","warning",4000);return;}await reloadReactions();
+    }
+    function renderChatMessage(message,countUnread=true){
       if(!message?.id || message.status!=="visible" || renderedMessageIds.has(message.id)) return;
       renderedMessageIds.add(message.id); removeChatEmpty();
       const row=document.createElement("div"); row.className=`chat-row ${message.sender_role==="admin"?"admin":""}`; row.dataset.messageId=message.id;
@@ -1373,13 +1417,20 @@
         const badge=document.createElement("span"); badge.className="chat-admin-badge"; badge.textContent="VERIFIED ✓"; meta.append(badge);
       }
       meta.append(document.createTextNode(` · ${formatChatTime(message.created_at)}`));
-      const bubble=document.createElement("div"); bubble.className="chat-bubble"; bubble.textContent=message.body;
+      const bubble=document.createElement("div"); bubble.className="chat-bubble";
+      if(message.reply_to){const quote=document.createElement("button");quote.type="button";quote.className="chat-quote";const qName=document.createElement("b");qName.textContent=message.reply_to_display_name||"Original message";const qBody=document.createElement("span");qBody.textContent=message.reply_to_body||"Message";quote.append(qName,qBody);quote.addEventListener("click",()=>jumpToMessage(message.reply_to));bubble.append(quote)}
+      bubble.append(document.createTextNode(message.body));
+      const messageActions=document.createElement("div");messageActions.className="chat-message-actions";
+      const replyButton=document.createElement("button");replyButton.type="button";replyButton.textContent="↩ Reply";replyButton.addEventListener("click",()=>startReply(message));
+      const reactButton=document.createElement("button");reactButton.type="button";reactButton.textContent="☺ React";
+      const picker=document.createElement("div");picker.className="chat-reaction-picker";allowedReactions.forEach(emoji=>{const button=document.createElement("button");button.type="button";button.textContent=emoji;button.setAttribute("aria-label",`React ${emoji}`);button.addEventListener("click",async()=>{picker.classList.remove("show");await toggleReaction(message.id,emoji)});picker.append(button)});reactButton.addEventListener("click",()=>picker.classList.toggle("show"));messageActions.append(replyButton,reactButton,picker);
+      const reactionSummary=document.createElement("div");reactionSummary.className="chat-reaction-summary";
       const actions=document.createElement("div"); actions.className="chat-mod-actions";
       if(message.sender_role!=="admin"&&message.sender_id){
         [["DELETE","delete"],["MUTE 15M","mute"],["BAN","ban"]].forEach(([label,action])=>{const button=document.createElement("button");button.type="button";button.dataset.action=action;button.textContent=label;button.addEventListener("click",()=>moderateInlineMessage(action,message));actions.append(button);});
       }
-      row.append(meta,bubble,actions); chatMessages?.append(row); chatMessages.scrollTop=chatMessages.scrollHeight;
-      if(!chatPanel?.classList.contains("show")){ unreadCount+=1; updateUnread(); }
+      row.append(meta,bubble,messageActions,reactionSummary,actions); chatMessages?.append(row);updateReactionSummary(message.id); chatMessages.scrollTop=chatMessages.scrollHeight;
+      if(countUnread&&!chatPanel?.classList.contains("show")){ unreadCount+=1; updateUnread(); }
     }
     function removeChatMessage(id){
       chatMessages?.querySelector(`[data-message-id="${CSS.escape(String(id))}"]`)?.remove();
@@ -1417,12 +1468,13 @@
         const userId=chatSession.user.id;
         const [{data:profile},{data:messages},{data:notices},{data:support}]=await Promise.all([
           chatDb.from("chat_profiles").select("user_id,public_name,role,strikes,mute_until,banned_at").eq("user_id",userId).maybeSingle(),
-          chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit),
+          chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,reply_to,reply_to_display_name,reply_to_body").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit),
           chatDb.from("chat_notices").select("id,body,notice_type,expires_at").gt("expires_at",new Date().toISOString()).order("created_at",{ascending:true}),
           chatDb.from("chat_support_status").select("is_online,status_text").eq("id",1).maybeSingle()
         ]);
         chatProfile=profile||null;
         (messages||[]).reverse().forEach(renderChatMessage);
+        await reloadReactions();
         (notices||[]).forEach(n=>renderChatNotice(n));
         if(chatProfile) unlockComposer();
         if(support){ setConnection(support.status_text|| (support.is_online?"Support online":"Support offline"),support.is_online); }
@@ -1438,9 +1490,13 @@
       chatChannel=chatDb.channel("aquila-public-chat",{config:{presence:{key:userId}}})
         .on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},payload=>{
           if(payload.eventType==="INSERT") renderChatMessage(payload.new);
-          else if(payload.eventType==="UPDATE") payload.new.status==="visible"?renderChatMessage(payload.new):removeChatMessage(payload.new.id);
+          else if(payload.eventType==="UPDATE"){
+            removeChatMessage(payload.new.id);
+            if(payload.new.status==="visible")renderChatMessage(payload.new,false);
+          }
           else if(payload.old?.id) removeChatMessage(payload.old.id);
         })
+        .on("postgres_changes",{event:"*",schema:"public",table:"chat_reactions"},()=>reloadReactions())
         .on("postgres_changes",{event:"INSERT",schema:"public",table:"chat_notices"},payload=>renderChatNotice(payload.new))
         .on("postgres_changes",{event:"UPDATE",schema:"public",table:"chat_support_status"},payload=>setConnection(payload.new.status_text,payload.new.is_online))
         .on("presence",{event:"sync"},()=>{
@@ -1457,11 +1513,12 @@
     }
     async function reconcileChatMessages(){
       if(!chatDb) return;
-      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
+      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,reply_to,reply_to_display_name,reply_to_body").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
       if(!data) return;
       const visibleIds=new Set(data.map(item=>item.id));
       renderedMessageIds.forEach(id=>{if(!visibleIds.has(id)) removeChatMessage(id)});
       data.reverse().forEach(renderChatMessage);
+      await reloadReactions();
     }
     async function joinLiveChat(){
       const name=chatDisplayName?.value.trim();
@@ -1502,8 +1559,8 @@
       subscribeToLiveChat(userId);
     }
     async function reloadChatMessages(){
-      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
-      if(!data)return;chatMessages.textContent="";renderedMessageIds.clear();data.reverse().forEach(renderChatMessage);
+      const {data}=await chatDb.from("chat_messages").select("id,sender_id,display_name,body,sender_role,status,created_at,reply_to,reply_to_display_name,reply_to_body").eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
+      if(!data)return;chatMessages.textContent="";renderedMessageIds.clear();data.reverse().forEach(renderChatMessage);await reloadReactions();
     }
     async function moderateInlineMessage(action,message){
       if(chatProfile?.role!=="admin")return;
@@ -1532,14 +1589,14 @@
       const body=chatInput?.value.trim(); if(!body||!chatDb) return;
       chatSend.disabled=true;
       try{
-        const {data,error}=await chatDb.rpc("chat_send_message",{p_body:body});
+        const {data,error}=await chatDb.rpc("chat_send_message",{p_body:body,p_reply_to:replyingTo?.id||null});
         if(error) throw error;
         if(!data?.ok){
           renderChatNotice(data?.notice||"Hindi naipadala ang message.","warning");
           if(chatPrivateState) chatPrivateState.textContent=data?.mute_until?"Naka-pause muna ang chat mo dahil sa repeated violations.":"Private warning · message not posted publicly.";
           return;
         }
-        chatInput.value=""; chatInput.style.height="auto";
+        chatInput.value=""; chatInput.style.height="auto";cancelReply();
       }catch(error){renderChatNotice("Hindi naipadala. Check your connection and try again.","warning");console.error(error)}
       finally{chatSend.disabled=false;}
     }
@@ -1550,6 +1607,7 @@
     chatDisplayName?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
     chatAdminPassword?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
     chatAdminLogout?.addEventListener("click",logoutInlineAdmin);
+    chatReplyCancel?.addEventListener("click",cancelReply);
     chatSend?.addEventListener("click",sendLiveChatMessage);
     chatInput?.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendLiveChatMessage()}});
     chatInput?.addEventListener("input",()=>{chatInput.style.height="auto";chatInput.style.height=`${Math.min(chatInput.scrollHeight,105)}px`});
