@@ -420,20 +420,6 @@
     }
     .sticky-convert.show{transform:translateX(-50%) translateY(0)}
     .sticky-convert small{display:block;color:#c9d8ee;margin-top:3px}
-    .support-orb{
-      position:fixed;right:18px;bottom:88px;z-index:89;width:58px;height:58px;border-radius:999px;
-      display:grid;place-items:center;border:0;cursor:pointer;color:#fff;font-size:23px;
-      background:linear-gradient(135deg,var(--red),var(--blue));box-shadow:0 15px 35px rgba(6,26,68,.25);
-    }
-    .support-menu{
-      position:fixed;right:18px;bottom:156px;z-index:89;width:230px;padding:12px;border-radius:18px;
-      background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);display:none;
-    }
-    .support-menu.show{display:grid;gap:8px}
-    .support-menu a,.support-menu button{
-      border:0;background:#f5f8fd;border-radius:12px;padding:12px;text-align:left;color:var(--navy);font-weight:800;cursor:pointer;
-    }
-
     @media(max-width:800px){
       .journey{grid-template-columns:1fr 1fr}
       .journey::before{display:none}
@@ -576,8 +562,7 @@
         <a href="#faq">FAQ</a>
       </div>
       <div class="nav-actions">
-        <button class="btn btn-glass" data-dashboard>Member Login</button>
-        <button class="btn btn-primary" data-dashboard>Get Started</button>
+        <button class="btn btn-primary" data-dashboard>LOGIN DASHBOARD</button>
       </div>
     </div>
   </nav>
@@ -925,7 +910,7 @@
         <details><summary>Where can I track my Capital Reserve?</summary><p>Active contracts, projections, remaining days, maturity, and status are available inside the member dashboard.</p></details>
         <details><summary>Are the activity cards updated automatically?</summary><p>Yes. Public-safe approved deposits, released withdrawals, active Capital Reserves, and approved reinvestments are loaded automatically.</p></details>
         <details><summary>Are withdrawal photos updated automatically?</summary><p>Yes. New images added to the official payout folder can appear automatically in the withdrawal gallery.</p></details>
-        <details><summary>How do I access the Member Portal?</summary><p>Use any official Member Login, Create Account, Get Started, or Open Member Portal button on this website.</p></details>
+        <details><summary>How do I access the Member Portal?</summary><p>Use the official Login Dashboard or Create Account button on this website.</p></details>
         <details><summary>Where do members get help?</summary><p>Support is available through the member dashboard and organized community channels.</p></details>
       </div>
     </section>
@@ -938,7 +923,6 @@
           <p>Enter the member portal to create your account, access your dashboard, and explore the tools available inside the Aquila ecosystem.</p>
           <div class="hero-cta">
             <button class="btn btn-primary" data-dashboard>CREATE ACCOUNT</button>
-            <button class="btn btn-glass" data-dashboard>MEMBER LOGIN</button>
           </div>
         </div>
         <div class="cta-logo"><img src="assets/logo.jpg" alt="Aquila Crest Capital emblem"></div>
@@ -949,17 +933,10 @@
 
   <div class="sticky-convert" id="stickyConvert">
     <div><strong>Ready to explore the member portal?</strong><small>Create an account or sign in to continue.</small></div>
-    <button class="btn btn-primary" data-dashboard>GET STARTED</button>
+    <button class="btn btn-primary" data-dashboard>LOGIN DASHBOARD</button>
   </div>
 
   <button class="install-btn" id="installBtn" type="button">INSTALL AQUILA</button>
-
-  <button class="support-orb" id="supportOrb" aria-label="Open support options">💬</button>
-  <div class="support-menu" id="supportMenu">
-    <button type="button" data-dashboard>Open Member Portal</button>
-    <a href="#faq">Read FAQ</a>
-    <a href="#community">Community Channels</a>
-  </div>
 
   <footer>
     <div class="footer-grid">
@@ -1256,11 +1233,6 @@
       stickyConvert.classList.toggle("show", window.scrollY > threshold && window.scrollY < document.documentElement.scrollHeight - window.innerHeight - 450);
     });
 
-    const supportOrb = document.getElementById("supportOrb");
-    const supportMenu = document.getElementById("supportMenu");
-    supportOrb?.addEventListener("click", () => supportMenu?.classList.toggle("show"));
-
-  
     let deferredInstallPrompt = null;
     const installBtn = document.getElementById("installBtn");
     window.addEventListener("beforeinstallprompt", event => {
