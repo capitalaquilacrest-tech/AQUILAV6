@@ -1,22 +1,29 @@
 {
+  "id": "/",
   "name": "Aquila Crest Capital",
   "short_name": "Aquila Crest",
   "description": "Official Aquila Crest Capital digital member platform.",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#061a44",
   "theme_color": "#061a44",
+  "lang": "en-PH",
+  "categories": ["business", "finance"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "assets/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "assets/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
