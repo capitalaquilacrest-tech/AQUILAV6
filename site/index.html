@@ -434,7 +434,7 @@
     .chat-panel.show{display:grid;grid-template-rows:auto auto 1fr auto;animation:chatRise .22s ease-out}
     @keyframes chatRise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
     .chat-head{padding:16px 17px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .chat-title{display:flex;align-items:center;gap:11px;min-width:0}.chat-title-copy{min-width:0}.chat-mark{width:38px;height:38px;border-radius:12px;background:#fff;padding:5px;object-fit:contain}.chat-title strong{display:block;font-size:15px}.chat-title small{display:flex;align-items:center;gap:6px;color:#d6e4fb;font-size:11px;margin-top:3px}.chat-dot{width:8px;height:8px;border-radius:50%;background:#ffb020}.chat-dot.online{background:#32d583}.chat-head-actions{display:flex;align-items:center;gap:6px;flex:0 0 auto}.chat-sound-toggle,.chat-close{border:0;background:rgba(255,255,255,.1);color:#fff;width:34px;height:34px;border-radius:11px;cursor:pointer;flex:0 0 34px;touch-action:manipulation}.chat-sound-toggle{font-size:15px}.chat-sound-toggle:hover,.chat-close:hover{background:rgba(255,255,255,.19)}.chat-sound-toggle[aria-pressed="false"]{opacity:.68}.chat-close{font-size:18px}
+    .chat-title{display:flex;align-items:center;gap:11px;min-width:0}.chat-title-copy{min-width:0}.chat-mark{width:38px;height:38px;border-radius:12px;background:#fff;padding:5px;object-fit:contain}.chat-title strong{display:block;font-size:15px}.chat-title small{display:flex;align-items:center;gap:6px;color:#d6e4fb;font-size:11px;margin-top:3px}.chat-dot{width:8px;height:8px;border-radius:50%;background:#ffb020}.chat-dot.online{background:#32d583}.chat-head-actions{display:flex;align-items:center;gap:6px;flex:0 0 auto}.chat-push-toggle,.chat-sound-toggle,.chat-close{border:0;background:rgba(255,255,255,.1);color:#fff;width:34px;height:34px;border-radius:11px;cursor:pointer;flex:0 0 34px;touch-action:manipulation}.chat-push-toggle,.chat-sound-toggle{font-size:15px}.chat-push-toggle:hover,.chat-sound-toggle:hover,.chat-close:hover{background:rgba(255,255,255,.19)}.chat-push-toggle.enabled{background:#198754;color:#fff;box-shadow:0 0 0 2px rgba(50,213,131,.28)}.chat-push-toggle.denied{opacity:.55}.chat-push-toggle:disabled{cursor:not-allowed;opacity:.45}.chat-sound-toggle[aria-pressed="false"]{opacity:.68}.chat-close{font-size:18px}
     .chat-identity-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px}.chat-identity-top .chat-state{color:#fff;font-size:10px;font-weight:850}.chat-identity-top .chat-change-name{display:none;align-items:center;border:1px solid rgba(255,255,255,.55);border-radius:999px;background:#fff;padding:5px 9px;color:var(--blue);font-size:9px;font-weight:950;cursor:pointer;pointer-events:auto;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.12)}.chat-panel.visitor-mode .chat-identity-top .chat-change-name{display:inline-flex}.chat-identity-top .chat-change-name:hover{background:#fff6d8;color:var(--navy)}.chat-identity-top .chat-change-name:disabled{opacity:.55;cursor:wait}.chat-panel.admin-mode .chat-identity-top .chat-change-name{display:none}.chat-rename-box{display:none;align-items:center;gap:5px;width:100%;margin-top:7px}.chat-rename-box.show{display:flex}.chat-rename-box input{min-width:0;flex:1;height:31px;border:1px solid rgba(255,255,255,.5);border-radius:9px;background:#fff;padding:6px 8px;color:var(--navy);font-size:11px;outline:none}.chat-rename-box button{height:31px;border:1px solid rgba(255,255,255,.5);border-radius:9px;padding:0 8px;background:#fff;color:var(--blue);font-size:9px;font-weight:950;cursor:pointer}.chat-rename-box .cancel{background:rgba(255,255,255,.12);color:#fff}.chat-panel:not(.visitor-mode) .chat-rename-box{display:none}
     .chat-rules{padding:10px 14px;background:#fff9e8;border-bottom:1px solid #f2e2aa;color:#69551d;font-size:11px;line-height:1.45}.chat-rules b{color:var(--navy)}
     .chat-main{min-width:0;min-height:0;position:relative;background:linear-gradient(180deg,#f4f8fe,#fff);overflow:hidden}
@@ -456,6 +456,11 @@
       .chat-panel{left:12px;right:12px;bottom:84px;width:auto;max-width:none;height:min(72dvh,680px);border-radius:22px}
       .chat-name-gate input,.chat-rename-box input,.chat-login input{font-size:16px}
       .support-orb{right:14px;bottom:20px}
+    }
+    @media(max-width:380px){
+      .chat-head{padding:12px 10px;gap:6px}
+      .chat-title{gap:7px}.chat-mark{width:32px;height:32px;border-radius:9px}.chat-title strong{font-size:13px}.chat-title small{flex-wrap:wrap;gap:3px;font-size:9px}
+      .chat-head-actions{gap:4px}.chat-push-toggle,.chat-sound-toggle,.chat-close{width:30px;height:30px;flex-basis:30px;border-radius:9px}
     }
 
   
@@ -983,6 +988,7 @@
         </div>
       </div>
       <div class="chat-head-actions">
+        <button class="chat-push-toggle" id="chatPushToggle" type="button" aria-label="Enable phone notifications" aria-pressed="false" title="Enable phone notifications">📲</button>
         <button class="chat-sound-toggle" id="chatSoundToggle" type="button" aria-label="Turn message sound off" aria-pressed="true" title="Message sound on">🔔</button>
         <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">×</button>
       </div>
@@ -1333,6 +1339,7 @@
     const AQUILA_CHAT_CONFIG = Object.freeze({
       supabaseUrl: "https://jkewnkgkcjiszwvszkkw.supabase.co",
       supabaseKey: "sb_publishable_HQnPqakVKjq9roi39Qazrw_v9WgOtaU",
+      vapidPublicKey: "BORto0V1LXLjui1mxnsKWOxenF4af5VKMHYowFo-XfZkQjAdvYjB9vxN3wDtWmO0FocHdJ1MtKBwgGbwriHGNzc",
       adminEmail: "capitalaquilacrest@gmail.com",
       historyLimit: 300
     });
@@ -1343,6 +1350,7 @@
     const chatMessages = document.getElementById("chatMessages");
     const chatEmpty = document.getElementById("chatEmpty");
     const chatUnread = document.getElementById("chatUnread");
+    const chatPushToggle = document.getElementById("chatPushToggle");
     const chatSoundToggle = document.getElementById("chatSoundToggle");
     const chatNameGate = document.getElementById("chatNameGate");
     const chatDisplayName = document.getElementById("chatDisplayName");
@@ -1395,6 +1403,7 @@
     let chatSoundEnabled = (()=>{try{return localStorage.getItem("aquilaChatSound")!=="off";}catch(_){return true;}})();
     let chatSoundContext = null;
     let lastChatSoundAt = 0;
+    let chatPushBusy = false;
     let replyingTo = null;
     let editingMessage = null;
     let pendingMedia = null;
@@ -1484,6 +1493,83 @@
       try{localStorage.setItem("aquilaChatSound",chatSoundEnabled?"on":"off");}catch(_){}
       updateChatSoundToggle();
       if(chatSoundEnabled)playCuteChatSound(true);
+    }
+    function pushSupported(){
+      return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+    }
+    function isIOSDevice(){return /iphone|ipad|ipod/i.test(navigator.userAgent||"");}
+    function isStandaloneApp(){return window.matchMedia?.("(display-mode: standalone)").matches||window.navigator.standalone===true;}
+    function urlBase64ToUint8Array(value){
+      const padding="=".repeat((4-value.length%4)%4);
+      const base64=(value+padding).replace(/-/g,"+").replace(/_/g,"/");
+      const raw=atob(base64);return Uint8Array.from([...raw].map(char=>char.charCodeAt(0)));
+    }
+    function updatePushToggle(state="off"){
+      if(!chatPushToggle)return;
+      const states={
+        unsupported:["—","Hindi supported ang phone notifications sa browser na ito"],
+        denied:["🔕","Blocked ang notifications — i-enable sa phone/browser Settings"],
+        enabled:["✅","Phone notifications enabled — tap para i-off"],
+        busy:["…","Inaayos ang notifications…"],
+        off:["📲","Enable phone notifications"]
+      };
+      const [icon,label]=states[state]||states.off;
+      chatPushToggle.textContent=icon;chatPushToggle.title=label;chatPushToggle.setAttribute("aria-label",label);
+      chatPushToggle.setAttribute("aria-pressed",String(state==="enabled"));
+      chatPushToggle.disabled=state==="unsupported"||state==="busy";
+      chatPushToggle.classList.toggle("enabled",state==="enabled");
+      chatPushToggle.classList.toggle("denied",state==="denied");
+    }
+    async function getPushSubscription(){
+      if(!pushSupported())return null;
+      const registration=await navigator.serviceWorker.ready;
+      return registration.pushManager.getSubscription();
+    }
+    async function savePushSubscription(subscription){
+      if(!chatDb||!chatSession?.user?.id)throw new Error("Chat session unavailable");
+      const json=subscription.toJSON();
+      const {data,error}=await chatDb.rpc("chat_register_push_subscription",{
+        p_endpoint:subscription.endpoint,
+        p_p256dh:json.keys?.p256dh||"",
+        p_auth_key:json.keys?.auth||"",
+        p_expiration_time:subscription.expirationTime?Math.round(subscription.expirationTime):null,
+        p_user_agent:(navigator.userAgent||"").slice(0,500)
+      });
+      if(error)throw error;if(!data?.ok)throw new Error(data?.notice||"Push registration failed");
+    }
+    async function refreshPushState(){
+      if(!pushSupported()){updatePushToggle("unsupported");return;}
+      if(Notification.permission==="denied"){updatePushToggle("denied");return;}
+      try{updatePushToggle((await getPushSubscription())?"enabled":"off");}catch(_){updatePushToggle("off");}
+    }
+    async function togglePhoneNotifications(){
+      if(chatPushBusy)return;
+      if(!pushSupported()){renderChatNotice("Hindi supported ng browser na ito ang phone push notifications.","warning");return;}
+      if(isIOSDevice()&&!isStandaloneApp()){
+        renderChatNotice("Sa iPhone/iPad: buksan ang Share menu, piliin ang Add to Home Screen, buksan ang Aquila app icon, saka pindutin ulit ang 📲.","warning",20000);return;
+      }
+      chatPushBusy=true;updatePushToggle("busy");
+      try{
+        await initLiveChat();
+        for(let attempt=0;attempt<40&&!chatSession?.user?.id;attempt++)await new Promise(resolve=>setTimeout(resolve,100));
+        if(!chatSession?.user?.id||!chatDb)throw new Error("Chat session unavailable");
+        let subscription=await getPushSubscription();
+        if(subscription){
+          if(chatDb){await chatDb.rpc("chat_unregister_push_subscription",{p_endpoint:subscription.endpoint});}
+          await subscription.unsubscribe();updatePushToggle("off");
+          renderChatNotice("Naka-off na ang phone notifications. Mananatili pa rin ang sound habang bukas ang site.");
+          return;
+        }
+        const permission=Notification.permission==="granted"?"granted":await Notification.requestPermission();
+        if(permission!=="granted"){updatePushToggle(permission==="denied"?"denied":"off");renderChatNotice("Hindi na-enable ang notifications. Maaari mo itong payagan sa browser o phone Settings.","warning");return;}
+        const registration=await navigator.serviceWorker.ready;
+        subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(AQUILA_CHAT_CONFIG.vapidPublicKey)});
+        await savePushSubscription(subscription);updatePushToggle("enabled");
+        renderChatNotice("Phone notifications are ON ✓ Makakatanggap ka na kahit sarado ang Aquila app.");
+      }catch(error){
+        console.error("Aquila push setup:",error);updatePushToggle(Notification.permission==="denied"?"denied":"off");
+        renderChatNotice("Hindi pa na-activate ang phone notifications. Siguraduhing na-run ang Push SQL at naka-deploy ang push sender.","warning");
+      }finally{chatPushBusy=false;if(chatPushToggle?.textContent==="…")refreshPushState();}
     }
     function setConnection(label,online=false){
       if(chatStatusText) chatStatusText.textContent=label;
@@ -2075,6 +2161,7 @@
     }
     supportOrb?.addEventListener("click",()=>setChatOpen(!chatPanel?.classList.contains("show")));
     chatSoundToggle?.addEventListener("click",toggleChatSound);
+    chatPushToggle?.addEventListener("click",togglePhoneNotifications);
     document.addEventListener("pointerdown",()=>{primeChatSound();initLiveChat();},{once:true,passive:true});
     document.addEventListener("visibilitychange",()=>{if(!document.hidden&&chatPanel?.classList.contains("show")){unreadCount=0;updateUnread();}});
     chatClose?.addEventListener("click",()=>setChatOpen(false));
@@ -2108,6 +2195,7 @@
     chatPhotoViewer?.addEventListener("touchend",event=>{if(viewerTouchStartX===null||viewerItems.length<2)return;const delta=(event.changedTouches?.[0]?.clientX??viewerTouchStartX)-viewerTouchStartX;viewerTouchStartX=null;if(Math.abs(delta)<45)return;viewerIndex+=delta<0?1:-1;updatePhotoViewer()},{passive:true});
     document.addEventListener("keydown",event=>{if(!chatPhotoViewer?.classList.contains("show"))return;if(event.key==="Escape")closePhotoViewer();else if(event.key==="ArrowLeft"){viewerIndex--;updatePhotoViewer()}else if(event.key==="ArrowRight"){viewerIndex++;updatePhotoViewer()}});
     updateChatSoundToggle();
+    refreshPushState();
 
   
     let deferredInstallPrompt = null;
@@ -2127,7 +2215,16 @@
     window.addEventListener("appinstalled", () => installBtn?.classList.remove("show"));
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
+      navigator.serviceWorker.addEventListener("message",event=>{if(event.data?.type==="AQUILA_OPEN_CHAT")setChatOpen(true);});
     }
+    function openChatFromLaunch(){
+      const params=new URLSearchParams(location.search);
+      if(params.get("openChat")==="1"){
+        params.delete("openChat");const query=params.toString();history.replaceState(null,"",`${location.pathname}${query?`?${query}`:""}${location.hash}`);
+        setChatOpen(true);
+      }
+    }
+    window.addEventListener("load",openChatFromLaunch);
 
   </script>
 </body>
