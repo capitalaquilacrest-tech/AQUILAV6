@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-4-louder-chat-sound";
+const CACHE = "aquila-vnext-5-double-sound-latest-chat";
 const ASSETS = [
   "./",
   "index.html",
