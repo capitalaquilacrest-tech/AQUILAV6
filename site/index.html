@@ -1469,6 +1469,7 @@
     let chatSoundEnabled = (()=>{try{return localStorage.getItem("aquilaChatSound")!=="off";}catch(_){return true;}})();
     let chatSoundContext = null;
     let lastChatSoundAt = 0;
+    let initialLatestScrollUntil = 0;
     let chatPushBusy = false;
     let replyingTo = null;
     let editingMessage = null;
@@ -1503,7 +1504,19 @@
       chatPanel?.classList.toggle("show",open);
       chatPanel?.setAttribute("aria-hidden",String(!open));
       supportOrb?.setAttribute("aria-expanded",String(open));
-      if(open){ unreadCount=0; updateUnread(); initLiveChat(); setTimeout(()=>chatInput?.focus(),180); }
+      if(open){
+        unreadCount=0; updateUnread();
+        initialLatestScrollUntil=Date.now()+1400;
+        Promise.resolve(initLiveChat()).finally(()=>scrollChatToLatestOnOpen());
+        requestAnimationFrame(()=>scrollChatToLatestOnOpen());
+        setTimeout(()=>scrollChatToLatestOnOpen(),120);
+        setTimeout(()=>scrollChatToLatestOnOpen(),420);
+        setTimeout(()=>chatInput?.focus(),180);
+      }
+    }
+    function scrollChatToLatestOnOpen(){
+      if(!chatMessages||!chatPanel?.classList.contains("show")||Date.now()>initialLatestScrollUntil)return;
+      chatMessages.scrollTop=chatMessages.scrollHeight;
     }
     function updateUnread(){
       if(!chatUnread) return;
@@ -1541,7 +1554,7 @@
         if(context.state!=="running")return;
         lastChatSoundAt=now;
         const start=context.currentTime+.012;
-        [[523.25,start,.13,.070],[659.25,start+.085,.16,.060],[783.99,start+.17,.2,.050]].forEach(([frequency,when,duration,volume])=>{
+        [[523.25,start,.13,.140],[659.25,start+.085,.16,.120],[783.99,start+.17,.2,.100]].forEach(([frequency,when,duration,volume])=>{
           const oscillator=context.createOscillator();
           const gain=context.createGain();
           oscillator.type="sine";
@@ -2048,6 +2061,7 @@
         (messages||[]).reverse().forEach(message=>renderChatMessage(message,false));
         await reloadReactions();
         (notices||[]).forEach(n=>renderChatNotice(n));
+        scrollChatToLatestOnOpen();
         if(chatProfile) unlockComposer();
         if(support){ setConnection(support.status_text|| (support.is_online?"Support online":"Support offline"),support.is_online); }
         subscribeToLiveChat(userId);
@@ -2158,7 +2172,7 @@
     async function reloadChatMessages(){
       const {data,error}=await fetchVisibleMessages();
       if(error){renderChatNotice("Hindi ma-load ang dating conversations ngayon. Walang message na binura; pakisubukang i-refresh.","warning",7000);console.error("Reload chat history:",error);return;}
-      if(!data)return;chatMessages.textContent="";renderedMessageIds.clear();data.reverse().forEach(renderChatMessage);await reloadReactions();
+      if(!data)return;chatMessages.textContent="";renderedMessageIds.clear();data.reverse().forEach(renderChatMessage);await reloadReactions();scrollChatToLatestOnOpen();
     }
     async function moderateInlineMessage(action,message){
       if(chatProfile?.role!=="admin")return;
@@ -2248,6 +2262,9 @@
     document.addEventListener("pointerdown",()=>{primeChatSound();initLiveChat();},{once:true,passive:true});
     document.addEventListener("visibilitychange",()=>{if(!document.hidden&&chatPanel?.classList.contains("show")){unreadCount=0;updateUnread();}});
     chatClose?.addEventListener("click",()=>setChatOpen(false));
+    chatMessages?.addEventListener("load",()=>scrollChatToLatestOnOpen(),true);
+    chatMessages?.addEventListener("touchstart",()=>{initialLatestScrollUntil=0},{passive:true});
+    chatMessages?.addEventListener("wheel",()=>{initialLatestScrollUntil=0},{passive:true});
     chatJoin?.addEventListener("click",joinLiveChat);
     chatDisplayName?.addEventListener("input",syncAdminGate);
     chatDisplayName?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
