@@ -588,6 +588,107 @@
       .activity-track .activity-card{min-height:170px}
     }
 
+    /* First-view income engine cover flow */
+    .income-hero{
+      min-height:100svh;background:#020817;isolation:isolate;
+    }
+    .income-backdrop,.income-backdrop::before,.income-backdrop::after{position:absolute;inset:0}
+    .income-backdrop{z-index:0;overflow:hidden;background:#020817}
+    .income-backdrop img{
+      width:100%;height:100%;object-fit:cover;filter:blur(24px) saturate(1.18);transform:scale(1.12);
+      opacity:.34;transition:opacity .38s ease,transform 5s ease;
+    }
+    .income-backdrop.changing img{opacity:.08;transform:scale(1.18)}
+    .income-backdrop::before{
+      content:"";z-index:1;background:
+        radial-gradient(circle at 50% 44%,rgba(27,105,238,.08),transparent 35%),
+        linear-gradient(180deg,rgba(2,8,23,.64),rgba(4,19,51,.88) 58%,#020817 100%);
+    }
+    .income-backdrop::after{
+      content:"";z-index:2;opacity:.22;background-image:
+        linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px);
+      background-size:72px 72px;mask-image:linear-gradient(to bottom,transparent 4%,#000 48%,transparent 100%);
+    }
+    .income-hero::before{
+      z-index:1;background:
+        radial-gradient(circle at 16% 28%,rgba(215,29,50,.18),transparent 22%),
+        radial-gradient(circle at 84% 30%,rgba(42,127,255,.22),transparent 24%),
+        radial-gradient(circle at 50% 72%,rgba(255,216,107,.13),transparent 25%);
+    }
+    .income-hero::after{z-index:1;opacity:.35}
+    .income-hero-inner{
+      position:relative;z-index:3;max-width:1440px;margin:auto;
+      padding:calc(124px + env(safe-area-inset-top,0px)) 22px 70px;text-align:center;
+    }
+    .income-copy{max-width:980px;margin:0 auto}
+    .income-copy .eyebrow{letter-spacing:.12em;text-transform:uppercase;color:#fff2b6}
+    .income-copy h1{margin:18px 0 14px;font-size:clamp(42px,6.1vw,82px);line-height:.92}
+    .income-copy h1 span,.income-copy h1 em{display:block;font-style:normal}
+    .income-copy h1 em{color:var(--gold2)}
+    .income-copy>p{max-width:820px;margin:0 auto;color:#d8e6fb;font-size:clamp(15px,1.5vw,18px);line-height:1.62}
+    .income-shell{position:relative;max-width:1340px;margin:28px auto 0}
+    .income-carousel{
+      position:relative;height:430px;overflow:hidden;perspective:1250px;touch-action:pan-y;
+      user-select:none;outline:none;cursor:grab;
+      -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);
+      mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);
+    }
+    .income-carousel.dragging{cursor:grabbing}
+    .income-track{position:absolute;inset:0;transform-style:preserve-3d}
+    .income-slide{
+      position:absolute;left:50%;top:50%;width:clamp(290px,34vw,480px);aspect-ratio:16/10;
+      border-radius:27px;overflow:hidden;background:#081c42;border:1px solid rgba(255,255,255,.24);
+      box-shadow:0 28px 80px rgba(0,0,0,.5);transform-style:preserve-3d;
+      transition:transform .72s cubic-bezier(.2,.8,.2,1),opacity .55s ease,filter .55s ease;
+      will-change:transform,opacity;backface-visibility:hidden;
+    }
+    .income-slide button{display:block;width:100%;height:100%;padding:0;border:0;background:none;color:#fff;cursor:pointer;text-align:left}
+    .income-slide img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+    .income-slide::after{
+      content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 50%,rgba(2,8,23,.9));
+    }
+    .income-slide-label{position:absolute;z-index:2;left:20px;right:20px;bottom:17px;display:flex;align-items:end;justify-content:space-between;gap:12px}
+    .income-slide-label b{font-size:clamp(17px,2vw,23px);letter-spacing:-.02em;text-shadow:0 2px 18px #000}
+    .income-slide-label span{flex:0 0 auto;color:#ffe79a;font-size:10px;font-weight:950;letter-spacing:.13em}
+    .income-slide.is-active{border-color:rgba(255,225,132,.92);box-shadow:0 30px 95px rgba(0,0,0,.64),0 0 0 1px rgba(255,216,107,.48),0 0 55px rgba(42,127,255,.22)}
+    .income-arrow{
+      position:absolute;z-index:35;top:50%;width:49px;height:49px;border:1px solid rgba(255,255,255,.3);
+      border-radius:50%;display:grid;place-items:center;color:#fff;background:rgba(3,15,40,.7);
+      backdrop-filter:blur(12px);font-size:25px;cursor:pointer;transform:translateY(-50%);transition:.2s ease;
+    }
+    .income-arrow:hover{background:#fff;color:var(--navy);transform:translateY(-50%) scale(1.06)}
+    .income-prev{left:14px}.income-next{right:14px}
+    .income-detail{
+      max-width:820px;min-height:132px;margin:-7px auto 0;padding:21px 25px;border-radius:24px;
+      background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.065));
+      border:1px solid rgba(255,255,255,.17);box-shadow:0 20px 60px rgba(0,0,0,.22);backdrop-filter:blur(18px);
+    }
+    .income-detail-top{display:flex;align-items:center;justify-content:center;gap:11px;color:#ffe289;font-size:11px;font-weight:950;letter-spacing:.15em;text-transform:uppercase}
+    .income-detail h2{margin:7px 0 6px;color:#fff;font-size:clamp(24px,3vw,35px);letter-spacing:-.025em}
+    .income-detail p{max-width:720px;margin:0 auto;color:#d7e4f6;font-size:15px;line-height:1.58}
+    .income-dots{display:flex;justify-content:center;gap:7px;margin-top:15px}
+    .income-dot{width:7px;height:7px;padding:0;border:0;border-radius:99px;background:rgba(255,255,255,.28);cursor:pointer;transition:.3s ease}
+    .income-dot.active{width:28px;background:linear-gradient(90deg,var(--gold2),#fff1b4)}
+    .income-hero .hero-cta{justify-content:center;margin:22px 0 13px}
+    .income-hero .micro-proof{justify-content:center}
+    .income-swipe-hint{display:none;margin-top:12px;color:#b9cae5;font-size:11px;font-weight:850;letter-spacing:.11em;text-transform:uppercase}
+    @media(max-width:800px){
+      .income-hero-inner{padding:calc(108px + env(safe-area-inset-top,0px)) 10px 58px}
+      .income-copy{padding:0 10px}.income-copy h1{font-size:clamp(39px,12.5vw,58px)}
+      .income-shell{margin-top:19px}.income-carousel{height:320px;perspective:900px;-webkit-mask-image:none;mask-image:none}
+      .income-slide{width:min(74vw,330px);border-radius:22px}.income-slide-label{left:15px;right:15px;bottom:14px}
+      .income-arrow{display:none}.income-detail{min-height:148px;margin:-2px 8px 0;padding:18px 17px;border-radius:20px}
+      .income-detail p{font-size:14px}.income-swipe-hint{display:block}.income-hero .micro-proof{padding:0 8px;gap:9px;font-size:11px}
+    }
+    @media(max-width:420px){
+      .income-carousel{height:292px}.income-slide{width:76vw}.income-copy h1{font-size:41px}
+      .income-copy>p{font-size:14px}.income-detail{min-height:160px}.income-detail h2{font-size:25px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .income-slide,.income-backdrop img{transition-duration:.01ms!important}.income-carousel{scroll-behavior:auto}
+    }
+
   </style>
 </head>
 <body>
@@ -622,43 +723,59 @@
     </div>
   </nav>
 
-  <header class="hero" id="top">
-    <div class="hero-inner">
-      <div>
-        <div class="eyebrow">🦅 Built for the modern Filipino digital community</div>
-        <h1>Rise with <span class="gold">strength.</span><br>Grow with <span class="gold">confidence.</span></h1>
-        <p>
-          One connected experience for account access, capital tools, transaction monitoring,
-          community updates, and member support.
-        </p>
-        <div class="hero-cta">
-          <button class="btn btn-primary" data-dashboard>CREATE ACCOUNT</button>
-          <a class="btn btn-glass" href="presentation.html">VIEW PRESENTATION</a>
-          <a class="btn btn-glass" href="#platform">EXPLORE PLATFORM</a>
-        </div>
-        <div class="micro-proof">
-          <span><i class="dot-check">✓</i> Mobile-ready dashboard</span>
-          <span><i class="dot-check">✓</i> Real-time activity updates</span>
-          <span><i class="dot-check">✓</i> Organized member support</span>
-        </div>
+  <header class="hero income-hero" id="top">
+    <div class="income-backdrop" id="incomeBackdrop" aria-hidden="true">
+      <img src="assets/income-sources/wind-energy.webp" alt="">
+    </div>
+    <div class="income-hero-inner">
+      <div class="income-copy">
+        <div class="eyebrow">🦅 Aquila Diversified Income Architecture</div>
+        <h1><span>9 INCOME ENGINES.</span><em>ONE AQUILA ECOSYSTEM.</em></h1>
+        <p>Explore how Aquila connects renewable energy, infrastructure, digital operations, natural assets, and global markets into one diversified operating model.</p>
       </div>
 
-      <div class="stage" id="stage">
-        <div class="glow"></div>
-        <div class="dashboard-frame" id="dashboardFrame">
-          <img src="assets/dashboard1.jpg" alt="Aquila member dashboard preview">
+      <div class="income-shell">
+        <div class="income-carousel" id="incomeCarousel" role="region" aria-label="Aquila sources of income carousel" tabindex="0">
+          <button class="income-arrow income-prev" id="incomePrev" type="button" aria-label="Previous income source">‹</button>
+          <div class="income-track" id="incomeTrack">
+            <article class="income-slide" data-title="Wind Energy" data-tag="Renewable Power" data-description="Wind facilities convert moving air into electricity. Revenue is produced through power sales and structured participation in operating energy projects."><button type="button" aria-label="View Wind Energy"><img src="assets/income-sources/wind-energy.webp" alt="Modern wind energy facilities" fetchpriority="high"><span class="income-slide-label"><b>Wind Energy</b><span>01 / 09</span></span></button></article>
+            <article class="income-slide" data-title="Solar Energy" data-tag="Renewable Power" data-description="Solar assets turn sunlight into electricity sold to commercial users or the grid, creating income through contracted and operating energy output."><button type="button" aria-label="View Solar Energy"><img src="assets/income-sources/solar-energy.webp" alt="Large-scale solar energy facility" loading="lazy"><span class="income-slide-label"><b>Solar Energy</b><span>02 / 09</span></span></button></article>
+            <article class="income-slide" data-title="Hydropower" data-tag="Renewable Power" data-description="Hydropower uses controlled water flow to generate electricity. Its long-life infrastructure supports recurring income from dependable energy production."><button type="button" aria-label="View Hydropower"><img src="assets/income-sources/hydropower.webp" alt="Hydroelectric power infrastructure" loading="lazy"><span class="income-slide-label"><b>Hydropower</b><span>03 / 09</span></span></button></article>
+            <article class="income-slide" data-title="Battery Energy Storage" data-tag="Grid Services · BESS" data-description="BESS stores electricity when supply is high and releases it when needed, earning from grid balancing, peak-demand support, and related energy services."><button type="button" aria-label="View Battery Energy Storage"><img src="assets/income-sources/bess.webp" alt="Battery energy storage facility" loading="lazy"><span class="income-slide-label"><b>Battery Storage</b><span>04 / 09</span></span></button></article>
+            <article class="income-slide" data-title="Green Logistics" data-tag="Low-Carbon Operations" data-description="Efficient fleets, charging systems, and smart distribution networks generate operating income from transport, delivery, and logistics service contracts."><button type="button" aria-label="View Green Logistics"><img src="assets/income-sources/green-logistics.webp" alt="Low-carbon logistics network" loading="lazy"><span class="income-slide-label"><b>Green Logistics</b><span>05 / 09</span></span></button></article>
+            <article class="income-slide" data-title="Data Centers" data-tag="Digital Infrastructure" data-description="Power-secured data facilities generate recurring service and infrastructure income by supporting computing, connectivity, storage, and reliable uptime."><button type="button" aria-label="View Data Centers"><img src="assets/income-sources/data-centers.webp" alt="Modern data center infrastructure" loading="lazy"><span class="income-slide-label"><b>Data Centers</b><span>06 / 09</span></span></button></article>
+            <article class="income-slide" data-title="Forestry & Land Assets" data-tag="Natural Assets" data-description="Managed land and forestry assets can create value through responsible resource programs, leasing, development partnerships, and long-term asset appreciation."><button type="button" aria-label="View Forestry and Land Assets"><img src="assets/income-sources/forestry-land.webp" alt="Managed forestry and land assets" loading="lazy"><span class="income-slide-label"><b>Forestry & Land</b><span>07 / 09</span></span></button></article>
+            <article class="income-slide" data-title="Energy Efficiency Infrastructure" data-tag="Smart Infrastructure" data-description="Modern retrofits, smart controls, and efficient equipment reduce energy waste. Income comes from project contracts, infrastructure services, and shared savings models."><button type="button" aria-label="View Energy Efficiency Infrastructure"><img src="assets/income-sources/energy-efficiency.webp" alt="Smart energy-efficient infrastructure" loading="lazy"><span class="income-slide-label"><b>Energy Efficiency</b><span>08 / 09</span></span></button></article>
+            <article class="income-slide" data-title="Forex Trading Operations" data-tag="Global Markets" data-description="Forex operations seek market-based income from movements between global currencies, using defined strategies, disciplined execution, and risk controls."><button type="button" aria-label="View Forex Trading Operations"><img src="assets/income-sources/forex-operations.webp" alt="Global foreign exchange trading operations" loading="lazy"><span class="income-slide-label"><b>Forex Operations</b><span>09 / 09</span></span></button></article>
+          </div>
+          <button class="income-arrow income-next" id="incomeNext" type="button" aria-label="Next income source">›</button>
         </div>
-        <div class="glass-card g1"><small>Active Capital Reserve</small><strong>₱5,000.00</strong></div>
-        <div class="glass-card g2"><small>Withdrawal Status</small><strong style="color:#12965a">RELEASED</strong></div>
-        <div class="glass-card g3"><small>Member Access</small><strong>24/7</strong></div>
+
+        <div class="income-detail" aria-live="polite">
+          <div class="income-detail-top"><span id="incomeTag">Renewable Power</span><span>•</span><span id="incomeCount">01 / 09</span></div>
+          <h2 id="incomeTitle">Wind Energy</h2>
+          <p id="incomeDescription">Wind facilities convert moving air into electricity. Revenue is produced through power sales and structured participation in operating energy projects.</p>
+          <div class="income-dots" id="incomeDots" aria-label="Choose an income source"></div>
+        </div>
+        <div class="income-swipe-hint">Swipe left or right to explore</div>
+      </div>
+
+      <div class="hero-cta">
+        <button class="btn btn-primary" data-dashboard>CREATE ACCOUNT</button>
+        <a class="btn btn-glass" href="presentation.html">VIEW PRESENTATION</a>
+      </div>
+      <div class="micro-proof">
+        <span><i class="dot-check">✓</i> Diversified sectors</span>
+        <span><i class="dot-check">✓</i> Real-world operations</span>
+        <span><i class="dot-check">✓</i> One connected system</span>
       </div>
     </div>
   </header>
 
   <div class="ticker">
     <div class="ticker-track">
-      <span>SECURE MEMBER PORTAL</span><span>•</span><span>CAPITAL RESERVE</span><span>•</span><span>TELEGRAM UPDATES</span><span>•</span><span>DISCORD COMMUNITY</span><span>•</span><span>MOBILE READY</span><span>•</span>
-      <span>SECURE MEMBER PORTAL</span><span>•</span><span>CAPITAL RESERVE</span><span>•</span><span>TELEGRAM UPDATES</span><span>•</span><span>DISCORD COMMUNITY</span><span>•</span><span>MOBILE READY</span><span>•</span>
+      <span>WIND ENERGY</span><span>•</span><span>SOLAR ENERGY</span><span>•</span><span>HYDROPOWER</span><span>•</span><span>BATTERY STORAGE</span><span>•</span><span>GREEN LOGISTICS</span><span>•</span><span>DATA CENTERS</span><span>•</span><span>FORESTRY &amp; LAND</span><span>•</span><span>ENERGY EFFICIENCY</span><span>•</span><span>FOREX OPERATIONS</span><span>•</span>
+      <span>WIND ENERGY</span><span>•</span><span>SOLAR ENERGY</span><span>•</span><span>HYDROPOWER</span><span>•</span><span>BATTERY STORAGE</span><span>•</span><span>GREEN LOGISTICS</span><span>•</span><span>DATA CENTERS</span><span>•</span><span>FORESTRY &amp; LAND</span><span>•</span><span>ENERGY EFFICIENCY</span><span>•</span><span>FOREX OPERATIONS</span><span>•</span>
     </div>
   </div>
 
@@ -1200,6 +1317,134 @@
       stage.addEventListener("mouseleave", () => {
         frame.style.transform = "perspective(1300px) rotateY(-8deg) rotateX(3deg) rotateZ(1deg)";
       });
+    }
+
+    const incomeCarousel = document.getElementById("incomeCarousel");
+    const incomeSlides = [...document.querySelectorAll(".income-slide")];
+    const incomeTitle = document.getElementById("incomeTitle");
+    const incomeTag = document.getElementById("incomeTag");
+    const incomeCount = document.getElementById("incomeCount");
+    const incomeDescription = document.getElementById("incomeDescription");
+    const incomeDots = document.getElementById("incomeDots");
+    const incomeBackdrop = document.getElementById("incomeBackdrop");
+    const incomeBackdropImage = incomeBackdrop?.querySelector("img");
+    let incomeActive = 0;
+    let incomeAutoplay = 0;
+    let incomePaused = false;
+    let incomePointerStart = null;
+    let incomeDragged = false;
+
+    const wrappedIncomeDistance = index => {
+      let distance = index - incomeActive;
+      const half = Math.floor(incomeSlides.length / 2);
+      if (distance > half) distance -= incomeSlides.length;
+      if (distance < -half) distance += incomeSlides.length;
+      return distance;
+    };
+
+    const renderIncomeCarousel = (announce = true) => {
+      if (!incomeSlides.length) return;
+      const mobile = window.innerWidth <= 800;
+      const step = mobile ? Math.min(184, window.innerWidth * .47) : Math.min(252, window.innerWidth * .195);
+
+      incomeSlides.forEach((slide, index) => {
+        const distance = wrappedIncomeDistance(index);
+        const depth = Math.abs(distance);
+        const visible = depth <= 3;
+        const scale = depth === 0 ? 1 : Math.max(.48, 1 - depth * (mobile ? .19 : .15));
+        const angle = depth === 0 ? 0 : (distance < 0 ? 52 : -52);
+        slide.style.transform = `translate(-50%,-50%) translateX(${distance * step}px) translateZ(${-depth * 105}px) rotateY(${angle}deg) scale(${scale})`;
+        slide.style.opacity = visible ? String(depth === 0 ? 1 : Math.max(.13, .78 - depth * .2)) : "0";
+        slide.style.filter = depth === 0 ? "brightness(1) saturate(1.05)" : `brightness(${Math.max(.37,.72-depth*.1)}) saturate(.78)`;
+        slide.style.zIndex = String(30 - depth);
+        slide.style.pointerEvents = visible ? "auto" : "none";
+        slide.classList.toggle("is-active", depth === 0);
+        slide.setAttribute("aria-hidden", depth === 0 ? "false" : "true");
+        const button = slide.querySelector("button");
+        if (button) button.tabIndex = depth === 0 ? 0 : -1;
+      });
+
+      const activeSlide = incomeSlides[incomeActive];
+      if (incomeTitle) incomeTitle.textContent = activeSlide.dataset.title || "";
+      if (incomeTag) incomeTag.textContent = activeSlide.dataset.tag || "";
+      if (incomeDescription) incomeDescription.textContent = activeSlide.dataset.description || "";
+      if (incomeCount) incomeCount.textContent = `${String(incomeActive + 1).padStart(2,"0")} / ${String(incomeSlides.length).padStart(2,"0")}`;
+      [...incomeDots?.children || []].forEach((dot,index) => {
+        dot.classList.toggle("active", index === incomeActive);
+        dot.setAttribute("aria-current", index === incomeActive ? "true" : "false");
+      });
+
+      const nextSource = activeSlide.querySelector("img")?.getAttribute("src");
+      if (incomeBackdropImage && nextSource && incomeBackdropImage.getAttribute("src") !== nextSource) {
+        incomeBackdrop?.classList.add("changing");
+        const preload = new Image();
+        preload.onload = () => {
+          incomeBackdropImage.src = nextSource;
+          requestAnimationFrame(() => incomeBackdrop?.classList.remove("changing"));
+        };
+        preload.src = nextSource;
+      }
+      if (announce) incomeCarousel?.setAttribute("aria-label", `Aquila sources of income carousel. Current: ${activeSlide.dataset.title}`);
+    };
+
+    const selectIncomeSource = index => {
+      incomeActive = (index + incomeSlides.length) % incomeSlides.length;
+      renderIncomeCarousel();
+    };
+
+    if (incomeCarousel && incomeSlides.length) {
+      incomeSlides.forEach((slide,index) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "income-dot";
+        dot.setAttribute("aria-label", `View ${slide.dataset.title}`);
+        dot.addEventListener("click", () => selectIncomeSource(index));
+        incomeDots?.appendChild(dot);
+        slide.querySelector("button")?.addEventListener("click", () => {
+          if (!incomeDragged) selectIncomeSource(index);
+        });
+      });
+
+      document.getElementById("incomePrev")?.addEventListener("click", () => selectIncomeSource(incomeActive - 1));
+      document.getElementById("incomeNext")?.addEventListener("click", () => selectIncomeSource(incomeActive + 1));
+      incomeCarousel.addEventListener("keydown", event => {
+        if (event.key === "ArrowLeft") { event.preventDefault(); selectIncomeSource(incomeActive - 1); }
+        if (event.key === "ArrowRight") { event.preventDefault(); selectIncomeSource(incomeActive + 1); }
+        if (event.key === "Home") { event.preventDefault(); selectIncomeSource(0); }
+        if (event.key === "End") { event.preventDefault(); selectIncomeSource(incomeSlides.length - 1); }
+      });
+      incomeCarousel.addEventListener("pointerdown", event => {
+        incomePointerStart = {x:event.clientX,y:event.clientY,id:event.pointerId};
+        incomeDragged = false;
+        incomeCarousel.classList.add("dragging");
+      });
+      incomeCarousel.addEventListener("pointermove", event => {
+        if (!incomePointerStart || incomePointerStart.id !== event.pointerId) return;
+        if (Math.abs(event.clientX - incomePointerStart.x) > 12) incomeDragged = true;
+      });
+      const finishIncomeSwipe = event => {
+        if (!incomePointerStart || incomePointerStart.id !== event.pointerId) return;
+        const dx = event.clientX - incomePointerStart.x;
+        const dy = event.clientY - incomePointerStart.y;
+        if (Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy)) selectIncomeSource(incomeActive + (dx < 0 ? 1 : -1));
+        incomePointerStart = null;
+        incomeCarousel.classList.remove("dragging");
+        setTimeout(() => { incomeDragged = false; }, 0);
+      };
+      incomeCarousel.addEventListener("pointerup", finishIncomeSwipe);
+      incomeCarousel.addEventListener("pointercancel", finishIncomeSwipe);
+      incomeCarousel.addEventListener("mouseenter", () => { incomePaused = true; });
+      incomeCarousel.addEventListener("mouseleave", () => { incomePaused = false; });
+      incomeCarousel.addEventListener("focusin", () => { incomePaused = true; });
+      incomeCarousel.addEventListener("focusout", () => { incomePaused = false; });
+      window.addEventListener("resize", () => renderIncomeCarousel(false));
+      renderIncomeCarousel(false);
+
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        incomeAutoplay = window.setInterval(() => {
+          if (!incomePaused && !document.hidden) selectIncomeSource(incomeActive + 1);
+        }, 5600);
+      }
     }
 
     document.querySelectorAll("[data-dashboard]").forEach(button => {
