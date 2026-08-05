@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-9-unread-glowing-orb";
+const CACHE = "aquila-vnext-10-durable-unread-glow";
 const ASSETS = [
   "./",
   "index.html",
