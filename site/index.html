@@ -427,14 +427,15 @@
     .sticky-convert small{display:block;color:#c9d8ee;margin-top:3px}
     .support-orb{
       position:fixed;right:18px;bottom:88px;z-index:89;width:58px;height:58px;border-radius:999px;
-      display:grid;place-items:center;border:0;cursor:pointer;color:#fff;font-size:23px;
+      display:grid;place-items:center;border:3px solid transparent;box-sizing:border-box;cursor:pointer;color:#fff;font-size:23px;
       background:linear-gradient(135deg,var(--red),var(--blue));box-shadow:0 15px 35px rgba(6,26,68,.25);
     }
     .support-orb::after{content:"";position:absolute;right:3px;top:3px;width:12px;height:12px;border-radius:50%;background:#32d583;border:2px solid #fff}
-    .support-orb.has-unread{animation:chatUnreadGlow 1.8s ease-in-out infinite}
-    @keyframes chatUnreadGlow{0%,100%{box-shadow:0 15px 35px rgba(6,26,68,.25)}50%{box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 9px rgba(219,168,43,.2);transform:scale(1.045)}}
-    .chat-unread{position:absolute;right:-4px;top:-7px;min-width:22px;height:22px;padding:0 6px;border-radius:20px;background:var(--gold);color:var(--navy);font-size:11px;font-weight:950;display:none;place-items:center;border:2px solid #fff}
+    .support-orb.has-unread{border-color:#ffe27a;animation:chatUnreadGlow 1.35s ease-in-out infinite}
+    @keyframes chatUnreadGlow{0%,100%{border-color:#ffd04a;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 2px rgba(255,208,74,.34),0 0 15px rgba(255,208,74,.55)}50%{border-color:#fff3b2;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 9px rgba(255,208,74,.22),0 0 30px rgba(255,208,74,.95);transform:scale(1.055)}}
+    .chat-unread{position:absolute;right:-7px;top:-9px;min-width:24px;height:24px;padding:0 6px;border-radius:20px;background:#e2263f;color:#fff;font-size:11px;line-height:1;font-weight:950;display:none;place-items:center;border:2px solid #fff;box-shadow:0 5px 14px rgba(125,11,29,.34)}
     .chat-unread.show{display:grid}
+    @media (prefers-reduced-motion:reduce){.support-orb.has-unread{animation:none;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 6px rgba(255,208,74,.22),0 0 24px rgba(255,208,74,.72)}}
     .chat-panel{position:fixed;right:18px;bottom:158px;z-index:96;width:min(408px,calc(100vw - 24px));max-width:calc(100vw - 24px);height:min(680px,calc(100vh - 184px));background:#fff;border:1px solid rgba(6,26,68,.12);border-radius:26px;box-shadow:0 28px 90px rgba(6,26,68,.28);display:none;overflow:hidden;overscroll-behavior:none;touch-action:manipulation}
     .chat-panel.show{display:grid;grid-template-rows:auto auto 1fr auto;animation:chatRise .22s ease-out}
     @keyframes chatRise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
@@ -1399,7 +1400,7 @@
       stickyConvert.classList.toggle("show", window.scrollY > threshold && window.scrollY < document.documentElement.scrollHeight - window.innerHeight - 450);
     });
 
-    // AQUILA PUBLIC LIVE CHAT V4.1
+    // AQUILA PUBLIC LIVE CHAT V4.2
     // Paste the Project URL and Publishable/Anon Key from Supabase > Project Settings > API.
     const AQUILA_CHAT_CONFIG = Object.freeze({
       supabaseUrl: "https://jkewnkgkcjiszwvszkkw.supabase.co",
@@ -1542,9 +1543,10 @@
     }
     function updateUnread(){
       if(!chatUnread) return;
-      chatUnread.textContent=String(Math.min(unreadCount,99));
+      chatUnread.textContent=unreadCount>10?"10+":String(unreadCount);
       chatUnread.classList.toggle("show",unreadCount>0);
       supportOrb?.classList.toggle("has-unread",unreadCount>0);
+      supportOrb?.setAttribute("aria-label",unreadCount>0?`Open Aquila Community Live Chat · ${unreadCount>10?"more than 10":unreadCount} unread message${unreadCount===1?"":"s"}`:"Open Aquila Community Live Chat");
       if(unreadCount>0&&navigator.setAppBadge)navigator.setAppBadge(Math.min(unreadCount,99)).catch(()=>{});
       else if(unreadCount===0&&navigator.clearAppBadge)navigator.clearAppBadge().catch(()=>{});
     }
@@ -2121,7 +2123,7 @@
         .on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},payload=>{
           if(payload.eventType==="INSERT"){
             const isOwnMessage=payload.new?.sender_id===chatSession?.user?.id;
-            renderChatMessage(payload.new);
+            renderChatMessage(payload.new,!isOwnMessage);
             if(!isOwnMessage&&payload.new?.status==="visible")playCuteChatSound();
           }
           else if(payload.eventType==="UPDATE"){
@@ -2304,6 +2306,7 @@
     chatSoundToggle?.addEventListener("click",toggleChatSound);
     chatPushToggle?.addEventListener("click",togglePhoneNotifications);
     document.addEventListener("pointerdown",()=>{primeChatSound();initLiveChat();},{once:true,passive:true});
+    window.addEventListener("load",()=>initLiveChat());
     document.addEventListener("visibilitychange",()=>{if(!document.hidden&&chatPanel?.classList.contains("show")){unreadCount=0;updateUnread();}});
     chatClose?.addEventListener("click",()=>setChatOpen(false));
     chatMessages?.addEventListener("load",()=>scrollChatToLatestOnOpen(),true);
