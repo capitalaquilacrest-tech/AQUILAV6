@@ -1588,7 +1588,8 @@
       const states={
         unsupported:["—","Hindi supported ang phone notifications sa browser na ito"],
         denied:["🔕","Blocked ang notifications — i-enable sa phone/browser Settings"],
-        enabled:["✅","Phone notifications enabled — tap para i-off"],
+        enabled:["✅","Phone notifications verified — tap para i-off"],
+        repair:["⚠️","Notification needs repair — tap to reconnect"],
         busy:["…","Inaayos ang notifications…"],
         off:["📲","Enable phone notifications"]
       };
@@ -1598,11 +1599,11 @@
       chatPushToggle.disabled=state==="unsupported"||state==="busy";
       chatPushToggle.classList.toggle("enabled",state==="enabled");
       chatPushToggle.classList.toggle("denied",state==="denied");
-      const statusLabels={unsupported:"Hindi supported sa browser na ito",denied:"BLOCKED — i-allow sa Phone Settings",enabled:"Notifications ON ✓",busy:"Ina-activate…",off:"Notifications are OFF"};
+      const statusLabels={unsupported:"Hindi supported sa browser na ito",denied:"BLOCKED — i-allow sa Phone Settings",enabled:"Notifications ON & VERIFIED ✓",repair:"NEEDS REPAIR — tap Enable",busy:"Ina-activate…",off:"Notifications are OFF"};
       if(downloadNotifyText)downloadNotifyText.textContent=statusLabels[state]||statusLabels.off;
       downloadNotifyStatus?.classList.toggle("enabled",state==="enabled");
       downloadNotifyStatus?.classList.toggle("denied",state==="denied");
-      if(downloadNotifyEnable){downloadNotifyEnable.textContent=state==="enabled"?"NOTIFICATIONS ON ✓":state==="busy"?"PLEASE WAIT…":"ENABLE NOTIFICATIONS";downloadNotifyEnable.disabled=state==="enabled"||state==="busy"||state==="unsupported";}
+      if(downloadNotifyEnable){downloadNotifyEnable.textContent=state==="enabled"?"NOTIFICATIONS ON ✓":state==="repair"?"REPAIR NOTIFICATIONS":state==="busy"?"PLEASE WAIT…":"ENABLE NOTIFICATIONS";downloadNotifyEnable.disabled=state==="enabled"||state==="busy"||state==="unsupported";}
       if(downloadNotifyTest)downloadNotifyTest.disabled=state!=="enabled";
     }
     async function getPushSubscription(){
@@ -1621,11 +1622,25 @@
         p_user_agent:(navigator.userAgent||"").slice(0,500)
       });
       if(error)throw error;if(!data?.ok)throw new Error(data?.notice||"Push registration failed");
+      const verified=await getServerPushStatus(subscription);
+      if(!verified)throw new Error("Push subscription was not verified by the server");
+    }
+    async function getServerPushStatus(subscription){
+      if(!subscription||!chatDb||!chatSession?.user?.id)return false;
+      const {data,error}=await chatDb.rpc("chat_push_subscription_status",{p_endpoint:subscription.endpoint});
+      if(error)throw error;
+      return data?.registered===true;
     }
     async function refreshPushState(){
       if(!pushSupported()){updatePushToggle("unsupported");return;}
       if(Notification.permission==="denied"){updatePushToggle("denied");return;}
-      try{updatePushToggle((await getPushSubscription())?"enabled":"off");}catch(_){updatePushToggle("off");}
+      try{
+        const subscription=await getPushSubscription();
+        if(!subscription){updatePushToggle("off");return;}
+        await initLiveChat();
+        for(let attempt=0;attempt<40&&!chatSession?.user?.id;attempt++)await new Promise(resolve=>setTimeout(resolve,100));
+        updatePushToggle(await getServerPushStatus(subscription)?"enabled":"repair");
+      }catch(error){console.error("Aquila push verification:",error);updatePushToggle("repair");}
     }
     async function togglePhoneNotifications(){
       if(chatPushBusy)return;
@@ -1640,9 +1655,15 @@
         if(!chatSession?.user?.id||!chatDb)throw new Error("Chat session unavailable");
         let subscription=await getPushSubscription();
         if(subscription){
-          if(chatDb){await chatDb.rpc("chat_unregister_push_subscription",{p_endpoint:subscription.endpoint});}
-          await subscription.unsubscribe();updatePushToggle("off");
-          renderChatNotice("Naka-off na ang phone notifications. Mananatili pa rin ang sound habang bukas ang site.");
+          const registered=await getServerPushStatus(subscription).catch(()=>false);
+          if(registered){
+            if(chatDb){await chatDb.rpc("chat_unregister_push_subscription",{p_endpoint:subscription.endpoint});}
+            await subscription.unsubscribe();updatePushToggle("off");
+            renderChatNotice("Naka-off na ang phone notifications. Mananatili pa rin ang sound habang bukas ang site.");
+            return;
+          }
+          await savePushSubscription(subscription);updatePushToggle("enabled");
+          renderChatNotice("Notification connection repaired and verified ✓");
           return;
         }
         const permission=Notification.permission==="granted"?"granted":await Notification.requestPermission();
@@ -1653,18 +1674,19 @@
         renderChatNotice("Phone notifications are ON ✓ Makakatanggap ka na kahit sarado ang Aquila app.");
       }catch(error){
         console.error("Aquila push setup:",error);updatePushToggle(Notification.permission==="denied"?"denied":"off");
-        renderChatNotice("Hindi pa na-activate ang phone notifications. Siguraduhing na-run ang Push SQL at naka-deploy ang push sender.","warning");
+        const brokenSubscription=await getPushSubscription().catch(()=>null);
+        if(brokenSubscription)await brokenSubscription.unsubscribe().catch(()=>{});
+        renderChatNotice("Hindi na-verify ang push connection. Na-reset ang incomplete subscription; pindutin ulit ang Enable pagkatapos ma-update ang Push Repair SQL.","warning",12000);
       }finally{chatPushBusy=false;if(chatPushToggle?.textContent==="…")refreshPushState();}
     }
     async function enablePhoneNotificationsFromDownload(){
-      if((await getPushSubscription().catch(()=>null))){updatePushToggle("enabled");return;}
       await togglePhoneNotifications();
     }
     async function testPhoneNotification(){
       if(Notification.permission!=="granted"){renderChatNotice("I-enable muna ang phone notifications bago mag-test.","warning");return;}
       try{
         const registration=await navigator.serviceWorker.ready;
-        await registration.showNotification("Aquila notification test ✓",{body:"Working ang notification pop-up sa cellphone na ito. Tap to open Live Chat.",icon:"assets/icon-192.png",badge:"assets/icon-192.png",tag:`aquila-test-${Date.now()}`,data:{url:"./?openChat=1"}});
+        await registration.showNotification("Aquila phone display test ✓",{body:"Local display test lang ito. Ang actual chat push ay hiwalay na backend test.",icon:"assets/icon-192.png",badge:"assets/icon-192.png",tag:`aquila-test-${Date.now()}`,renotify:true,silent:false,vibrate:[180,80,180],data:{url:"./?openChat=1"}});
       }catch(error){console.error("Aquila notification test:",error);renderChatNotice("Hindi lumabas ang test. I-check ang lock-screen at pop-up notification settings.","warning");}
     }
     function setConnection(label,online=false){
