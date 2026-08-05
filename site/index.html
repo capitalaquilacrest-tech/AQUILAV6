@@ -428,14 +428,16 @@
     .support-orb{
       position:fixed;right:18px;bottom:88px;z-index:89;width:58px;height:58px;border-radius:999px;
       display:grid;place-items:center;border:3px solid transparent;box-sizing:border-box;cursor:pointer;color:#fff;font-size:23px;
-      background:linear-gradient(135deg,var(--red),var(--blue));box-shadow:0 15px 35px rgba(6,26,68,.25);
+      background:linear-gradient(135deg,var(--red),var(--blue));box-shadow:0 15px 35px rgba(6,26,68,.25);isolation:isolate;
     }
-    .support-orb::after{content:"";position:absolute;right:3px;top:3px;width:12px;height:12px;border-radius:50%;background:#32d583;border:2px solid #fff}
-    .support-orb.has-unread{border-color:#ffe27a;animation:chatUnreadGlow 1.35s ease-in-out infinite}
-    @keyframes chatUnreadGlow{0%,100%{border-color:#ffd04a;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 2px rgba(255,208,74,.34),0 0 15px rgba(255,208,74,.55)}50%{border-color:#fff3b2;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 9px rgba(255,208,74,.22),0 0 30px rgba(255,208,74,.95);transform:scale(1.055)}}
-    .chat-unread{position:absolute;right:-7px;top:-9px;min-width:24px;height:24px;padding:0 6px;border-radius:20px;background:#e2263f;color:#fff;font-size:11px;line-height:1;font-weight:950;display:none;place-items:center;border:2px solid #fff;box-shadow:0 5px 14px rgba(125,11,29,.34)}
+    .support-orb::before{content:"";position:absolute;inset:-7px;z-index:-1;border:4px solid #ffe16a;border-radius:inherit;opacity:0;pointer-events:none}
+    .support-orb.has-unread{border-color:#fff4b3;animation:chatUnreadCore 1.05s ease-in-out infinite}
+    .support-orb.has-unread::before{animation:chatUnreadRing 1.05s ease-out infinite}
+    @keyframes chatUnreadCore{0%,100%{box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 8px 3px rgba(255,218,72,.9),0 0 22px 8px rgba(255,191,0,.6)}50%{border-color:#fff;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 12px 5px #fff7bf,0 0 34px 13px rgba(255,198,0,.98),0 0 55px 20px rgba(255,174,0,.5);transform:scale(1.09)}}
+    @keyframes chatUnreadRing{0%{opacity:.95;transform:scale(.88)}75%,100%{opacity:0;transform:scale(1.45)}}
+    .chat-unread{position:absolute;right:-9px;top:-11px;z-index:2;min-width:25px;height:25px;padding:0 6px;border-radius:20px;background:#e2263f;color:#fff;font-size:11px;line-height:1;font-weight:950;display:none;place-items:center;border:2px solid #fff;box-shadow:0 0 0 2px rgba(226,38,63,.25),0 5px 14px rgba(125,11,29,.48)}
     .chat-unread.show{display:grid}
-    @media (prefers-reduced-motion:reduce){.support-orb.has-unread{animation:none;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 6px rgba(255,208,74,.22),0 0 24px rgba(255,208,74,.72)}}
+    @media (prefers-reduced-motion:reduce){.support-orb.has-unread{animation:none;border-color:#fff4b3;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 12px 5px #fff7bf,0 0 34px 13px rgba(255,198,0,.95)}.support-orb.has-unread::before{animation:none;opacity:.65}}
     .chat-panel{position:fixed;right:18px;bottom:158px;z-index:96;width:min(408px,calc(100vw - 24px));max-width:calc(100vw - 24px);height:min(680px,calc(100vh - 184px));background:#fff;border:1px solid rgba(6,26,68,.12);border-radius:26px;box-shadow:0 28px 90px rgba(6,26,68,.28);display:none;overflow:hidden;overscroll-behavior:none;touch-action:manipulation}
     .chat-panel.show{display:grid;grid-template-rows:auto auto 1fr auto;animation:chatRise .22s ease-out}
     @keyframes chatRise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
