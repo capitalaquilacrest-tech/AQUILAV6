@@ -104,7 +104,9 @@
     .brand strong{display:block;font-size:16px}
     .brand span{display:block;color:#d9e7ff;font-size:12px;margin-top:2px}
     .nav-links{display:flex;gap:22px;color:#eaf2ff;font-size:14px}
-    .nav-actions{display:flex;gap:10px}
+    .nav-actions{display:flex;gap:10px;align-items:center}
+    .nav-download{color:#fff;background:linear-gradient(135deg,var(--red2),var(--red));box-shadow:0 12px 28px rgba(215,29,50,.28);animation:downloadPulse 2.4s ease-in-out infinite}
+    @keyframes downloadPulse{0%,100%{box-shadow:0 12px 28px rgba(215,29,50,.28)}50%{box-shadow:0 12px 28px rgba(215,29,50,.28),0 0 0 6px rgba(255,255,255,.12)}}
 
     .btn{
       display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -314,6 +316,7 @@
       .nav-inner{padding:11px 13px}
       .brand div{display:none}
       .nav-actions .btn-glass{display:none}
+      .nav-actions{gap:6px}.nav-actions .btn{padding:10px 11px;font-size:10px;border-radius:12px}
       .btn{padding:12px 14px;font-size:13px}
       .hero-inner{padding:118px 16px 54px;gap:34px}
       h1{font-size:50px}
@@ -502,17 +505,25 @@
     .footer-brand p{line-height:1.65;max-width:360px}
     .legal-line{max-width:1120px;margin:auto;border-top:1px solid var(--line);padding-top:22px}
     .install-btn{
-      display:none;position:fixed;left:18px;bottom:88px;z-index:89;border:0;border-radius:15px;
-      padding:13px 16px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy));
-      box-shadow:0 15px 35px rgba(6,26,68,.25);cursor:pointer;
+      display:flex;align-items:center;gap:8px;position:fixed;left:18px;bottom:20px;z-index:89;border:1px solid rgba(255,255,255,.35);border-radius:15px;
+      padding:13px 16px;font-weight:950;color:#fff;background:linear-gradient(135deg,var(--red),var(--blue));
+      box-shadow:0 15px 35px rgba(6,26,68,.28);cursor:pointer;animation:downloadFloat 2.3s ease-in-out infinite;
     }
-    .install-btn.show{display:block}
+    .install-btn::before{content:"📲"}.install-btn.installed{animation:none;background:linear-gradient(135deg,#198754,#0d6b42)}
+    @keyframes downloadFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    .download-modal{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,10,28,.78);backdrop-filter:blur(8px)}
+    .download-modal.show{display:flex}.download-card{position:relative;width:min(560px,100%);max-height:calc(100dvh - 36px);overflow:auto;border-radius:26px;background:#fff;box-shadow:0 32px 100px rgba(0,0,0,.42)}
+    .download-head{padding:24px 24px 19px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--blue) 68%,var(--red));text-align:center}.download-head img{width:64px;height:64px;margin:0 auto 10px;border-radius:17px;padding:5px;background:#fff;object-fit:contain}.download-head h3{margin:0;font-size:23px}.download-head p{margin:7px 0 0;color:#dce9ff;font-size:13px;line-height:1.45}.download-close{position:absolute;right:13px;top:13px;width:38px;height:38px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:23px;cursor:pointer}
+    .download-body{padding:20px}.download-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.download-choice{border:1px solid var(--line);border-radius:17px;padding:15px;background:#f7faff;color:var(--navy);font-weight:950;cursor:pointer;text-align:center}.download-choice.active{border-color:var(--blue);background:#eaf2ff;box-shadow:0 0 0 2px rgba(15,91,216,.1)}.download-choice span{display:block;font-size:25px;margin-bottom:5px}
+    .download-panel{display:none;padding:17px 2px 2px}.download-panel.active{display:block}.download-panel h4{margin:0 0 8px;color:var(--navy);font-size:18px}.download-panel p{margin:0 0 13px;color:var(--muted);font-size:13px;line-height:1.55}.download-steps{margin:0 0 15px;padding:0;list-style:none;counter-reset:installStep}.download-steps li{counter-increment:installStep;position:relative;padding:9px 8px 9px 38px;color:#425877;font-size:13px;line-height:1.45}.download-steps li::before{content:counter(installStep);position:absolute;left:3px;top:7px;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-size:11px;font-weight:950}.download-primary{width:100%;border:0;border-radius:14px;padding:14px 16px;color:#fff;background:linear-gradient(135deg,var(--red),var(--blue));font-weight:950;cursor:pointer}.download-primary:disabled{opacity:.6;cursor:default}.download-note{margin-top:10px;padding:10px 12px;border-radius:12px;background:#fff8df;border:1px solid #ead68f;color:#6c5719;font-size:11px;line-height:1.45}
+    .notify-setup{margin-top:18px;padding:15px;border:1px solid #cfe0fb;border-radius:17px;background:#f3f8ff}.notify-setup h4{margin:0 0 5px;color:var(--navy)}.notify-status{display:flex;align-items:center;gap:7px;margin:8px 0 12px;color:#526681;font-size:12px;font-weight:800}.notify-status-dot{width:9px;height:9px;border-radius:50%;background:#f0a323}.notify-status.enabled .notify-status-dot{background:#1f9d61}.notify-status.denied .notify-status-dot{background:#d92d43}.notify-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.notify-actions button{border:0;border-radius:12px;padding:11px 8px;font-size:11px;font-weight:950;cursor:pointer}.notify-enable{color:#fff;background:var(--blue)}.notify-test{color:var(--blue);background:#fff;border:1px solid #bdd3f2!important}.notify-actions button:disabled{opacity:.5;cursor:not-allowed}
     @media(max-width:900px){
       .official-links{grid-template-columns:1fr 1fr}
       .footer-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:600px){
       .official-links,.footer-grid{grid-template-columns:1fr}
+      .install-btn{left:12px;bottom:20px;padding:11px 13px;font-size:11px}.download-card{border-radius:22px}.download-head{padding:21px 18px 17px}.download-body{padding:16px}.notify-actions{grid-template-columns:1fr}
     }
 
     .live-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0}
@@ -599,6 +610,7 @@
         <a href="#faq">FAQ</a>
       </div>
       <div class="nav-actions">
+        <button class="btn nav-download" type="button" data-open-download>DOWNLOAD</button>
         <button class="btn btn-primary" data-dashboard>LOGIN DASHBOARD</button>
       </div>
     </div>
@@ -973,7 +985,57 @@
     <button class="btn btn-primary" data-dashboard>LOGIN DASHBOARD</button>
   </div>
 
-  <button class="install-btn" id="installBtn" type="button">INSTALL AQUILA</button>
+  <div class="download-modal" id="downloadModal" role="dialog" aria-modal="true" aria-labelledby="downloadTitle" aria-hidden="true">
+    <div class="download-card">
+      <header class="download-head">
+        <button class="download-close" id="downloadClose" type="button" aria-label="Close download instructions">×</button>
+        <img src="assets/logo.jpg" alt="Aquila Crest Capital logo">
+        <h3 id="downloadTitle">Download Aquila App</h3>
+        <p>Piliin ang cellphone mo. Susundan ka namin step-by-step.</p>
+      </header>
+      <div class="download-body">
+        <div class="download-choices" role="tablist" aria-label="Choose your phone">
+          <button class="download-choice active" id="androidChoice" type="button" role="tab" aria-selected="true" aria-controls="androidInstall"><span>🤖</span>ANDROID</button>
+          <button class="download-choice" id="iosChoice" type="button" role="tab" aria-selected="false" aria-controls="iosInstall"><span>🍎</span>iPHONE / iOS</button>
+        </div>
+        <section class="download-panel active" id="androidInstall" role="tabpanel" aria-labelledby="androidChoice">
+          <h4>Install sa Android</h4>
+          <p>Hindi APK ang Aquila. Secure web app ito na mai-install diretso mula sa browser.</p>
+          <button class="download-primary" id="androidInstallNow" type="button">📲 DOWNLOAD / INSTALL NOW</button>
+          <ol class="download-steps" id="androidManualSteps">
+            <li>Buksan ang site gamit ang <b>Google Chrome</b>.</li>
+            <li>I-tap ang <b>⋮ menu</b> sa upper-right.</li>
+            <li>Piliin ang <b>Install app</b> o <b>Add to Home screen</b>.</li>
+            <li>Pindutin ang <b>Install</b>, pagkatapos buksan ang Aquila icon.</li>
+          </ol>
+          <div class="download-note" id="androidInstallNote">Kapag nasa Facebook/Messenger browser ka, piliin muna ang “Open in Chrome.”</div>
+        </section>
+        <section class="download-panel" id="iosInstall" role="tabpanel" aria-labelledby="iosChoice">
+          <h4>Install sa iPhone</h4>
+          <p>Gamitin ang Safari para lumitaw ang tamang Add to Home Screen option.</p>
+          <ol class="download-steps">
+            <li>Buksan ang <b>aquilacrestcapital.com</b> sa <b>Safari</b>.</li>
+            <li>I-tap ang <b>Share</b> icon (square na may arrow pataas).</li>
+            <li>Scroll at piliin ang <b>Add to Home Screen</b>.</li>
+            <li>I-ON ang <b>Open as Web App</b> kung nakikita, tapos pindutin ang <b>Add</b>.</li>
+            <li>Buksan ang Aquila icon mula sa Home Screen.</li>
+          </ol>
+          <button class="download-primary" id="copySiteLink" type="button">COPY AQUILA WEBSITE LINK</button>
+        </section>
+        <section class="notify-setup" aria-labelledby="notifySetupTitle">
+          <h4 id="notifySetupTitle">🔔 Phone Notifications</h4>
+          <p style="margin:0;color:#667995;font-size:12px;line-height:1.45">Pagkatapos ma-install, i-enable ito para may alert kahit naka-lock ang screen.</p>
+          <div class="notify-status" id="downloadNotifyStatus"><span class="notify-status-dot"></span><span id="downloadNotifyText">Checking notification status…</span></div>
+          <div class="notify-actions">
+            <button class="notify-enable" id="downloadNotifyEnable" type="button">ENABLE NOTIFICATIONS</button>
+            <button class="notify-test" id="downloadNotifyTest" type="button" disabled>TEST POP-UP</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <button class="install-btn" id="installBtn" type="button">DOWNLOAD APP</button>
 
   <button class="support-orb" id="supportOrb" type="button" aria-label="Open Aquila Community Live Chat" aria-expanded="false">💬<span class="chat-unread" id="chatUnread">0</span></button>
   <aside class="chat-panel" id="chatPanel" aria-label="Aquila Community Live Chat" aria-hidden="true">
@@ -1351,6 +1413,10 @@
     const chatEmpty = document.getElementById("chatEmpty");
     const chatUnread = document.getElementById("chatUnread");
     const chatPushToggle = document.getElementById("chatPushToggle");
+    const downloadNotifyStatus = document.getElementById("downloadNotifyStatus");
+    const downloadNotifyText = document.getElementById("downloadNotifyText");
+    const downloadNotifyEnable = document.getElementById("downloadNotifyEnable");
+    const downloadNotifyTest = document.getElementById("downloadNotifyTest");
     const chatSoundToggle = document.getElementById("chatSoundToggle");
     const chatNameGate = document.getElementById("chatNameGate");
     const chatDisplayName = document.getElementById("chatDisplayName");
@@ -1519,6 +1585,12 @@
       chatPushToggle.disabled=state==="unsupported"||state==="busy";
       chatPushToggle.classList.toggle("enabled",state==="enabled");
       chatPushToggle.classList.toggle("denied",state==="denied");
+      const statusLabels={unsupported:"Hindi supported sa browser na ito",denied:"BLOCKED — i-allow sa Phone Settings",enabled:"Notifications ON ✓",busy:"Ina-activate…",off:"Notifications are OFF"};
+      if(downloadNotifyText)downloadNotifyText.textContent=statusLabels[state]||statusLabels.off;
+      downloadNotifyStatus?.classList.toggle("enabled",state==="enabled");
+      downloadNotifyStatus?.classList.toggle("denied",state==="denied");
+      if(downloadNotifyEnable){downloadNotifyEnable.textContent=state==="enabled"?"NOTIFICATIONS ON ✓":state==="busy"?"PLEASE WAIT…":"ENABLE NOTIFICATIONS";downloadNotifyEnable.disabled=state==="enabled"||state==="busy"||state==="unsupported";}
+      if(downloadNotifyTest)downloadNotifyTest.disabled=state!=="enabled";
     }
     async function getPushSubscription(){
       if(!pushSupported())return null;
@@ -1570,6 +1642,17 @@
         console.error("Aquila push setup:",error);updatePushToggle(Notification.permission==="denied"?"denied":"off");
         renderChatNotice("Hindi pa na-activate ang phone notifications. Siguraduhing na-run ang Push SQL at naka-deploy ang push sender.","warning");
       }finally{chatPushBusy=false;if(chatPushToggle?.textContent==="…")refreshPushState();}
+    }
+    async function enablePhoneNotificationsFromDownload(){
+      if((await getPushSubscription().catch(()=>null))){updatePushToggle("enabled");return;}
+      await togglePhoneNotifications();
+    }
+    async function testPhoneNotification(){
+      if(Notification.permission!=="granted"){renderChatNotice("I-enable muna ang phone notifications bago mag-test.","warning");return;}
+      try{
+        const registration=await navigator.serviceWorker.ready;
+        await registration.showNotification("Aquila notification test ✓",{body:"Working ang notification pop-up sa cellphone na ito. Tap to open Live Chat.",icon:"assets/icon-192.png",badge:"assets/icon-192.png",tag:`aquila-test-${Date.now()}`,data:{url:"./?openChat=1"}});
+      }catch(error){console.error("Aquila notification test:",error);renderChatNotice("Hindi lumabas ang test. I-check ang lock-screen at pop-up notification settings.","warning");}
     }
     function setConnection(label,online=false){
       if(chatStatusText) chatStatusText.textContent=label;
@@ -2200,19 +2283,42 @@
   
     let deferredInstallPrompt = null;
     const installBtn = document.getElementById("installBtn");
+    const downloadModal = document.getElementById("downloadModal");
+    const downloadClose = document.getElementById("downloadClose");
+    const androidChoice = document.getElementById("androidChoice");
+    const iosChoice = document.getElementById("iosChoice");
+    const androidInstall = document.getElementById("androidInstall");
+    const iosInstall = document.getElementById("iosInstall");
+    const androidInstallNow = document.getElementById("androidInstallNow");
+    const androidInstallNote = document.getElementById("androidInstallNote");
+    const copySiteLink = document.getElementById("copySiteLink");
+    function openDownloadModal(){downloadModal?.classList.add("show");downloadModal?.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";refreshPushState();}
+    function closeDownloadModal(){downloadModal?.classList.remove("show");downloadModal?.setAttribute("aria-hidden","true");document.body.style.overflow="";}
+    function showInstallPlatform(platform){const android=platform==="android";androidChoice?.classList.toggle("active",android);iosChoice?.classList.toggle("active",!android);androidChoice?.setAttribute("aria-selected",String(android));iosChoice?.setAttribute("aria-selected",String(!android));androidInstall?.classList.toggle("active",android);iosInstall?.classList.toggle("active",!android);}
     window.addEventListener("beforeinstallprompt", event => {
       event.preventDefault();
       deferredInstallPrompt = event;
-      installBtn?.classList.add("show");
+      if(androidInstallNow)androidInstallNow.textContent="📲 DOWNLOAD / INSTALL NOW";
     });
-    installBtn?.addEventListener("click", async () => {
-      if (!deferredInstallPrompt) return;
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
-      installBtn.classList.remove("show");
+    document.querySelectorAll("[data-open-download]").forEach(button=>button.addEventListener("click",openDownloadModal));
+    installBtn?.addEventListener("click",openDownloadModal);
+    downloadClose?.addEventListener("click",closeDownloadModal);
+    downloadModal?.addEventListener("click",event=>{if(event.target===downloadModal)closeDownloadModal();});
+    androidChoice?.addEventListener("click",()=>showInstallPlatform("android"));
+    iosChoice?.addEventListener("click",()=>showInstallPlatform("ios"));
+    androidInstallNow?.addEventListener("click",async()=>{
+      if(isStandaloneApp()){androidInstallNote.textContent="Installed na ang Aquila app sa cellphone na ito ✓";return;}
+      if(deferredInstallPrompt){deferredInstallPrompt.prompt();const result=await deferredInstallPrompt.userChoice;if(result.outcome==="accepted")androidInstallNote.textContent="Installing Aquila… Hanapin ang Aquila icon sa Home Screen.";deferredInstallPrompt=null;return;}
+      androidInstallNote.textContent="Hindi nagpakita ang automatic installer. Sa Chrome, i-tap ang ⋮ menu → Install app o Add to Home screen.";
+      androidInstallNote.scrollIntoView({behavior:"smooth",block:"nearest"});
     });
-    window.addEventListener("appinstalled", () => installBtn?.classList.remove("show"));
+    copySiteLink?.addEventListener("click",async()=>{try{await navigator.clipboard.writeText("https://aquilacrestcapital.com/");copySiteLink.textContent="LINK COPIED ✓";setTimeout(()=>copySiteLink.textContent="COPY AQUILA WEBSITE LINK",1800);}catch(_){location.href="https://aquilacrestcapital.com/";}});
+    downloadNotifyEnable?.addEventListener("click",enablePhoneNotificationsFromDownload);
+    downloadNotifyTest?.addEventListener("click",testPhoneNotification);
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&downloadModal?.classList.contains("show"))closeDownloadModal();});
+    if(isIOSDevice())showInstallPlatform("ios");
+    window.addEventListener("appinstalled", () => {installBtn?.classList.add("installed");if(installBtn)installBtn.textContent="APP INSTALLED ✓";if(androidInstallNote)androidInstallNote.textContent="Installed na ang Aquila app ✓ Buksan ang icon mula sa Home Screen.";});
+    if(isStandaloneApp()){installBtn?.classList.add("installed");if(installBtn)installBtn.textContent="APP MENU";}
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => navigator.serviceWorker.register("service-worker.js").catch(() => {}));
       navigator.serviceWorker.addEventListener("message",event=>{if(event.data?.type==="AQUILA_OPEN_CHAT")setChatOpen(true);});
