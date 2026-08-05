@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-13-income-coverflow";
+const CACHE = "aquila-vnext-14-dashboard-showcase";
 const ASSETS = [
   "./",
   "index.html",
@@ -10,6 +10,7 @@ const ASSETS = [
   "assets/apple-touch-icon-v11.png",
   "assets/icon-192.png",
   "assets/icon-512.png",
+  "assets/aquila-dashboard-showcase.jpeg",
   "assets/income-sources/wind-energy.webp",
   "assets/income-sources/solar-energy.webp",
   "assets/income-sources/hydropower.webp",
