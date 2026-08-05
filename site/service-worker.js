@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-5-double-sound-latest-chat";
+const CACHE = "aquila-vnext-6-push-delivery-repair";
 const ASSETS = [
   "./",
   "index.html",
@@ -64,7 +64,9 @@ self.addEventListener("push", event => {
     badge: data.badge || "assets/icon-192.png",
     image: data.image || undefined,
     tag: data.tag || "aquila-live-chat",
-    renotify: false,
+    renotify: true,
+    silent: false,
+    vibrate: [180, 80, 180],
     requireInteraction: false,
     timestamp: data.timestamp || Date.now(),
     data: { url: data.url || "./?openChat=1", messageId: data.messageId || null }
