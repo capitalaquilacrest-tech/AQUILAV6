@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-10-durable-unread-glow";
+const CACHE = "aquila-vnext-11-native-app-icons";
 const ASSETS = [
   "./",
   "index.html",
@@ -7,6 +7,7 @@ const ASSETS = [
   "disclaimer.html",
   "manifest.webmanifest",
   "assets/logo.jpg",
+  "assets/apple-touch-icon-v11.png",
   "assets/icon-192.png",
   "assets/icon-512.png"
 ];
