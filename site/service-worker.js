@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-6-push-delivery-repair";
+const CACHE = "aquila-vnext-7-android-install-repair";
 const ASSETS = [
   "./",
   "index.html",
@@ -12,7 +12,11 @@ const ASSETS = [
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
+  event.waitUntil(
+    caches.open(CACHE).then(cache =>
+      Promise.allSettled(ASSETS.map(asset => cache.add(asset)))
+    )
+  );
   self.skipWaiting();
 });
 
