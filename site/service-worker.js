@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-2-push";
+const CACHE = "aquila-vnext-3-download-push";
 const ASSETS = [
   "./",
   "index.html",
@@ -93,4 +93,3 @@ self.addEventListener("notificationclick", event => {
     })
   );
 });
-
