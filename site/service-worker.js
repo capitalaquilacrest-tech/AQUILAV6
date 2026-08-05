@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-12-desktop-install";
+const CACHE = "aquila-vnext-13-income-coverflow";
 const ASSETS = [
   "./",
   "index.html",
@@ -9,7 +9,16 @@ const ASSETS = [
   "assets/logo.jpg",
   "assets/apple-touch-icon-v11.png",
   "assets/icon-192.png",
-  "assets/icon-512.png"
+  "assets/icon-512.png",
+  "assets/income-sources/wind-energy.webp",
+  "assets/income-sources/solar-energy.webp",
+  "assets/income-sources/hydropower.webp",
+  "assets/income-sources/bess.webp",
+  "assets/income-sources/green-logistics.webp",
+  "assets/income-sources/data-centers.webp",
+  "assets/income-sources/forestry-land.webp",
+  "assets/income-sources/energy-efficiency.webp",
+  "assets/income-sources/forex-operations.webp"
 ];
 
 self.addEventListener("install", event => {
