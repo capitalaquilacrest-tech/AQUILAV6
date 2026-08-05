@@ -1541,7 +1541,7 @@
         if(context.state!=="running")return;
         lastChatSoundAt=now;
         const start=context.currentTime+.012;
-        [[523.25,start,.13,.026],[659.25,start+.085,.16,.022],[783.99,start+.17,.2,.018]].forEach(([frequency,when,duration,volume])=>{
+        [[523.25,start,.13,.070],[659.25,start+.085,.16,.060],[783.99,start+.17,.2,.050]].forEach(([frequency,when,duration,volume])=>{
           const oscillator=context.createOscillator();
           const gain=context.createGain();
           oscillator.type="sine";
