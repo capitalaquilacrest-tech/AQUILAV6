@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-11-native-app-icons";
+const CACHE = "aquila-vnext-12-desktop-install";
 const ASSETS = [
   "./",
   "index.html",
