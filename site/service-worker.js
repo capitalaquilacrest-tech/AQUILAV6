@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-7-android-install-repair";
+const CACHE = "aquila-vnext-8-chat-unread-counter";
 const ASSETS = [
   "./",
   "index.html",
