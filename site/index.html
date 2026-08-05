@@ -520,7 +520,7 @@
     .download-modal{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,10,28,.78);backdrop-filter:blur(8px)}
     .download-modal.show{display:flex}.download-card{position:relative;width:min(560px,100%);max-height:calc(100dvh - 36px);overflow:auto;border-radius:26px;background:#fff;box-shadow:0 32px 100px rgba(0,0,0,.42)}
     .download-head{padding:24px 24px 19px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--blue) 68%,var(--red));text-align:center}.download-head img{width:64px;height:64px;margin:0 auto 10px;border-radius:17px;padding:5px;background:#fff;object-fit:contain}.download-head h3{margin:0;font-size:23px}.download-head p{margin:7px 0 0;color:#dce9ff;font-size:13px;line-height:1.45}.download-close{position:absolute;right:13px;top:13px;width:38px;height:38px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:23px;cursor:pointer}
-    .download-body{padding:20px}.download-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.download-choice{border:1px solid var(--line);border-radius:17px;padding:15px;background:#f7faff;color:var(--navy);font-weight:950;cursor:pointer;text-align:center}.download-choice.active{border-color:var(--blue);background:#eaf2ff;box-shadow:0 0 0 2px rgba(15,91,216,.1)}.download-choice span{display:block;font-size:25px;margin-bottom:5px}
+    .download-body{padding:20px}.download-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.download-choice{min-width:0;border:1px solid var(--line);border-radius:17px;padding:13px 7px;background:#f7faff;color:var(--navy);font-size:11px;font-weight:950;cursor:pointer;text-align:center}.download-choice.active{border-color:var(--blue);background:#eaf2ff;box-shadow:0 0 0 2px rgba(15,91,216,.1)}.download-choice span{display:block;font-size:24px;margin-bottom:5px}
     .download-panel{display:none;padding:17px 2px 2px}.download-panel.active{display:block}.download-panel h4{margin:0 0 8px;color:var(--navy);font-size:18px}.download-panel p{margin:0 0 13px;color:var(--muted);font-size:13px;line-height:1.55}.download-steps{margin:0 0 15px;padding:0;list-style:none;counter-reset:installStep}.download-steps li{counter-increment:installStep;position:relative;padding:9px 8px 9px 38px;color:#425877;font-size:13px;line-height:1.45}.download-steps li::before{content:counter(installStep);position:absolute;left:3px;top:7px;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-size:11px;font-weight:950}.download-primary{width:100%;border:0;border-radius:14px;padding:14px 16px;color:#fff;background:linear-gradient(135deg,var(--red),var(--blue));font-weight:950;cursor:pointer}.download-primary:disabled{opacity:.6;cursor:default}.download-secondary{display:none;width:100%;margin-top:9px;border:1px solid #b8cae7;border-radius:14px;padding:12px 15px;color:var(--navy);background:#eef5ff;font-weight:950;cursor:pointer}.download-secondary.show{display:block}.download-note{margin-top:10px;padding:10px 12px;border-radius:12px;background:#fff8df;border:1px solid #ead68f;color:#6c5719;font-size:11px;line-height:1.45}.download-note.ok{background:#eaf9f0;border-color:#a9dfbc;color:#176438}.download-note.error{background:#fff0f1;border-color:#efb6bd;color:#9a2634}
     .notify-setup{margin-top:18px;padding:15px;border:1px solid #cfe0fb;border-radius:17px;background:#f3f8ff}.notify-setup h4{margin:0 0 5px;color:var(--navy)}.notify-status{display:flex;align-items:center;gap:7px;margin:8px 0 12px;color:#526681;font-size:12px;font-weight:800}.notify-status-dot{width:9px;height:9px;border-radius:50%;background:#f0a323}.notify-status.enabled .notify-status-dot{background:#1f9d61}.notify-status.denied .notify-status-dot{background:#d92d43}.notify-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.notify-actions button{border:0;border-radius:12px;padding:11px 8px;font-size:11px;font-weight:950;cursor:pointer}.notify-enable{color:#fff;background:var(--blue)}.notify-test{color:var(--blue);background:#fff;border:1px solid #bdd3f2!important}.notify-actions button:disabled{opacity:.5;cursor:not-allowed}
     @media(max-width:900px){
@@ -529,7 +529,7 @@
     }
     @media(max-width:600px){
       .official-links,.footer-grid{grid-template-columns:1fr}
-      .install-btn{left:12px;bottom:20px;padding:11px 13px;font-size:11px}.download-card{border-radius:22px}.download-head{padding:21px 18px 17px}.download-body{padding:16px}.notify-actions{grid-template-columns:1fr}
+      .install-btn{left:12px;bottom:20px;padding:11px 13px;font-size:11px}.download-card{border-radius:22px}.download-head{padding:21px 18px 17px}.download-body{padding:16px}.download-choices{grid-template-columns:1fr 1fr}.notify-actions{grid-template-columns:1fr}
     }
 
     .live-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:28px 0}
@@ -997,12 +997,14 @@
         <button class="download-close" id="downloadClose" type="button" aria-label="Close download instructions">×</button>
         <img src="assets/logo.jpg" alt="Aquila Crest Capital logo">
         <h3 id="downloadTitle">Download Aquila App</h3>
-        <p>Piliin ang cellphone mo. Susundan ka namin step-by-step.</p>
+        <p>Piliin ang device mo para mailagay agad ang Aquila app.</p>
       </header>
       <div class="download-body">
-        <div class="download-choices" role="tablist" aria-label="Choose your phone">
+        <div class="download-choices" role="tablist" aria-label="Choose your device">
           <button class="download-choice active" id="androidChoice" type="button" role="tab" aria-selected="true" aria-controls="androidInstall"><span>🤖</span>ANDROID</button>
           <button class="download-choice" id="iosChoice" type="button" role="tab" aria-selected="false" aria-controls="iosInstall"><span>🍎</span>iPHONE / iOS</button>
+          <button class="download-choice" id="windowsChoice" type="button" role="tab" aria-selected="false" aria-controls="windowsInstall"><span>🪟</span>WINDOWS</button>
+          <button class="download-choice" id="macChoice" type="button" role="tab" aria-selected="false" aria-controls="macInstall"><span>💻</span>Mac</button>
         </div>
         <section class="download-panel active" id="androidInstall" role="tabpanel" aria-labelledby="androidChoice">
           <h4>Install sa Android</h4>
@@ -1029,9 +1031,33 @@
           </ol>
           <button class="download-primary" id="copySiteLink" type="button">COPY AQUILA WEBSITE LINK</button>
         </section>
+        <section class="download-panel" id="windowsInstall" role="tabpanel" aria-labelledby="windowsChoice">
+          <h4>Install sa Windows</h4>
+          <p>Magiging standalone Aquila app ito na may sariling icon at window. Makikita sa Start Menu at maaari ring ilagay sa Desktop o Taskbar.</p>
+          <button class="download-primary desktop-install-now" id="windowsInstallNow" type="button">💻 CHECKING INSTALLER…</button>
+          <ol class="download-steps">
+            <li>Buksan ang site gamit ang updated <b>Google Chrome</b> o <b>Microsoft Edge</b>.</li>
+            <li>Pindutin ang button sa taas. Kung walang popup, i-click ang <b>Install icon</b> sa kanan ng address bar.</li>
+            <li>Sa Chrome, maaari ring piliin ang <b>⋮ → Cast, save, and share → Install page as app</b>.</li>
+            <li>Sa Edge, piliin ang <b>⋯ → Apps → Install Aquila Crest Capital</b>.</li>
+          </ol>
+          <div class="download-note" id="windowsInstallNote" role="status" aria-live="polite">Checking your Windows browser…</div>
+        </section>
+        <section class="download-panel" id="macInstall" role="tabpanel" aria-labelledby="macChoice">
+          <h4>Install sa Mac</h4>
+          <p>Magiging standalone Aquila app ito sa Applications at maaari mong i-pin sa Dock—may sariling premium Aquila icon.</p>
+          <button class="download-primary desktop-install-now" id="macInstallNow" type="button">💻 CHECKING INSTALLER…</button>
+          <ol class="download-steps">
+            <li>Sa <b>Chrome o Edge</b>, pindutin ang button sa taas o ang <b>Install icon</b> sa kanan ng address bar.</li>
+            <li>Kung Safari ang gamit, piliin ang menu na <b>File → Add to Dock</b>.</li>
+            <li>Pindutin ang <b>Add</b> o <b>Install</b>.</li>
+            <li>Buksan ang Aquila mula sa <b>Applications, Launchpad, o Dock</b>.</li>
+          </ol>
+          <div class="download-note" id="macInstallNote" role="status" aria-live="polite">Checking your Mac browser…</div>
+        </section>
         <section class="notify-setup" aria-labelledby="notifySetupTitle">
-          <h4 id="notifySetupTitle">🔔 Phone Notifications</h4>
-          <p style="margin:0;color:#667995;font-size:12px;line-height:1.45">Pagkatapos ma-install, i-enable ito para may alert kahit naka-lock ang screen.</p>
+          <h4 id="notifySetupTitle">🔔 App Notifications</h4>
+          <p style="margin:0;color:#667995;font-size:12px;line-height:1.45">Pagkatapos ma-install, i-enable ito para may chat alert sa phone o desktop.</p>
           <div class="notify-status" id="downloadNotifyStatus"><span class="notify-status-dot"></span><span id="downloadNotifyText">Checking notification status…</span></div>
           <div class="notify-actions">
             <button class="notify-enable" id="downloadNotifyEnable" type="button">ENABLE NOTIFICATIONS</button>
@@ -1756,7 +1782,7 @@
       try{return new Intl.DateTimeFormat("en-PH",{hour:"numeric",minute:"2-digit"}).format(new Date(value));}catch(_){return "";}
     }
     function removeChatEmpty(){ chatEmpty?.remove(); }
-    // Build 2026-08-05 DURABLE-UNREAD-1: persistent unread count + visible glowing bubble.
+    // Build 2026-08-06 DESKTOP-INSTALL-1: Windows/Mac install flow + durable unread glow.
     const AQUILA_CHAT_BUILD="2026-08-05-durable-unread-1";
     const chatLinkPattern=/((?:https?:\/\/|www\.)[^\s<>"']+|(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}(?::\d{2,5})?(?:\/[^\s<>"']*)?)/gi;
     function cleanChatLinkToken(value){
@@ -2415,14 +2441,26 @@
     const downloadClose = document.getElementById("downloadClose");
     const androidChoice = document.getElementById("androidChoice");
     const iosChoice = document.getElementById("iosChoice");
+    const windowsChoice = document.getElementById("windowsChoice");
+    const macChoice = document.getElementById("macChoice");
     const androidInstall = document.getElementById("androidInstall");
     const iosInstall = document.getElementById("iosInstall");
+    const windowsInstall = document.getElementById("windowsInstall");
+    const macInstall = document.getElementById("macInstall");
     const androidInstallNow = document.getElementById("androidInstallNow");
+    const windowsInstallNow = document.getElementById("windowsInstallNow");
+    const macInstallNow = document.getElementById("macInstallNow");
     const androidOpenChrome = document.getElementById("androidOpenChrome");
     const androidInstallNote = document.getElementById("androidInstallNote");
+    const windowsInstallNote = document.getElementById("windowsInstallNote");
+    const macInstallNote = document.getElementById("macInstallNote");
     const copySiteLink = document.getElementById("copySiteLink");
     const androidUA = navigator.userAgent || "";
     const isAndroidDevice = /android/i.test(androidUA);
+    const isWindowsDevice = /Windows/i.test(androidUA);
+    const isMacDevice = /Macintosh|Mac OS X/i.test(androidUA) && !isIOSDevice();
+    const isDesktopChromium = !isAndroidDevice && /Chrome|Chromium|Edg\//i.test(androidUA) && !/OPR|Firefox|FxiOS/i.test(androidUA);
+    const isMacSafari = isMacDevice && /Safari\//i.test(androidUA) && !/Chrome|Chromium|Edg|OPR|Firefox/i.test(androidUA);
     const isAndroidInAppBrowser = isAndroidDevice && /FBAN|FBAV|Instagram|Messenger|;\s*wv\)|\bwv\b/i.test(androidUA);
     const isAndroidChrome = isAndroidDevice && /Chrome\//i.test(androidUA) && !/EdgA|OPR|SamsungBrowser|Firefox|FxiOS/i.test(androidUA) && !isAndroidInAppBrowser;
     function setAndroidInstallNote(message,state=""){
@@ -2466,13 +2504,51 @@
         setAndroidInstallNote("Buksan ang page na ito sa Android phone gamit ang updated Google Chrome.");
       }
     }
-    function openDownloadModal(){downloadModal?.classList.add("show");downloadModal?.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";updateAndroidInstallUI();refreshPushState();}
+    function setDesktopInstallNote(platform,message,state=""){
+      const note=platform==="windows"?windowsInstallNote:macInstallNote;
+      if(!note)return;
+      note.textContent=message;
+      note.classList.toggle("ok",state==="ok");
+      note.classList.toggle("error",state==="error");
+    }
+    function updateDesktopInstallUI(){
+      [["windows",windowsInstallNow],["mac",macInstallNow]].forEach(([platform,button])=>{
+        if(!button)return;
+        if(isStandaloneApp()){
+          button.textContent="APP INSTALLED ✓";
+          button.disabled=true;
+          setDesktopInstallNote(platform,platform==="windows"?"Installed na ang Aquila. Buksan ito mula sa Start Menu, Desktop, o Taskbar.":"Installed na ang Aquila. Buksan ito mula sa Applications, Launchpad, o Dock.","ok");
+        }else if(deferredInstallPrompt){
+          button.textContent="💻 INSTALL AQUILA APP";
+          button.disabled=false;
+          setDesktopInstallNote(platform,"Ready na ang secure app installer. Pindutin ang button sa taas.","ok");
+        }else if(platform==="mac"&&isMacSafari){
+          button.textContent=" SHOW SAFARI INSTALL STEP";
+          button.disabled=false;
+          setDesktopInstallNote(platform,"Sa Safari menu sa pinakataas ng screen: File → Add to Dock → Add.");
+        }else if(isDesktopChromium){
+          button.textContent="📋 SHOW MANUAL INSTALL STEP";
+          button.disabled=false;
+          setDesktopInstallNote(platform,"Kung wala pang popup, gamitin ang Install icon sa address bar o browser menu. Maaaring may maikling delay bago ihanda ng browser ang installer.");
+        }else{
+          button.textContent="🌐 OPEN IN CHROME OR EDGE";
+          button.disabled=false;
+          setDesktopInstallNote(platform,platform==="mac"?"Pinakamadali sa updated Chrome/Edge. Sa Safari, gamitin ang File → Add to Dock.":"Buksan ang Aquila sa updated Google Chrome o Microsoft Edge para ma-install bilang desktop app.","error");
+        }
+      });
+    }
+    function updateInstallUI(){updateAndroidInstallUI();updateDesktopInstallUI();}
+    function openDownloadModal(){downloadModal?.classList.add("show");downloadModal?.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";updateInstallUI();refreshPushState();}
     function closeDownloadModal(){downloadModal?.classList.remove("show");downloadModal?.setAttribute("aria-hidden","true");document.body.style.overflow="";}
-    function showInstallPlatform(platform){const android=platform==="android";androidChoice?.classList.toggle("active",android);iosChoice?.classList.toggle("active",!android);androidChoice?.setAttribute("aria-selected",String(android));iosChoice?.setAttribute("aria-selected",String(!android));androidInstall?.classList.toggle("active",android);iosInstall?.classList.toggle("active",!android);}
+    function showInstallPlatform(platform){
+      const tabs={android:[androidChoice,androidInstall],ios:[iosChoice,iosInstall],windows:[windowsChoice,windowsInstall],mac:[macChoice,macInstall]};
+      Object.entries(tabs).forEach(([name,[choice,panel]])=>{const active=name===platform;choice?.classList.toggle("active",active);choice?.setAttribute("aria-selected",String(active));panel?.classList.toggle("active",active)});
+      updateInstallUI();
+    }
     window.addEventListener("beforeinstallprompt", event => {
       event.preventDefault();
       deferredInstallPrompt = event;
-      updateAndroidInstallUI();
+      updateInstallUI();
     });
     document.querySelectorAll("[data-open-download]").forEach(button=>button.addEventListener("click",openDownloadModal));
     installBtn?.addEventListener("click",openDownloadModal);
@@ -2480,6 +2556,8 @@
     downloadModal?.addEventListener("click",event=>{if(event.target===downloadModal)closeDownloadModal();});
     androidChoice?.addEventListener("click",()=>showInstallPlatform("android"));
     iosChoice?.addEventListener("click",()=>showInstallPlatform("ios"));
+    windowsChoice?.addEventListener("click",()=>showInstallPlatform("windows"));
+    macChoice?.addEventListener("click",()=>showInstallPlatform("mac"));
     androidInstallNow?.addEventListener("click",async()=>{
       if(isStandaloneApp()){androidInstallNote.textContent="Installed na ang Aquila app sa cellphone na ito ✓";return;}
       if(isAndroidInAppBrowser){openAquilaInChrome();return;}
@@ -2494,16 +2572,32 @@
       setAndroidInstallNote(isAndroidChrome?"Manual: i-tap ang ⋮ sa upper-right ng Chrome → Install app o Add to Home screen → Install.":"Buksan muna sa updated Google Chrome, tapos ⋮ menu → Install app o Add to Home screen.");
       androidInstallNote.scrollIntoView({behavior:"smooth",block:"nearest"});
     });
+    async function installOnDesktop(platform){
+      const note=platform==="windows"?windowsInstallNote:macInstallNote;
+      if(isStandaloneApp()){if(note)note.textContent="Installed na ang Aquila app sa device na ito ✓";return;}
+      if(deferredInstallPrompt){
+        deferredInstallPrompt.prompt();
+        const result=await deferredInstallPrompt.userChoice;
+        setDesktopInstallNote(platform,result.outcome==="accepted"?"Installing Aquila… Lalabas na ang app icon pagkatapos nito.":"Hindi itinuloy ang installation. Pindutin ulit kapag ready ka.",result.outcome==="accepted"?"ok":"");
+        deferredInstallPrompt=null;
+        if(result.outcome!=="accepted")updateInstallUI();
+        return;
+      }
+      setDesktopInstallNote(platform,platform==="mac"&&isMacSafari?"Sa menu bar ng Safari, piliin ang File → Add to Dock → Add.":platform==="windows"?"Chrome: i-click ang Install icon sa address bar. Edge: ⋯ → Apps → Install Aquila Crest Capital.":"Chrome/Edge: i-click ang Install icon sa address bar. Safari: File → Add to Dock.");
+      note?.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }
+    windowsInstallNow?.addEventListener("click",()=>installOnDesktop("windows"));
+    macInstallNow?.addEventListener("click",()=>installOnDesktop("mac"));
     androidOpenChrome?.addEventListener("click",openAquilaInChrome);
     copySiteLink?.addEventListener("click",async()=>{try{await navigator.clipboard.writeText("https://aquilacrestcapital.com/");copySiteLink.textContent="LINK COPIED ✓";setTimeout(()=>copySiteLink.textContent="COPY AQUILA WEBSITE LINK",1800);}catch(_){location.href="https://aquilacrestcapital.com/";}});
     downloadNotifyEnable?.addEventListener("click",enablePhoneNotificationsFromDownload);
     downloadNotifyTest?.addEventListener("click",testPhoneNotification);
     document.addEventListener("keydown",event=>{if(event.key==="Escape"&&downloadModal?.classList.contains("show"))closeDownloadModal();});
-    if(isIOSDevice())showInstallPlatform("ios");
-    window.addEventListener("appinstalled", () => {installBtn?.classList.add("installed");if(installBtn)installBtn.textContent="APP INSTALLED ✓";setAndroidInstallNote("Installed na ang Aquila app ✓ Buksan ang icon mula sa Home Screen.","ok");updateAndroidInstallUI();});
+    if(isIOSDevice())showInstallPlatform("ios");else if(isWindowsDevice)showInstallPlatform("windows");else if(isMacDevice)showInstallPlatform("mac");
+    window.addEventListener("appinstalled", () => {installBtn?.classList.add("installed");if(installBtn)installBtn.textContent="APP INSTALLED ✓";setAndroidInstallNote("Installed na ang Aquila app ✓ Buksan ang icon mula sa Home Screen.","ok");updateInstallUI();});
     if(isStandaloneApp()){installBtn?.classList.add("installed");if(installBtn)installBtn.textContent="APP MENU";}
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js",{scope:"/"}).then(()=>navigator.serviceWorker.ready).then(()=>updateAndroidInstallUI()).catch(()=>{if(isAndroidDevice)setAndroidInstallNote("Hindi maihanda ang installer. I-refresh ang page sa Chrome at subukan ulit.","error");}));
+      window.addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js",{scope:"/"}).then(()=>navigator.serviceWorker.ready).then(()=>updateInstallUI()).catch(()=>{if(isAndroidDevice)setAndroidInstallNote("Hindi maihanda ang installer. I-refresh ang page sa Chrome at subukan ulit.","error");else if(isWindowsDevice||isMacDevice)setDesktopInstallNote(isMacDevice?"mac":"windows","Hindi maihanda ang installer. I-refresh ang page sa Chrome/Edge at subukan ulit.","error");}));
       navigator.serviceWorker.addEventListener("message",event=>{if(event.data?.type==="AQUILA_OPEN_CHAT")setChatOpen(true);});
     }
     function openChatFromLaunch(){
