@@ -193,6 +193,67 @@
     .ticker-track span{white-space:nowrap}
     @keyframes ticker{to{transform:translateX(-50%)}}
 
+    .dashboard-showcase{
+      position:relative;isolation:isolate;overflow:hidden;
+      padding:86px 22px 92px;
+      background:
+        radial-gradient(circle at 18% 20%,rgba(255,216,107,.20),transparent 26%),
+        radial-gradient(circle at 82% 34%,rgba(42,127,255,.28),transparent 30%),
+        linear-gradient(145deg,#030b20 0%,#071c47 48%,#320b2e 100%);
+    }
+    .dashboard-showcase::before{
+      content:"";position:absolute;inset:0;z-index:-1;opacity:.32;
+      background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+      background-size:42px 42px;mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 82%,transparent);
+    }
+    .dashboard-showcase::after{
+      content:"";position:absolute;z-index:-1;width:620px;height:620px;left:50%;top:54%;
+      transform:translate(-50%,-50%);border-radius:50%;filter:blur(54px);
+      background:radial-gradient(circle,rgba(31,119,255,.28),rgba(255,42,91,.10) 48%,transparent 70%);
+    }
+    .dashboard-showcase-copy{max-width:850px;margin:0 auto 34px;text-align:center;color:#fff}
+    .dashboard-showcase-copy .section-kicker{color:#ffe69a}
+    .dashboard-showcase-copy h2{margin:10px 0 12px;font-size:clamp(34px,5vw,60px);line-height:1;letter-spacing:-.04em}
+    .dashboard-showcase-copy p{max-width:690px;margin:0 auto;color:#d4e4fb;font-size:clamp(14px,1.6vw,17px);line-height:1.65}
+    .dashboard-visual{
+      position:relative;width:min(100%,760px);margin:auto;padding:10px;
+      border:1px solid rgba(255,255,255,.24);border-radius:42px;
+      background:linear-gradient(145deg,rgba(255,255,255,.20),rgba(255,255,255,.05));
+      box-shadow:0 42px 120px rgba(0,0,0,.48),0 0 90px rgba(42,127,255,.20);
+      animation:dashboardHover 7s ease-in-out infinite;transform-origin:center;
+    }
+    .dashboard-visual::before{
+      content:"";position:absolute;inset:-2px;border-radius:44px;padding:2px;pointer-events:none;
+      background:linear-gradient(120deg,rgba(255,232,153,.85),rgba(255,255,255,.08),rgba(68,146,255,.80),rgba(255,58,114,.65));
+      -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor;mask-composite:exclude;
+    }
+    .dashboard-visual img{display:block;width:100%;height:auto;border-radius:32px}
+    .dashboard-light{
+      position:absolute;pointer-events:none;border-radius:999px;mix-blend-mode:screen;
+      border:2px solid rgba(255,237,154,.86);
+      box-shadow:0 0 12px 5px rgba(255,212,75,.80),0 0 38px 15px rgba(255,70,103,.45);
+      animation:dashboardBeacon 3.2s ease-in-out infinite;
+    }
+    .dashboard-light.reserve{width:36%;height:15%;left:-2%;top:1%;animation-delay:-.8s}
+    .dashboard-light.released{width:35%;height:15%;right:-1%;top:16%;animation-delay:-1.8s}
+    .dashboard-light.access{width:31%;height:15%;left:0;bottom:8%;animation-delay:-2.6s}
+    .dashboard-status-strip{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:25px}
+    .dashboard-status-strip span{
+      display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid rgba(255,255,255,.16);
+      border-radius:999px;background:rgba(255,255,255,.08);color:#e4efff;font-size:12px;font-weight:850;backdrop-filter:blur(12px)
+    }
+    .dashboard-status-strip i{width:8px;height:8px;border-radius:50%;background:#68efad;box-shadow:0 0 13px #68efad}
+    @keyframes dashboardHover{50%{transform:translateY(-12px) rotateX(1deg)}}
+    @keyframes dashboardBeacon{0%,100%{opacity:.28;transform:scale(.96)}50%{opacity:.9;transform:scale(1.035)}}
+    @media(max-width:640px){
+      .dashboard-showcase{padding:60px 12px 68px}.dashboard-showcase-copy{margin-bottom:23px;padding:0 10px}
+      .dashboard-visual{padding:6px;border-radius:27px}.dashboard-visual::before{border-radius:29px}.dashboard-visual img{border-radius:21px}
+      .dashboard-status-strip{gap:7px;margin-top:19px}.dashboard-status-strip span{padding:8px 10px;font-size:10px}
+      .dashboard-light{border-width:1px;box-shadow:0 0 8px 3px rgba(255,212,75,.75),0 0 20px 8px rgba(255,70,103,.38)}
+    }
+    @media(prefers-reduced-motion:reduce){.dashboard-visual,.dashboard-light{animation:none}.dashboard-light{opacity:.52}}
+
     .section{max-width:1200px;margin:auto;padding:100px 22px}
     .section-kicker{color:var(--red);font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
     .section h2{font-size:clamp(36px,5vw,58px);line-height:1.03;letter-spacing:-.035em;margin:12px 0 16px;color:var(--navy)}
@@ -780,6 +841,25 @@
   </div>
 
   <main>
+    <section class="dashboard-showcase reveal" aria-labelledby="dashboardShowcaseTitle">
+      <div class="dashboard-showcase-copy">
+        <div class="section-kicker">Inside the Aquila Platform</div>
+        <h2 id="dashboardShowcaseTitle">Your capital. Your activity. One connected dashboard.</h2>
+        <p>See member access, Capital Reserve activity, transaction status, account tools, and platform updates in one organized digital experience.</p>
+      </div>
+      <div class="dashboard-visual">
+        <img src="assets/aquila-dashboard-showcase.jpeg" alt="Aquila member dashboard showing Active Capital Reserve, released withdrawal status, and 24/7 member access" loading="lazy">
+        <span class="dashboard-light reserve" aria-hidden="true"></span>
+        <span class="dashboard-light released" aria-hidden="true"></span>
+        <span class="dashboard-light access" aria-hidden="true"></span>
+      </div>
+      <div class="dashboard-status-strip" aria-label="Dashboard highlights">
+        <span><i></i> Active Capital Reserve</span>
+        <span><i></i> Withdrawal Tracking</span>
+        <span><i></i> Member Access 24/7</span>
+      </div>
+    </section>
+
     <section class="section reveal" id="about">
       <div class="section-kicker">Why Aquila</div>
       <h2>A connected platform, not just a login page.</h2>
