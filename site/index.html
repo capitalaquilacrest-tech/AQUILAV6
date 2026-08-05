@@ -430,14 +430,15 @@
       display:grid;place-items:center;border:3px solid transparent;box-sizing:border-box;cursor:pointer;color:#fff;font-size:23px;
       background:linear-gradient(135deg,var(--red),var(--blue));box-shadow:0 15px 35px rgba(6,26,68,.25);isolation:isolate;
     }
-    .support-orb::before{content:"";position:absolute;inset:-7px;z-index:-1;border:4px solid #ffe16a;border-radius:inherit;opacity:0;pointer-events:none}
-    .support-orb.has-unread{border-color:#fff4b3;animation:chatUnreadCore 1.05s ease-in-out infinite}
-    .support-orb.has-unread::before{animation:chatUnreadRing 1.05s ease-out infinite}
-    @keyframes chatUnreadCore{0%,100%{box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 8px 3px rgba(255,218,72,.9),0 0 22px 8px rgba(255,191,0,.6)}50%{border-color:#fff;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 12px 5px #fff7bf,0 0 34px 13px rgba(255,198,0,.98),0 0 55px 20px rgba(255,174,0,.5);transform:scale(1.09)}}
-    @keyframes chatUnreadRing{0%{opacity:.95;transform:scale(.88)}75%,100%{opacity:0;transform:scale(1.45)}}
-    .chat-unread{position:absolute;right:-9px;top:-11px;z-index:2;min-width:25px;height:25px;padding:0 6px;border-radius:20px;background:#e2263f;color:#fff;font-size:11px;line-height:1;font-weight:950;display:none;place-items:center;border:2px solid #fff;box-shadow:0 0 0 2px rgba(226,38,63,.25),0 5px 14px rgba(125,11,29,.48)}
+    .support-orb::before{content:"";position:absolute;inset:-10px;z-index:0;border:5px solid #ffe45c;border-radius:inherit;opacity:0;pointer-events:none}
+    .support-orb.has-unread{border-color:#fff9cf;animation:chatUnreadCore .9s ease-in-out infinite;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 5px #ffe45c,0 0 28px 13px rgba(255,190,0,.98),0 0 56px 23px rgba(255,137,0,.58)}
+    .support-orb.has-unread::before{animation:chatUnreadRing .9s ease-out infinite}
+    .support-orb.has-unread>span,.support-orb.has-unread{isolation:isolate}.support-orb.has-unread{font-size:25px}.support-orb.has-unread::after{content:"";position:absolute;inset:3px;z-index:0;border:2px solid rgba(255,255,255,.92);border-radius:inherit;pointer-events:none}
+    @keyframes chatUnreadCore{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.12);filter:brightness(1.22);box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 7px #fff4a3,0 0 40px 18px #ffc400,0 0 70px 30px rgba(255,119,0,.7)}}
+    @keyframes chatUnreadRing{0%{opacity:1;transform:scale(.82)}80%,100%{opacity:0;transform:scale(1.52)}}
+    .chat-unread{position:absolute;right:-10px;top:-13px;z-index:3;min-width:27px;height:27px;padding:0 6px;border-radius:20px;background:#e0002f;color:#fff;font-size:12px;line-height:1;font-weight:950;display:none;place-items:center;border:2px solid #fff;box-shadow:0 0 0 3px rgba(224,0,47,.28),0 6px 16px rgba(125,11,29,.58)}
     .chat-unread.show{display:grid}
-    @media (prefers-reduced-motion:reduce){.support-orb.has-unread{animation:none;border-color:#fff4b3;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 12px 5px #fff7bf,0 0 34px 13px rgba(255,198,0,.95)}.support-orb.has-unread::before{animation:none;opacity:.65}}
+    @media (prefers-reduced-motion:reduce){.support-orb.has-unread{animation:none;border-color:#fff4b3;box-shadow:0 15px 35px rgba(6,26,68,.25),0 0 0 6px #ffe45c,0 0 38px 17px rgba(255,198,0,.98),0 0 65px 26px rgba(255,139,0,.64)}.support-orb.has-unread::before{animation:none;opacity:.85;transform:scale(1.2)}}
     .chat-panel{position:fixed;right:18px;bottom:158px;z-index:96;width:min(408px,calc(100vw - 24px));max-width:calc(100vw - 24px);height:min(680px,calc(100vh - 184px));background:#fff;border:1px solid rgba(6,26,68,.12);border-radius:26px;box-shadow:0 28px 90px rgba(6,26,68,.28);display:none;overflow:hidden;overscroll-behavior:none;touch-action:manipulation}
     .chat-panel.show{display:grid;grid-template-rows:auto auto 1fr auto;animation:chatRise .22s ease-out}
     @keyframes chatRise{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
@@ -1472,6 +1473,8 @@
     let chatChannel = null;
     let chatReady = false;
     let unreadCount = 0;
+    let latestVisibleMessageAt = "";
+    const CHAT_LAST_SEEN_KEY = "aquilaChatLastSeenAtV1";
     let chatSoundEnabled = (()=>{try{return localStorage.getItem("aquilaChatSound")!=="off";}catch(_){return true;}})();
     let chatSoundContext = null;
     let lastChatSoundAt = 0;
@@ -1530,7 +1533,7 @@
       chatPanel?.setAttribute("aria-hidden",String(!open));
       supportOrb?.setAttribute("aria-expanded",String(open));
       if(open){
-        unreadCount=0; updateUnread();
+        markChatMessagesSeen();
         initialLatestScrollUntil=Date.now()+1400;
         Promise.resolve(initLiveChat()).finally(()=>scrollChatToLatestOnOpen());
         requestAnimationFrame(()=>scrollChatToLatestOnOpen());
@@ -1551,6 +1554,36 @@
       supportOrb?.setAttribute("aria-label",unreadCount>0?`Open Aquila Community Live Chat · ${unreadCount>10?"more than 10":unreadCount} unread message${unreadCount===1?"":"s"}`:"Open Aquila Community Live Chat");
       if(unreadCount>0&&navigator.setAppBadge)navigator.setAppBadge(Math.min(unreadCount,99)).catch(()=>{});
       else if(unreadCount===0&&navigator.clearAppBadge)navigator.clearAppBadge().catch(()=>{});
+    }
+    function storedChatLastSeenAt(){
+      try{return localStorage.getItem(CHAT_LAST_SEEN_KEY)||"";}catch(_){return "";}
+    }
+    function saveChatLastSeenAt(value){
+      if(!value)return;
+      try{localStorage.setItem(CHAT_LAST_SEEN_KEY,value);}catch(_){}
+    }
+    function rememberLatestVisibleMessage(message){
+      const createdAt=String(message?.created_at||"");
+      if(createdAt&&(!latestVisibleMessageAt||createdAt>latestVisibleMessageAt))latestVisibleMessageAt=createdAt;
+    }
+    function markChatMessagesSeen(){
+      unreadCount=0;
+      if(latestVisibleMessageAt)saveChatLastSeenAt(latestVisibleMessageAt);
+      updateUnread();
+    }
+    function restoreUnreadFromHistory(messages,userId){
+      const visible=(messages||[]).filter(message=>message?.status==="visible");
+      visible.forEach(rememberLatestVisibleMessage);
+      const lastSeen=storedChatLastSeenAt();
+      if(!lastSeen){
+        if(latestVisibleMessageAt)saveChatLastSeenAt(latestVisibleMessageAt);
+        unreadCount=0;updateUnread();return;
+      }
+      if(chatPanel?.classList.contains("show")){
+        markChatMessagesSeen();return;
+      }
+      unreadCount=visible.filter(message=>String(message.created_at||"")>lastSeen&&message.sender_id!==userId).length;
+      updateUnread();
     }
     function updateChatSoundToggle(){
       if(!chatSoundToggle)return;
@@ -1723,8 +1756,8 @@
       try{return new Intl.DateTimeFormat("en-PH",{hour:"numeric",minute:"2-digit"}).format(new Date(value));}catch(_){return "";}
     }
     function removeChatEmpty(){ chatEmpty?.remove(); }
-    // Build 2026-08-05 CHAT-SOUND-1: link previews + soft message sound + unread/app badge.
-    const AQUILA_CHAT_BUILD="2026-08-05-chat-sound-1";
+    // Build 2026-08-05 DURABLE-UNREAD-1: persistent unread count + visible glowing bubble.
+    const AQUILA_CHAT_BUILD="2026-08-05-durable-unread-1";
     const chatLinkPattern=/((?:https?:\/\/|www\.)[^\s<>"']+|(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}(?::\d{2,5})?(?:\/[^\s<>"']*)?)/gi;
     function cleanChatLinkToken(value){
       let token=String(value||"");
@@ -2106,6 +2139,7 @@
         const notices=noticesResult.data;
         const support=supportResult.data;
         chatProfile=profile||null;
+        restoreUnreadFromHistory(messages,userId);
         (messages||[]).reverse().forEach(message=>renderChatMessage(message,false));
         await reloadReactions();
         (notices||[]).forEach(n=>renderChatNotice(n));
@@ -2125,7 +2159,9 @@
         .on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},payload=>{
           if(payload.eventType==="INSERT"){
             const isOwnMessage=payload.new?.sender_id===chatSession?.user?.id;
+            rememberLatestVisibleMessage(payload.new);
             renderChatMessage(payload.new,!isOwnMessage);
+            if(!isOwnMessage&&payload.new?.status==="visible"&&chatPanel?.classList.contains("show")&&!document.hidden)markChatMessagesSeen();
             if(!isOwnMessage&&payload.new?.status==="visible")playCuteChatSound();
           }
           else if(payload.eventType==="UPDATE"){
@@ -2156,7 +2192,12 @@
       if(!data) return;
       const visibleIds=new Set(data.map(item=>item.id));
       renderedMessageIds.forEach(id=>{if(!visibleIds.has(id)) removeChatMessage(id)});
-      data.reverse().forEach(renderChatMessage);
+      const userId=chatSession?.user?.id;
+      const lastSeen=storedChatLastSeenAt();
+      const closed=!chatPanel?.classList.contains("show")||document.hidden;
+      data.forEach(rememberLatestVisibleMessage);
+      data.reverse().forEach(message=>renderChatMessage(message,Boolean(closed&&lastSeen&&String(message.created_at||"")>lastSeen&&message.sender_id!==userId)));
+      if(!closed)markChatMessagesSeen();
       await reloadReactions();
     }
     async function joinLiveChat(){
@@ -2309,7 +2350,19 @@
     chatPushToggle?.addEventListener("click",togglePhoneNotifications);
     document.addEventListener("pointerdown",()=>{primeChatSound();initLiveChat();},{once:true,passive:true});
     window.addEventListener("load",()=>initLiveChat());
-    document.addEventListener("visibilitychange",()=>{if(!document.hidden&&chatPanel?.classList.contains("show")){unreadCount=0;updateUnread();}});
+    let unreadReturnSyncTimer=null;
+    function syncUnreadOnReturn(){
+      if(document.hidden)return;
+      clearTimeout(unreadReturnSyncTimer);
+      unreadReturnSyncTimer=setTimeout(async()=>{
+        if(chatPanel?.classList.contains("show")){markChatMessagesSeen();return;}
+        if(!chatReady)await initLiveChat();
+        if(chatDb&&chatSession)await reconcileChatMessages();
+      },180);
+    }
+    document.addEventListener("visibilitychange",syncUnreadOnReturn);
+    window.addEventListener("pageshow",syncUnreadOnReturn);
+    window.addEventListener("online",syncUnreadOnReturn);
     chatClose?.addEventListener("click",()=>setChatOpen(false));
     chatMessages?.addEventListener("load",()=>scrollChatToLatestOnOpen(),true);
     chatMessages?.addEventListener("touchstart",()=>{
