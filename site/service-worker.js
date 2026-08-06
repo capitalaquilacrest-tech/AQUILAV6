@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-20-liquid-glass-innovation";
+const CACHE = "aquila-vnext-21-zero-white-flash";
 const ASSETS = [
   "./",
   "index.html",
@@ -51,10 +51,10 @@ self.addEventListener("fetch", event => {
     event.respondWith(
       fetch(event.request)
         .then(response => {
-          if (response.ok) caches.open(CACHE).then(cache => cache.put("index.html", response.clone()));
+          if (response.ok) caches.open(CACHE).then(cache => { cache.put("index.html", response.clone()); cache.put("./", response.clone()); });
           return response;
         })
-        .catch(() => caches.match("index.html"))
+        .catch(() => caches.match(event.request).then(r => r || caches.match("./")).then(r => r || caches.match("index.html")))
     );
     return;
   }
