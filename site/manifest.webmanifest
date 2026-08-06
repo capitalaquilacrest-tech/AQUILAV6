@@ -3,16 +3,12 @@
   "name": "Aquila Crest Capital",
   "short_name": "Aquila Crest",
   "description": "Official Aquila Crest Capital digital member platform.",
-  "start_url": "/?source=pwa",
+  "start_url": "/?source=pwa&v=23",
   "scope": "/",
   "display": "standalone",
-  "display_override": [
-    "standalone",
-    "minimal-ui"
-  ],
   "orientation": "portrait-primary",
-  "background_color": "#061a44",
-  "theme_color": "#061a44",
+  "background_color": "#020817",
+  "theme_color": "#020817",
   "lang": "en-PH",
   "categories": [
     "business",
