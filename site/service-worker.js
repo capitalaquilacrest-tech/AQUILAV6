@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-19-valid-chat-links";
+const CACHE = "aquila-vnext-20-liquid-glass-innovation";
 const ASSETS = [
   "./",
   "index.html",
@@ -12,6 +12,7 @@ const ASSETS = [
   "assets/icon-512.png",
   "assets/aquila-dashboard-showcase.jpeg",
   "assets/aquila-dashboard-showcase-hq.webp",
+  "assets/aquila-innovation-city.webp",
   "assets/income-sources/wind-energy.webp",
   "assets/income-sources/solar-energy.webp",
   "assets/income-sources/hydropower.webp",
