@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-21-zero-white-flash";
+const CACHE = "aquila-vnext-22-smooth-reference";
 const ASSETS = [
   "./",
   "index.html",
@@ -12,7 +12,6 @@ const ASSETS = [
   "assets/icon-512.png",
   "assets/aquila-dashboard-showcase.jpeg",
   "assets/aquila-dashboard-showcase-hq.webp",
-  "assets/aquila-innovation-city.webp",
   "assets/income-sources/wind-energy.webp",
   "assets/income-sources/solar-energy.webp",
   "assets/income-sources/hydropower.webp",
