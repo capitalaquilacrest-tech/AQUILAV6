@@ -25,13 +25,22 @@
   <meta name="twitter:image" content="https://aquilacrestcapital.com/assets/og-image.jpg">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0a54c5">
+  <style id="aquila-critical-startup">
+    html,body{margin:0;min-height:100%;background:#020817;color-scheme:dark}
+    body{overflow-x:hidden}
+    #intro{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:#020817;opacity:1;visibility:visible}
+    #intro .intro-core{opacity:0;transform:translateY(12px) scale(.985)}
+    html.aquila-started #intro .intro-core{opacity:1;transform:none;transition:opacity .62s ease,transform .82s cubic-bezier(.2,.8,.2,1)}
+    #intro.hide{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .72s ease,visibility 0s linear .72s}
+  </style>
+  <meta name="theme-color" content="#020817">
   <link rel="canonical" href="https://aquilacrestcapital.com/">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-v11.png">
+  <link rel="preload" as="image" href="assets/logo.jpg" fetchpriority="high">
   <link rel="preload" as="image" href="assets/aquila-dashboard-showcase-hq.webp" type="image/webp">
-  <link rel="preload" as="image" href="assets/aquila-innovation-city.webp" type="image/webp">
+  <link rel="preload" as="image" href="assets/aquila-innovation-city.webp" type="image/webp" fetchpriority="high">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Aquila Crest">
@@ -432,7 +441,7 @@
       transition:opacity .7s ease,visibility .7s ease;
     }
     .intro.hide{opacity:0;visibility:hidden}
-    .intro-core{text-align:center;color:#fff;animation:introRise 1.4s ease both}
+    .intro-core{text-align:center;color:#fff}
     .intro-core img{
       width:150px;height:150px;object-fit:contain;border-radius:32px;background:#fff;padding:8px;
       box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 80px rgba(255,216,107,.30);
@@ -1010,7 +1019,7 @@
 <body>
   <div class="intro" id="intro">
     <div class="intro-core">
-      <img src="assets/logo.jpg" alt="Aquila Crest Capital logo">
+      <img src="assets/logo.jpg" alt="Aquila Crest Capital logo" fetchpriority="high" decoding="sync">
       <h2>AQUILA CREST CAPITAL</h2>
       <p>DIGITAL MEMBER EXPERIENCE</p>
       <div class="intro-line"></div>
@@ -1842,9 +1851,35 @@
     document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
 
     const intro = document.getElementById("intro");
-    window.addEventListener("load", () => {
-      setTimeout(() => intro && intro.classList.add("hide"), 1650);
-    });
+    const introLogo = intro?.querySelector("img");
+    let introClosed = false;
+
+    const closeIntro = () => {
+      if (introClosed || !intro) return;
+      introClosed = true;
+      intro.classList.add("hide");
+      intro.addEventListener("transitionend", () => intro.remove(), {once:true});
+    };
+
+    const startIntro = async () => {
+      document.documentElement.classList.add("aquila-started");
+      try {
+        if (introLogo && !introLogo.complete) {
+          await Promise.race([
+            introLogo.decode?.().catch(() => {}),
+            new Promise(resolve => setTimeout(resolve, 500))
+          ]);
+        }
+      } catch (_) {}
+      setTimeout(closeIntro, 1550);
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => requestAnimationFrame(startIntro), {once:true});
+    } else {
+      requestAnimationFrame(startIntro);
+    }
+    setTimeout(closeIntro, 2600);
 
     document.querySelectorAll(".option-tab").forEach(tab => {
       tab.addEventListener("click", () => {
