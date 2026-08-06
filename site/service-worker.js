@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-18-desktop-chat-readable";
+const CACHE = "aquila-vnext-19-valid-chat-links";
 const ASSETS = [
   "./",
   "index.html",
