@@ -6,12 +6,18 @@
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "portrait-primary",
-  "background_color": "#020817",
-  "theme_color": "#020817",
+  "background_color": "#061a44",
+  "theme_color": "#061a44",
   "lang": "en-PH",
-  "categories": ["business", "finance"],
+  "categories": [
+    "business",
+    "finance"
+  ],
   "prefer_related_applications": false,
   "icons": [
     {
