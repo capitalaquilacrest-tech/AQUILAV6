@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-16-dashboard-faq-polish";
+const CACHE = "aquila-vnext-17-dashboard-hq-safe-download";
 const ASSETS = [
   "./",
   "index.html",
@@ -11,6 +11,7 @@ const ASSETS = [
   "assets/icon-192.png",
   "assets/icon-512.png",
   "assets/aquila-dashboard-showcase.jpeg",
+  "assets/aquila-dashboard-showcase-hq.webp",
   "assets/income-sources/wind-energy.webp",
   "assets/income-sources/solar-energy.webp",
   "assets/income-sources/hydropower.webp",
