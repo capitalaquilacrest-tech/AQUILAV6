@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-22-smooth-reference";
+const CACHE = "aquila-vnext-23-ios-dark-startup";
 const ASSETS = [
   "./",
   "index.html",
@@ -8,6 +8,7 @@ const ASSETS = [
   "manifest.webmanifest",
   "assets/logo.jpg",
   "assets/apple-touch-icon-v11.png",
+  "assets/apple-splash-1320x2868.png",
   "assets/icon-192.png",
   "assets/icon-512.png",
   "assets/aquila-dashboard-showcase.jpeg",
