@@ -1,4 +1,4 @@
-const CACHE = "aquila-vnext-15-dashboard-embedded";
+const CACHE = "aquila-vnext-16-dashboard-faq-polish";
 const ASSETS = [
   "./",
   "index.html",
