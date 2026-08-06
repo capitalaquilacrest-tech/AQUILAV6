@@ -2184,9 +2184,21 @@
       try{return new Intl.DateTimeFormat("en-PH",{hour:"numeric",minute:"2-digit"}).format(new Date(value));}catch(_){return "";}
     }
     function removeChatEmpty(){ chatEmpty?.remove(); }
-    // Build 2026-08-06 DESKTOP-INSTALL-1: Windows/Mac install flow + durable unread glow.
-    const AQUILA_CHAT_BUILD="2026-08-05-durable-unread-1";
+    // Build 2026-08-06 VALID-LINKS-1: reject period-joined words that are not real domains.
+    const AQUILA_CHAT_BUILD="2026-08-06-valid-links-1";
     const chatLinkPattern=/((?:https?:\/\/|www\.)[^\s<>"']+|(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}(?::\d{2,5})?(?:\/[^\s<>"']*)?)/gi;
+    const chatGenericTlds=new Set("com org net edu gov mil int info biz name mobi pro aero asia cat coop jobs museum travel tel app dev io ai cloud online site website tech store shop live news media digital agency solutions services systems network finance capital investments energy solar green global world today xyz top club space link one me tv gg ly co us uk ca au nz de fr es it nl be ch at se no dk fi ie pt pl cz sk hu ro bg gr tr il ae sa qa kw bh om in pk bd lk np sg my id th vn ph jp kr cn hk tw mn kz uz ge am az ru ua by md lt lv ee is za ng ke gh tz ug zw bw na zm mw mu sc et eg ma dz tn ly sn ci cm ao mz mg rw cd cg ga gm sl lr so sd ss er dj sz ls bf ml ne td cf gq bi mr bn kh la mm bt mv af iq ir sy jo lb ye al ba hr rs me mk si mt cy ad mc sm va li lu xk mx gt bz sv hn ni cr pa cu jm ht do bs bb tt gd lc vc ag kn dm ar bo br cl co ec gy py pe sr uy ve gf fk aw cw bq sx pr vi gl bm ky tc vg ai ms gp mq bl mf pm pf nc vu fj pg sb ki tv nr ws to ck nu pw fm mh mp gu as um cc cx nf pn io sh ac re yt tf hm gs aq ax fo gi gg im je eu".split(" "));
+    function isChatIpHost(host){
+      if(/^\[(?:[0-9a-f:]+)\]$/i.test(host))return true;
+      const parts=host.split(".");return parts.length===4&&parts.every(part=>/^\d{1,3}$/.test(part)&&Number(part)<=255);
+    }
+    function isRecognizedChatHost(hostname){
+      const host=String(hostname||"").toLowerCase().replace(/^www\./,"").replace(/\.$/,"");
+      if(!host||host==="localhost"||host.includes("..")||host.includes("_"))return false;
+      if(isChatIpHost(host))return true;
+      const labels=host.split(".");if(labels.length<2||labels.some(label=>!label||label.length>63||!/^(?:xn--[a-z0-9-]+|[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$/i.test(label)))return false;
+      const tld=labels.at(-1);return tld.startsWith("xn--")||chatGenericTlds.has(tld);
+    }
     function cleanChatLinkToken(value){
       let token=String(value||"");
       while(/[.,!?;:\]\}]+$/.test(token))token=token.slice(0,-1);
@@ -2195,7 +2207,10 @@
     }
     function safeChatUrl(value){
       const token=cleanChatLinkToken(value);
-      try{const url=new URL(/^https?:\/\//i.test(token)?token:`https://${token}`);return /^https?:$/.test(url.protocol)?url:null;}catch(_){return null;}
+      try{
+        const url=new URL(/^https?:\/\//i.test(token)?token:`https://${token}`);
+        return /^https?:$/.test(url.protocol)&&isRecognizedChatHost(url.hostname)?url:null;
+      }catch(_){return null;}
     }
     function chatLinkInfo(url){
       const host=url.hostname.toLowerCase().replace(/^www\./,"");
