@@ -30,6 +30,7 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-v11.png">
+  <link rel="preload" as="image" href="assets/aquila-dashboard-showcase-hq.webp" type="image/webp">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Aquila Crest">
@@ -221,8 +222,7 @@
       border:1px solid rgba(255,255,255,.22);border-radius:42px;
       background:linear-gradient(145deg,rgba(35,123,255,.28),rgba(255,255,255,.06) 48%,rgba(224,28,61,.23));
       box-shadow:0 42px 120px rgba(0,0,0,.50),-18px 0 70px rgba(25,105,255,.20),18px 0 70px rgba(223,28,61,.18);
-      animation:dashboardHover 6s cubic-bezier(.45,.05,.55,.95) infinite;transform-origin:center;
-      will-change:transform;
+      animation:dashboardHover 6s ease-in-out infinite;
     }
     .dashboard-visual::before{
       content:"";position:absolute;inset:-2px;border-radius:44px;padding:2px;pointer-events:none;
@@ -238,17 +238,17 @@
       transform:translateX(-35%) rotate(2deg);animation:dashboardSweep 5.8s ease-in-out infinite;
       mix-blend-mode:screen;
     }
-    .dashboard-art img{display:block;width:100%;height:auto;border-radius:inherit;transform:scale(1.002)}
+    .dashboard-art img{display:block;width:100%;height:auto;border-radius:inherit;transform:none;image-rendering:auto}
     .dashboard-light{
-      position:absolute;z-index:3;pointer-events:none;border-radius:22px;mix-blend-mode:screen;
+      position:absolute;z-index:3;pointer-events:none;border-radius:22px;mix-blend-mode:screen;box-sizing:border-box;overflow:hidden;
       border:2px solid rgba(255,255,255,.92);
       background:linear-gradient(110deg,rgba(23,112,255,.08),rgba(255,255,255,.14),rgba(224,28,61,.08));
-      box-shadow:-8px 0 18px rgba(28,115,255,.92),8px 0 20px rgba(230,28,61,.90),0 0 28px rgba(255,255,255,.55);
+      box-shadow:inset -7px 0 14px rgba(28,115,255,.52),inset 7px 0 14px rgba(230,28,61,.50),0 0 15px rgba(255,255,255,.38);
       animation:dashboardBeacon 2.8s ease-in-out infinite;
     }
-    .dashboard-light.reserve{width:40%;height:15.5%;left:3.6%;top:2%;animation-delay:-.4s}
-    .dashboard-light.released{width:33.5%;height:15.5%;right:2.7%;top:17.2%;animation-delay:-1.35s}
-    .dashboard-light.access{width:31%;height:15.8%;left:5.8%;top:75.2%;animation-delay:-2.25s}
+    .dashboard-light.reserve{width:39.25%;height:15.25%;left:4.05%;top:2.25%;animation-delay:-.4s}
+    .dashboard-light.released{width:33.15%;height:15.45%;right:3.15%;top:17.25%;animation-delay:-1.35s}
+    .dashboard-light.access{width:30.55%;height:15.35%;left:6.05%;top:74.9%;animation-delay:-2.25s}
     .dashboard-status-strip{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:25px}
     .dashboard-status-strip span{
       display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid rgba(255,255,255,.16);
@@ -258,14 +258,14 @@
     @property --dashboard-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
     @keyframes dashboardBorder{to{--dashboard-angle:360deg}}
     @keyframes aquilaAura{to{transform:translate(-50%,-50%) rotate(360deg)}}
-    @keyframes dashboardHover{0%,100%{transform:translateY(0) rotateX(0)}50%{transform:translateY(-13px) rotateX(1.2deg) scale(1.008)}}
-    @keyframes dashboardBeacon{0%,100%{opacity:.30;filter:saturate(.9);transform:scale(.985)}45%,55%{opacity:1;filter:saturate(1.35);transform:scale(1.018)}}
+    @keyframes dashboardHover{0%,100%{box-shadow:0 42px 120px rgba(0,0,0,.50),-18px 0 70px rgba(25,105,255,.20),18px 0 70px rgba(223,28,61,.18)}50%{box-shadow:0 48px 128px rgba(0,0,0,.53),-22px 0 78px rgba(25,105,255,.28),22px 0 78px rgba(223,28,61,.25)}}
+    @keyframes dashboardBeacon{0%,100%{opacity:.28;filter:saturate(.95) brightness(.92)}45%,55%{opacity:1;filter:saturate(1.35) brightness(1.15)}}
     @keyframes dashboardSweep{0%,18%{transform:translateX(-38%) rotate(2deg);opacity:0}35%{opacity:.72}62%,100%{transform:translateX(38%) rotate(2deg);opacity:0}}
     @media(max-width:640px){
       .dashboard-showcase{padding:60px 12px 68px}.dashboard-showcase-copy{margin-bottom:23px;padding:0 10px}
       .dashboard-visual{padding:5px;border-radius:27px}.dashboard-visual::before{border-radius:29px}.dashboard-art{border-radius:21px}
       .dashboard-status-strip{gap:7px;margin-top:19px}.dashboard-status-strip span{padding:8px 10px;font-size:10px}
-      .dashboard-light{border-width:1.5px;border-radius:13px;box-shadow:-5px 0 11px rgba(28,115,255,.95),5px 0 12px rgba(230,28,61,.92),0 0 16px rgba(255,255,255,.50)}
+      .dashboard-light{border-width:1.5px;border-radius:13px;box-shadow:inset -4px 0 8px rgba(28,115,255,.62),inset 4px 0 8px rgba(230,28,61,.60),0 0 9px rgba(255,255,255,.42)}
     }
     @media(prefers-reduced-motion:reduce){.dashboard-showcase::after,.dashboard-visual,.dashboard-visual::before,.dashboard-art::after,.dashboard-light{animation-duration:18s}}
 
@@ -602,11 +602,11 @@
     }
     .install-btn::before{content:"📲"}.install-btn.installed{animation:none;background:linear-gradient(135deg,#198754,#0d6b42)}
     @keyframes downloadFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-    .download-modal{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,10,28,.78);backdrop-filter:blur(8px)}
-    .download-modal.show{display:flex}.download-card{position:relative;width:min(560px,100%);max-height:calc(100dvh - 36px);overflow:auto;border-radius:26px;background:#fff;box-shadow:0 32px 100px rgba(0,0,0,.42)}
-    .download-head{padding:24px 24px 19px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--blue) 68%,var(--red));text-align:center}.download-head img{width:64px;height:64px;margin:0 auto 10px;border-radius:17px;padding:5px;background:#fff;object-fit:contain}.download-head h3{margin:0;font-size:23px}.download-head p{margin:7px 0 0;color:#dce9ff;font-size:13px;line-height:1.45}.download-close{position:absolute;right:13px;top:13px;width:38px;height:38px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:23px;cursor:pointer}
-    .download-body{padding:20px}.download-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.download-choice{min-width:0;border:1px solid var(--line);border-radius:17px;padding:13px 7px;background:#f7faff;color:var(--navy);font-size:11px;font-weight:950;cursor:pointer;text-align:center}.download-choice.active{border-color:var(--blue);background:#eaf2ff;box-shadow:0 0 0 2px rgba(15,91,216,.1)}.download-choice span{display:block;font-size:24px;margin-bottom:5px}
-    .download-panel{display:none;padding:17px 2px 2px}.download-panel.active{display:block}.download-panel h4{margin:0 0 8px;color:var(--navy);font-size:18px}.download-panel p{margin:0 0 13px;color:var(--muted);font-size:13px;line-height:1.55}.download-steps{margin:0 0 15px;padding:0;list-style:none;counter-reset:installStep}.download-steps li{counter-increment:installStep;position:relative;padding:9px 8px 9px 38px;color:#425877;font-size:13px;line-height:1.45}.download-steps li::before{content:counter(installStep);position:absolute;left:3px;top:7px;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-size:11px;font-weight:950}.download-primary{width:100%;border:0;border-radius:14px;padding:14px 16px;color:#fff;background:linear-gradient(135deg,var(--red),var(--blue));font-weight:950;cursor:pointer}.download-primary:disabled{opacity:.6;cursor:default}.download-secondary{display:none;width:100%;margin-top:9px;border:1px solid #b8cae7;border-radius:14px;padding:12px 15px;color:var(--navy);background:#eef5ff;font-weight:950;cursor:pointer}.download-secondary.show{display:block}.download-note{margin-top:10px;padding:10px 12px;border-radius:12px;background:#fff8df;border:1px solid #ead68f;color:#6c5719;font-size:11px;line-height:1.45}.download-note.ok{background:#eaf9f0;border-color:#a9dfbc;color:#176438}.download-note.error{background:#fff0f1;border-color:#efb6bd;color:#9a2634}
+    .download-modal{position:fixed;inset:0;z-index:150;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:max(12px,calc(env(safe-area-inset-top,0px) + 10px)) max(12px,calc(env(safe-area-inset-right,0px) + 12px)) max(12px,calc(env(safe-area-inset-bottom,0px) + 10px)) max(12px,calc(env(safe-area-inset-left,0px) + 12px));background:rgba(2,10,28,.78);backdrop-filter:blur(8px)}
+    .download-modal.show{display:flex}.download-card{position:relative;width:min(560px,100%);max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 24px);margin:auto 0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:26px;background:#fff;box-shadow:0 32px 100px rgba(0,0,0,.42)}
+    .download-head{position:sticky;top:0;z-index:6;padding:24px 24px 19px;color:#fff;background:linear-gradient(135deg,var(--navy),var(--blue) 68%,var(--red));text-align:center}.download-head img{width:64px;height:64px;margin:0 auto 10px;border-radius:17px;padding:5px;background:#fff;object-fit:contain}.download-head h3{margin:0;font-size:23px}.download-head p{margin:7px 0 0;color:#dce9ff;font-size:13px;line-height:1.45}.download-close{position:absolute;right:12px;top:12px;width:44px;height:44px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.16);color:#fff;font-size:25px;cursor:pointer;touch-action:manipulation}
+    .download-body{padding:20px}.download-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.download-choice{min-width:0;min-height:68px;border:1px solid var(--line);border-radius:17px;padding:13px 7px;background:#f7faff;color:var(--navy);font-size:11px;font-weight:950;cursor:pointer;text-align:center;touch-action:manipulation}.download-choice.active{border-color:var(--blue);background:#eaf2ff;box-shadow:0 0 0 2px rgba(15,91,216,.1)}.download-choice span{display:block;font-size:24px;margin-bottom:5px}
+    .download-panel{display:none;padding:17px 2px 2px}.download-panel.active{display:block}.download-panel h4{margin:0 0 8px;color:var(--navy);font-size:18px}.download-panel p{margin:0 0 13px;color:var(--muted);font-size:13px;line-height:1.55}.download-steps{margin:0 0 15px;padding:0;list-style:none;counter-reset:installStep}.download-steps li{counter-increment:installStep;position:relative;padding:9px 8px 9px 38px;color:#425877;font-size:13px;line-height:1.45}.download-steps li::before{content:counter(installStep);position:absolute;left:3px;top:7px;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-size:11px;font-weight:950}.download-primary{width:100%;min-height:46px;border:0;border-radius:14px;padding:14px 16px;color:#fff;background:linear-gradient(135deg,var(--red),var(--blue));font-weight:950;cursor:pointer;touch-action:manipulation}.download-primary:disabled{opacity:.6;cursor:default}.download-secondary{display:none;width:100%;min-height:44px;margin-top:9px;border:1px solid #b8cae7;border-radius:14px;padding:12px 15px;color:var(--navy);background:#eef5ff;font-weight:950;cursor:pointer;touch-action:manipulation}.download-secondary.show{display:block}.download-note{margin-top:10px;padding:10px 12px;border-radius:12px;background:#fff8df;border:1px solid #ead68f;color:#6c5719;font-size:11px;line-height:1.45}.download-note.ok{background:#eaf9f0;border-color:#a9dfbc;color:#176438}.download-note.error{background:#fff0f1;border-color:#efb6bd;color:#9a2634}
     .notify-setup{margin-top:18px;padding:15px;border:1px solid #cfe0fb;border-radius:17px;background:#f3f8ff}.notify-setup h4{margin:0 0 5px;color:var(--navy)}.notify-status{display:flex;align-items:center;gap:7px;margin:8px 0 12px;color:#526681;font-size:12px;font-weight:800}.notify-status-dot{width:9px;height:9px;border-radius:50%;background:#f0a323}.notify-status.enabled .notify-status-dot{background:#1f9d61}.notify-status.denied .notify-status-dot{background:#d92d43}.notify-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.notify-actions button{border:0;border-radius:12px;padding:11px 8px;font-size:11px;font-weight:950;cursor:pointer}.notify-enable{color:#fff;background:var(--blue)}.notify-test{color:var(--blue);background:#fff;border:1px solid #bdd3f2!important}.notify-actions button:disabled{opacity:.5;cursor:not-allowed}
     @media(max-width:900px){
       .official-links{grid-template-columns:1fr 1fr}
@@ -1416,6 +1416,17 @@
     const progress = document.getElementById("progress");
     const frame = document.getElementById("dashboardFrame");
     const stage = document.getElementById("stage");
+    const dashboardShowcaseImage = document.querySelector(".dashboard-art img");
+
+    if (dashboardShowcaseImage) {
+      const dashboardHqImage = new Image();
+      dashboardHqImage.decoding = "async";
+      dashboardHqImage.onload = () => {
+        dashboardShowcaseImage.src = dashboardHqImage.src;
+        dashboardShowcaseImage.removeAttribute("srcset");
+      };
+      dashboardHqImage.src = "assets/aquila-dashboard-showcase-hq.webp";
+    }
 
     window.addEventListener("scroll", () => {
       const scrollTop = window.scrollY;
@@ -2923,7 +2934,16 @@
       });
     }
     function updateInstallUI(){updateAndroidInstallUI();updateDesktopInstallUI();}
-    function openDownloadModal(){downloadModal?.classList.add("show");downloadModal?.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";updateInstallUI();refreshPushState();}
+    function openDownloadModal(){
+      downloadModal?.classList.add("show");
+      downloadModal?.setAttribute("aria-hidden","false");
+      document.body.style.overflow="hidden";
+      const downloadCard = downloadModal?.querySelector(".download-card");
+      if(downloadCard) downloadCard.scrollTop = 0;
+      requestAnimationFrame(() => downloadClose?.focus({preventScroll:true}));
+      updateInstallUI();
+      refreshPushState();
+    }
     function closeDownloadModal(){downloadModal?.classList.remove("show");downloadModal?.setAttribute("aria-hidden","true");document.body.style.overflow="";}
     function showInstallPlatform(platform){
       const tabs={android:[androidChoice,androidInstall],ios:[iosChoice,iosInstall],windows:[windowsChoice,windowsInstall],mac:[macChoice,macInstall]};
