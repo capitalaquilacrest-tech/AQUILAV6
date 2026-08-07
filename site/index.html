@@ -1557,7 +1557,7 @@
         <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">×</button>
       </div>
     </header>
-    <div class="chat-rules"><b>Community rules:</b> Aquila-related and respectful messages only. Never share passwords, OTPs, PINs, phone numbers, or account details. <strong>May concern or kailangan ng assistance? Type <span class="chat-rule-mention">@ACC ADMIN</span> para madaling mapansin at ma-prioritize ng admin ang message mo.</strong></div>
+    <div class="chat-rules"><b>Community rules:</b> Aquila-related and respectful messages only. Never share passwords, OTPs, PINs, phone numbers, or account details. <strong>May concern o kailangan ng assistance? Type <span class="chat-rule-mention">@ACC ADMIN</span> at ilagay na ang kumpletong concern sa iisang message. Minimum 3 words at 15 meaningful characters ang concern, at isang admin mention lang kada 10 minutes bawat user. Normal chat ay puwede pa rin habang naka-cooldown.</strong></div>
     <div class="chat-main">
       <div class="chat-messages" id="chatMessages" aria-live="polite">
         <div class="chat-empty" id="chatEmpty"><strong>Welcome to Aquila Live Chat</strong>Read real questions and verified answers from the community. Enter your name to join the conversation.</div>
@@ -3057,8 +3057,40 @@
       if(message.includes("maximum")||message.includes("too large")||message.includes("size"))return "Hindi ma-upload: maximum file size ay 5 MB.";
       return navigator.onLine?"Hindi natuloy ang photo upload. Subukan ulit o buksan ang website sa Safari/Chrome.":"Nawala ang internet connection. Kumonekta at subukan muli.";
     }
+    function getAdminConcernDetails(value){
+      const clean=String(value||"").replace(/@ACC\s+ADMIN\b/ig," ").replace(/\s+/g," ").trim();
+      const words=clean.split(/\s+/).filter(Boolean);
+      const meaningfulChars=clean.replace(/\s/g,"").length;
+      return {clean,words,meaningfulChars};
+    }
+    async function validateAdminMentionConcern(value){
+      if(!hasAccAdminMention(value))return {ok:true};
+      const details=getAdminConcernDetails(value);
+      if(details.words.length<3 || details.meaningfulChars<15){
+        return {ok:false,message:"Please describe your concern in one complete message. Kapag minention ang @ACC ADMIN, kailangan ng minimum 3 words at 15 meaningful characters bukod sa mention."};
+      }
+      const cutoff=new Date(Date.now()-10*60*1000).toISOString();
+      const {data,error}=await chatDb.from("public_chat_messages")
+        .select("id,body,created_at").eq("sender_id",chatSession.user.id)
+        .gte("created_at",cutoff).order("created_at",{ascending:false}).limit(25);
+      if(error)return {ok:false,message:"Unable to verify the admin mention cooldown right now. Please try again."};
+      const recent=(data||[]).find(item=>hasAccAdminMention(item.body));
+      if(recent){
+        const remaining=Math.max(1,Math.ceil((new Date(recent.created_at).getTime()+600000-Date.now())/60000));
+        return {ok:false,message:`@ACC ADMIN can only be mentioned once every 10 minutes per person. You can still send normal messages. Please wait about ${remaining} minute${remaining===1?"":"s"} before mentioning the admin again.`};
+      }
+      return {ok:true};
+    }
     async function sendLiveChatMessage(){
       const body=chatInput?.value.trim()||""; if((!body&&!pendingMedia)||!chatDb) return;
+      if(hasAccAdminMention(body)){
+        const adminMentionCheck=await validateAdminMentionConcern(body);
+        if(!adminMentionCheck.ok){
+          setChatStatus(adminMentionCheck.message,true);
+          chatInput?.focus();
+          return;
+        }
+      }
       chatSend.disabled=true;if(chatPhotoButton)chatPhotoButton.disabled=true;if(chatVoiceButton)chatVoiceButton.disabled=true;
       const uploadedPaths=[];
       try{
