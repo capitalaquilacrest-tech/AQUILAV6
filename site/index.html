@@ -3065,21 +3065,57 @@
       return {clean,words,meaningfulChars};
     }
     async function validateAdminMentionConcern(value){
-      if(!hasAccAdminMention(value))return {ok:true};
-      const details=getAdminConcernDetails(value);
-      if(details.words.length<3 || details.meaningfulChars<15){
-        return {ok:false,message:"Please describe your concern in one complete message. Kapag minention ang @ACC ADMIN, kailangan ng minimum 3 words at 15 meaningful characters bukod sa mention."};
+      if(!hasAccAdminMention(value)) return {ok:true};
+
+      const details = getAdminConcernDetails(value);
+
+      if(details.words.length < 3 || details.meaningfulChars < 15){
+        return {
+          ok:false,
+          message:"Please describe your concern in one complete message. Kapag minention ang @ACC ADMIN, kailangan ng minimum 3 words at 15 meaningful characters bukod sa mention."
+        };
       }
-      const cutoff=new Date(Date.now()-10*60*1000).toISOString();
-      const {data,error}=await chatDb.from("public_chat_messages")
-        .select("id,body,created_at").eq("sender_id",chatSession.user.id)
-        .gte("created_at",cutoff).order("created_at",{ascending:false}).limit(25);
-      if(error)return {ok:false,message:"Unable to verify the admin mention cooldown right now. Please try again."};
-      const recent=(data||[]).find(item=>hasAccAdminMention(item.body));
+
+      const cutoff = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+
+      // FIX: use the actual chat table
+      const {data, error} = await chatDb
+        .from("chat_messages")
+        .select("id,body,created_at")
+        .eq("sender_id", chatSession.user.id)
+        .gte("created_at", cutoff)
+        .order("created_at", {ascending:false})
+        .limit(25);
+
+      if(error){
+        console.error("ACC Admin mention validation:", error);
+
+        // Don't block the user if the validation query itself fails
+        return {ok:true};
+      }
+
+      const recent = (data || []).find(item =>
+        hasAccAdminMention(item.body)
+      );
+
       if(recent){
-        const remaining=Math.max(1,Math.ceil((new Date(recent.created_at).getTime()+600000-Date.now())/60000));
-        return {ok:false,message:`@ACC ADMIN can only be mentioned once every 10 minutes per person. You can still send normal messages. Please wait about ${remaining} minute${remaining===1?"":"s"} before mentioning the admin again.`};
+        const remaining = Math.max(
+          1,
+          Math.ceil(
+            (
+              new Date(recent.created_at).getTime()
+              + 600000
+              - Date.now()
+            ) / 60000
+          )
+        );
+
+        return {
+          ok:false,
+          message:`@ACC ADMIN can only be mentioned once every 10 minutes per person. You can still send normal messages. Please wait about ${remaining} minute${remaining === 1 ? "" : "s"} before mentioning the admin again.`
+        };
       }
+
       return {ok:true};
     }
     async function sendLiveChatMessage(){
@@ -3087,7 +3123,12 @@
       if(hasAccAdminMention(body)){
         const adminMentionCheck=await validateAdminMentionConcern(body);
         if(!adminMentionCheck.ok){
-          setChatStatus(adminMentionCheck.message,true);
+          renderChatNotice(
+            adminMentionCheck.message,
+            "warning",
+            7000
+          );
+
           chatInput?.focus();
           return;
         }
