@@ -7,7 +7,385 @@
     html,body{margin:0!important;min-height:100%;background:#020817!important}
     html.aquila-boot-lock,html.aquila-boot-lock body{overflow:hidden!important;overscroll-behavior:none!important;background:#020817!important}
     html.aquila-boot-lock body> :not(#intro){visibility:hidden!important}
-  </style>
+  
+    /* =========================================================
+       THE DECISION — CINEMATIC OPENING
+       Google Drive 16:9 film embed + Aquila atmosphere
+       ========================================================= */
+    .decision-hero{
+      position:relative;
+      min-height:100svh;
+      overflow:hidden;
+      isolation:isolate;
+      color:#fff;
+      background:
+        radial-gradient(circle at 50% 35%,rgba(20,83,180,.16),transparent 32%),
+        linear-gradient(180deg,#01040b 0%,#020817 46%,#01040b 100%);
+    }
+    .decision-atmosphere,
+    .decision-grid,
+    .decision-particles,
+    .decision-sweep{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
+    .decision-atmosphere{z-index:0;overflow:hidden}
+    .decision-grid{
+      opacity:.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+      background-size:72px 72px;
+      mask-image:linear-gradient(to bottom,transparent 0,#000 20%,#000 78%,transparent 100%);
+      transform:perspective(700px) rotateX(58deg) scale(1.8) translateY(16%);
+      transform-origin:center bottom;
+    }
+    .decision-particles{
+      opacity:.58;
+      background:
+        radial-gradient(circle at 13% 23%,rgba(255,255,255,.9) 0 1px,transparent 2px),
+        radial-gradient(circle at 26% 72%,rgba(255,216,107,.8) 0 1px,transparent 2px),
+        radial-gradient(circle at 74% 18%,rgba(255,255,255,.72) 0 1px,transparent 2px),
+        radial-gradient(circle at 88% 68%,rgba(255,216,107,.72) 0 1px,transparent 2px),
+        radial-gradient(circle at 61% 82%,rgba(255,255,255,.5) 0 1px,transparent 2px);
+      background-size:310px 240px,380px 290px,270px 250px,330px 280px,420px 320px;
+      animation:decisionParticleDrift 24s linear infinite;
+    }
+    .decision-sweep{
+      z-index:2;
+      inset:-40% -20%;
+      opacity:.16;
+      background:linear-gradient(108deg,transparent 43%,rgba(255,255,255,.8) 49%,transparent 55%);
+      transform:translateX(-60%) rotate(4deg);
+      animation:decisionSweep 11s ease-in-out infinite;
+      mix-blend-mode:screen;
+    }
+    .decision-orb{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(80px);
+      opacity:.7;
+      animation:decisionOrbFloat 9s ease-in-out infinite;
+    }
+    .decision-orb-blue{
+      width:44vw;height:44vw;max-width:680px;max-height:680px;
+      left:-16vw;top:16vh;
+      background:rgba(12,91,216,.27);
+    }
+    .decision-orb-red{
+      width:38vw;height:38vw;max-width:600px;max-height:600px;
+      right:-14vw;top:23vh;
+      background:rgba(215,29,50,.23);
+      animation-delay:-3.5s;
+    }
+    .decision-orb-gold{
+      width:28vw;height:28vw;max-width:430px;max-height:430px;
+      left:50%;top:16%;
+      transform:translateX(-50%);
+      background:rgba(233,183,47,.10);
+      filter:blur(100px);
+      animation-delay:-6s;
+    }
+
+    .decision-inner{
+      position:relative;
+      z-index:4;
+      width:min(1320px,100%);
+      margin:0 auto;
+      padding:calc(132px + env(safe-area-inset-top,0px)) 22px 84px;
+      text-align:center;
+    }
+    .decision-kicker{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      color:#ffe39a;
+      font-size:10px;
+      font-weight:950;
+      letter-spacing:.26em;
+      text-transform:uppercase;
+      opacity:.9;
+    }
+    .decision-kicker-line{
+      width:min(90px,12vw);
+      height:1px;
+      background:linear-gradient(90deg,transparent,#ffd86b);
+    }
+    .decision-kicker-line:last-child{
+      background:linear-gradient(90deg,#ffd86b,transparent);
+    }
+    .decision-title-wrap{margin:24px auto 28px}
+    .decision-pretitle{
+      color:#9fb4d5;
+      font-size:10px;
+      font-weight:850;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      margin-bottom:13px;
+    }
+    .decision-title-wrap h1{
+      margin:0;
+      color:#fff;
+      font-size:clamp(54px,8vw,108px);
+      line-height:.84;
+      letter-spacing:-.075em;
+      text-shadow:0 12px 55px rgba(0,0,0,.55);
+    }
+    .decision-title-wrap h1 em{
+      font-style:normal;
+      color:#ffd86b;
+      background:linear-gradient(90deg,#fff2b1 0%,#ffd86b 45%,#fff2b1 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow:none;
+    }
+    .decision-subtitle{
+      margin:18px auto 0;
+      color:#d8e5f7;
+      font-size:clamp(15px,1.6vw,19px);
+      line-height:1.6;
+      letter-spacing:.01em;
+    }
+
+    .decision-film-shell{
+      position:relative;
+      width:min(1120px,100%);
+      margin:0 auto;
+      padding:14px;
+    }
+    .decision-film-glow{
+      position:absolute;
+      z-index:-1;
+      width:52%;
+      height:80%;
+      top:12%;
+      filter:blur(75px);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .decision-film-glow-blue{
+      left:-5%;
+      background:rgba(21,103,255,.34);
+    }
+    .decision-film-glow-red{
+      right:-5%;
+      background:rgba(225,28,61,.28);
+    }
+    .decision-film-frame{
+      position:relative;
+      padding:9px;
+      border:1px solid rgba(255,255,255,.19);
+      border-radius:30px;
+      background:
+        linear-gradient(145deg,rgba(37,116,255,.28),rgba(255,255,255,.045) 44%,rgba(222,28,61,.25));
+      box-shadow:
+        0 48px 120px rgba(0,0,0,.72),
+        -24px 0 75px rgba(17,100,255,.14),
+        24px 0 75px rgba(222,28,61,.12),
+        inset 0 1px 0 rgba(255,255,255,.18);
+    }
+    .decision-film-frame::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      z-index:-1;
+      border-radius:32px;
+      background:conic-gradient(
+        from 220deg,
+        rgba(39,126,255,.85),
+        rgba(255,255,255,.18) 24%,
+        rgba(255,216,107,.72) 38%,
+        rgba(225,28,61,.85) 57%,
+        rgba(255,255,255,.12) 75%,
+        rgba(39,126,255,.85)
+      );
+      filter:blur(1px);
+      animation:decisionBorder 8s linear infinite;
+    }
+    .decision-film-topline{
+      height:27px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 10px 7px;
+      color:#a9bddc;
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .decision-film-topline span{
+      display:flex;
+      align-items:center;
+      gap:7px;
+    }
+    .decision-film-topline i{
+      width:6px;height:6px;border-radius:50%;
+      background:#63e9a6;
+      box-shadow:0 0 12px rgba(99,233,166,.9);
+    }
+    .decision-video-wrap{
+      position:relative;
+      width:100%;
+      aspect-ratio:16 / 9;
+      overflow:hidden;
+      border-radius:22px;
+      background:#000;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+    }
+    .decision-video-wrap iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
+      background:#000;
+    }
+    .decision-video-vignette{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      border-radius:inherit;
+      box-shadow:
+        inset 0 0 80px rgba(0,0,0,.52),
+        inset 0 -70px 100px rgba(0,0,0,.25);
+    }
+    .decision-after{
+      margin:31px auto 0;
+      max-width:850px;
+    }
+    .decision-rule{
+      width:110px;
+      height:1px;
+      margin:0 auto 19px;
+      background:linear-gradient(90deg,transparent,#ffd86b,transparent);
+      box-shadow:0 0 20px rgba(255,216,107,.32);
+    }
+    .decision-brand{
+      color:#fff;
+      font-size:clamp(17px,2vw,25px);
+      font-weight:950;
+      letter-spacing:.18em;
+    }
+    .decision-tagline{
+      margin-top:8px;
+      color:#ffd86b;
+      font-size:clamp(11px,1.2vw,14px);
+      font-weight:950;
+      letter-spacing:.25em;
+    }
+    .decision-manifesto{
+      max-width:650px;
+      margin:16px auto 0;
+      color:#aebfda;
+      font-size:13px;
+      line-height:1.7;
+    }
+
+    @keyframes decisionParticleDrift{
+      to{background-position:310px -240px,-380px 290px,270px 250px,-330px -280px,420px 320px}
+    }
+    @keyframes decisionSweep{
+      0%,15%{transform:translateX(-70%) rotate(4deg);opacity:0}
+      35%{opacity:.7}
+      58%,100%{transform:translateX(70%) rotate(4deg);opacity:0}
+    }
+    @keyframes decisionOrbFloat{
+      0%,100%{transform:translate3d(0,0,0) scale(1)}
+      50%{transform:translate3d(1.5vw,-2vh,0) scale(1.05)}
+    }
+    @keyframes decisionBorder{to{transform:rotate(360deg)}}
+    @keyframes decisionDown{
+      0%,100%{transform:translateY(0);opacity:.72}
+      50%{transform:translateY(4px);opacity:1}
+    }
+
+    @media(max-width:700px){
+      .decision-inner{
+        padding:calc(112px + env(safe-area-inset-top,0px)) 12px 58px;
+      }
+      .decision-kicker{font-size:8px;letter-spacing:.18em;gap:8px}
+      .decision-kicker-line{width:34px}
+      .decision-title-wrap{margin:19px auto 22px}
+      .decision-pretitle{font-size:8px;letter-spacing:.16em}
+      .decision-title-wrap h1{font-size:clamp(52px,16vw,78px)}
+      .decision-subtitle{font-size:14px;margin-top:13px}
+      .decision-film-shell{padding:6px}
+      .decision-film-frame{padding:5px;border-radius:21px}
+      .decision-film-frame::before{border-radius:23px}
+      .decision-film-topline{height:22px;padding:0 7px 5px;font-size:6px}
+      .decision-film-topline i{width:5px;height:5px}
+      .decision-video-wrap{border-radius:16px}
+      .decision-video-vignette{box-shadow:inset 0 0 45px rgba(0,0,0,.48),inset 0 -35px 55px rgba(0,0,0,.22)}
+      .decision-after{margin-top:23px}
+      .decision-brand{font-size:14px;letter-spacing:.13em}
+      .decision-tagline{font-size:9px;letter-spacing:.18em}
+      .decision-manifesto{font-size:11px;max-width:330px}
+
+      .decision-orb-blue{width:80vw;height:80vw;left:-40vw;top:22vh}
+      .decision-orb-red{width:72vw;height:72vw;right:-36vw;top:28vh}
+      .decision-orb-gold{width:65vw;height:65vw;top:22%}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .decision-particles,.decision-sweep,.decision-orb,.decision-film-frame::before{
+        animation:none!important;
+      }
+    }
+
+
+    /* Correct sequence: original income-engine hero FIRST, then The Decision film. */
+    .decision-hero{
+      min-height:auto;
+      padding:96px 0 104px;
+      background:
+        radial-gradient(circle at 50% 15%,rgba(20,93,210,.16),transparent 34%),
+        linear-gradient(180deg,#01040b 0%,#020817 48%,#01040b 100%);
+    }
+    .decision-inner{padding:0 22px}
+    .decision-title-wrap h2{
+      margin:0;
+      color:#fff;
+      font-size:clamp(54px,8vw,108px);
+      line-height:.84;
+      letter-spacing:-.075em;
+      text-shadow:0 12px 55px rgba(0,0,0,.55);
+    }
+    @media(max-width:700px){
+      .decision-hero{padding:68px 0 72px}
+      .decision-inner{padding:0 12px}
+      .decision-title-wrap h2{font-size:clamp(52px,16vw,78px)}
+    }
+
+
+    /* FINAL SEQUENCE:
+       Intro splash → THE DECISION → 9 Income Engines → existing page */
+    .decision-hero{
+      min-height:auto;
+      padding:108px 0 118px;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(20,93,210,.18),transparent 34%),
+        linear-gradient(180deg,#01040b 0%,#020817 50%,#01040b 100%);
+    }
+    .decision-inner{padding:0 22px}
+    .decision-title-wrap h2{
+      margin:0;
+      color:#fff;
+      font-size:clamp(54px,8vw,108px);
+      line-height:.84;
+      letter-spacing:-.075em;
+      text-shadow:0 12px 55px rgba(0,0,0,.55);
+    }
+    @media(max-width:700px){
+      .decision-hero{padding:72px 0 78px}
+      .decision-inner{padding:0 12px}
+      .decision-title-wrap h2{font-size:clamp(52px,16vw,78px)}
+    }
+
+</style>
 
   <title>Aquila Crest Capital | Official Website</title>
 
@@ -51,8 +429,8 @@
   <meta property="og:image" content="https://aquilacrestcapital.com/assets/og-cover.png">
   <meta name="twitter:card" content="summary_large_image">
   
-  <title>Aquila Crest Capital — Digital Experience</title>
-  <meta name="description" content="The official Aquila Crest Capital digital member platform for organized account access, activity monitoring, capital tools, official updates, and community support.">
+  <title>Aquila Crest Capital — The Decision</title>
+  <meta name="description" content="The Decision — an original film by Aquila Crest Capital. The future favors the prepared.">
   <style>
     :root{
       --navy:#061a44;
@@ -1043,6 +1421,59 @@
     </div>
   </nav>
 
+  <section class="decision-hero" id="decision-film">
+    <div class="decision-atmosphere" aria-hidden="true">
+      <span class="decision-orb decision-orb-blue"></span>
+      <span class="decision-orb decision-orb-red"></span>
+      <span class="decision-orb decision-orb-gold"></span>
+      <span class="decision-grid"></span>
+      <span class="decision-particles"></span>
+      <span class="decision-sweep"></span>
+    </div>
+
+    <div class="decision-inner">
+      <div class="decision-kicker">
+        <span class="decision-kicker-line"></span>
+        <span>AQUILA CREST CAPITAL PRESENTS</span>
+        <span class="decision-kicker-line"></span>
+      </div>
+
+      <div class="decision-title-wrap">
+        <div class="decision-pretitle">A FILM ABOUT THE MOMENT THAT CHANGES EVERYTHING</div>
+        <h2>THE <em>DECISION</em></h2>
+        <p class="decision-subtitle">Every life is shaped by the decisions we make.</p>
+      </div>
+
+      <div class="decision-film-shell">
+        <div class="decision-film-glow decision-film-glow-blue"></div>
+        <div class="decision-film-glow decision-film-glow-red"></div>
+        <div class="decision-film-frame">
+          <div class="decision-film-topline">
+            <span><i></i> AQUILA ORIGINAL</span>
+            <span>16:9 CINEMATIC FILM</span>
+          </div>
+          <div class="decision-video-wrap">
+            <iframe
+              src="https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview"
+              title="Aquila Crest Capital — The Decision"
+              loading="lazy"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <div class="decision-video-vignette" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision-after">
+        <div class="decision-rule"></div>
+        <div class="decision-brand">AQUILA CREST CAPITAL</div>
+        <div class="decision-tagline">THE FUTURE FAVORS THE PREPARED.</div>
+        <p class="decision-manifesto">The future does not belong to those who simply wait for it. It belongs to those who prepare for it.</p>
+      </div>
+    </div>
+  </section>
+
   <header class="hero income-hero" id="top">
     <div class="income-innovation-bg" aria-hidden="true"></div>
     <div class="income-backdrop" id="incomeBackdrop" aria-hidden="true">
@@ -1098,8 +1529,7 @@
       </div>
     </div>
   </header>
-
-  <div class="ticker">
+<div class="ticker">
     <div class="ticker-track">
       <span>WIND ENERGY</span><span>•</span><span>SOLAR ENERGY</span><span>•</span><span>HYDROPOWER</span><span>•</span><span>BATTERY STORAGE</span><span>•</span><span>GREEN LOGISTICS</span><span>•</span><span>DATA CENTERS</span><span>•</span><span>FORESTRY &amp; LAND</span><span>•</span><span>ENERGY EFFICIENCY</span><span>•</span><span>FOREX OPERATIONS</span><span>•</span>
       <span>WIND ENERGY</span><span>•</span><span>SOLAR ENERGY</span><span>•</span><span>HYDROPOWER</span><span>•</span><span>BATTERY STORAGE</span><span>•</span><span>GREEN LOGISTICS</span><span>•</span><span>DATA CENTERS</span><span>•</span><span>FORESTRY &amp; LAND</span><span>•</span><span>ENERGY EFFICIENCY</span><span>•</span><span>FOREX OPERATIONS</span><span>•</span>
