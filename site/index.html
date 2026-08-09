@@ -307,11 +307,11 @@
     @media(max-width:700px){
       /* Keep the cinematic heading safely below the fixed mobile header. */
       .decision-inner{
-        padding:calc(172px + env(safe-area-inset-top,0px)) 8px 52px;
+        padding:calc(225px + env(safe-area-inset-top,0px)) 8px 52px;
       }
       .decision-kicker{font-size:8px;letter-spacing:.18em;gap:8px}
       .decision-kicker-line{width:34px}
-      .decision-title-wrap{margin:12px auto 20px}
+      .decision-title-wrap{margin:10px auto 20px}
       .decision-pretitle{font-size:8px;letter-spacing:.16em}
       .decision-title-wrap h1{font-size:clamp(52px,16vw,78px)}
       .decision-subtitle{font-size:14px;margin-top:13px}
@@ -324,9 +324,17 @@
          crowding/cutting the lower portion of the film. */
       /* The source film is 16:9. Do not distort/crop it with a taller wrapper. */
       .decision-video-wrap{
+        width:100%;
         aspect-ratio:16 / 9;
+        height:auto;
         min-height:0;
         border-radius:16px;
+      }
+      .decision-video-wrap iframe{
+        width:100%;
+        height:100%;
+        min-width:0;
+        min-height:0;
       }
       .decision-video-wrap iframe{
         min-height:0;
@@ -1663,7 +1671,7 @@
               src="https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview"
               title="Aquila Crest Capital — The Decision"
               loading="lazy"
-              allow="autoplay; fullscreen; picture-in-picture"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowfullscreen
               referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
@@ -4080,7 +4088,13 @@
         stage.classList.add('is-playing');
         const frame = stage.querySelector('iframe');
         if(frame){
-          try { frame.focus(); } catch(e){}
+          // Google Drive's preview player can remain paused/black on iOS when
+          // it is only focused. Reload the preview with autoplay after the
+          // user's explicit tap, which is a user gesture and is therefore
+          // much more reliable on mobile Safari.
+          const base = 'https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview';
+          frame.src = base + '?autoplay=1&rm=minimal';
+          setTimeout(function(){ try { frame.focus(); } catch(e){} }, 120);
         }
       });
 
