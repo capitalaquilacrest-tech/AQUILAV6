@@ -230,7 +230,7 @@
     .decision-video-wrap{
       position:relative;
       width:100%;
-      aspect-ratio:16 / 10;
+      aspect-ratio:16 / 9;
       overflow:hidden;
       border-radius:22px;
       background:#000;
@@ -688,6 +688,11 @@
       }
     }
 
+
+    .decision-kicker span:nth-child(2){font-size:clamp(13px,1.45vw,17px)!important;letter-spacing:.24em!important;}
+    @media(max-width:700px){
+      .decision-kicker span:nth-child(2){font-size:15px!important;letter-spacing:.18em!important;}
+    }
 </style>
 
   <title>Aquila Crest Capital | Official Website</title>
@@ -1756,16 +1761,15 @@
             <span>16:9 CINEMATIC FILM</span>
           </div>
           <div class="decision-video-wrap" id="decisionVideoStage">
-            <video
+            <iframe
               id="decisionFilm"
-              playsinline
-              controls
-              preload="metadata"
               title="Aquila Crest Capital — The Decision"
-              poster=""
-              style="width:100%;height:100%;display:block;object-fit:contain;background:#000;border-radius:16px;">
-              <source src="https://drive.google.com/uc?export=download&id=1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe" type="video/mp4">
-            </video>
+              src="about:blank"
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+              style="width:100%;height:100%;display:block;border:0;background:#000;border-radius:16px;">
+            </iframe>
 
             <button class="decision-watch-overlay" id="decisionWatchOverlay" type="button" aria-label="Play The Decision film">
               <span class="decision-watch-kicker">AQUILA ORIGINAL</span>
@@ -4165,30 +4169,24 @@
 
 <script>
 
-    /* THE DECISION native playback — avoids Google Drive iframe black/overlay behavior on iPhone */
+    /* THE DECISION — Drive preview: wait for explicit user tap, then load autoplay.
+       This preserves the film's opening black sequence and avoids the broken direct-download
+       HTML5 source that cannot be streamed from Google Drive on iPhone. */
     (function(){
       const stage = document.getElementById('decisionVideoStage');
       const overlay = document.getElementById('decisionWatchOverlay');
-      const video = document.getElementById('decisionFilm');
-      if(!stage || !overlay || !video) return;
-
+      const frame = document.getElementById('decisionFilm');
+      if(!stage || !overlay || !frame) return;
+      const base = 'https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview';
+      let started = false;
       overlay.addEventListener('click', function(){
+        if(started) return;
+        started = true;
         stage.classList.add('is-playing');
-        // User gesture starts the actual HTML5 video from frame 0.
-        // This preserves the film's opening black sequence instead of jumping ahead.
-        video.currentTime = 0;
-        const playPromise = video.play();
-        if(playPromise && playPromise.catch){
-          playPromise.catch(function(){
-            stage.classList.remove('is-playing');
-          });
-        }
-      });
-
-      video.addEventListener('play', function(){ stage.classList.add('is-playing'); });
-      video.addEventListener('pause', function(){
-        // Do not restore the poster overlay after a user pause; native controls remain usable.
-      });
+        // The tap is the user gesture. Loading the preview with autoplay here lets
+        // Drive start playback from the beginning instead of autoplaying on page load.
+        frame.src = base + '?autoplay=1';
+      }, {passive:true});
     })();
 
 </script>
