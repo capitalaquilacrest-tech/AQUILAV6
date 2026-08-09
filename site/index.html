@@ -230,7 +230,7 @@
     .decision-video-wrap{
       position:relative;
       width:100%;
-      aspect-ratio:16 / 9;
+      aspect-ratio:16 / 10;
       overflow:hidden;
       border-radius:22px;
       background:#000;
@@ -335,12 +335,6 @@
         height:100%;
         min-width:0;
         min-height:0;
-      }
-      .decision-video-wrap video{
-        width:100%;
-        height:100%;
-        object-fit:contain;
-        background:#000;
       }
       .decision-video-wrap iframe{
         min-height:0;
@@ -595,7 +589,7 @@
         padding:calc(158px + env(safe-area-inset-top,0px)) 12px 32px;
       }
       .decision-kicker{
-        font-size:10px;
+        font-size:7px;
         letter-spacing:.19em;
         gap:8px;
       }
@@ -604,7 +598,7 @@
         margin:14px auto 20px;
       }
       .decision-pretitle{
-        font-size:8px;
+        font-size:7px;
         letter-spacing:.16em;
         margin-bottom:9px;
       }
@@ -638,7 +632,7 @@
          is visible instead of being clipped at the bottom. */
       .decision-video-wrap{
         width:100%;
-        aspect-ratio:16 / 9;
+        aspect-ratio:16 / 11.2;
         height:auto;
         min-height:0;
         border-radius:16px;
@@ -648,12 +642,6 @@
         height:100%;
         min-width:0;
         min-height:0;
-      }
-      .decision-video-wrap video{
-        width:100%;
-        height:100%;
-        object-fit:contain;
-        background:#000;
       }
       .decision-video-vignette{
         box-shadow:inset 0 0 35px rgba(0,0,0,.38);
@@ -684,15 +672,10 @@
         padding-top:calc(150px + env(safe-area-inset-top,0px));
       }
       .decision-video-wrap{
-        aspect-ratio:16 / 9;
+        aspect-ratio:16 / 11.6;
       }
     }
 
-
-    .decision-kicker span:nth-child(2){font-size:clamp(13px,1.45vw,17px)!important;letter-spacing:.24em!important;}
-    @media(max-width:700px){
-      .decision-kicker span:nth-child(2){font-size:15px!important;letter-spacing:.18em!important;}
-    }
 </style>
 
   <title>Aquila Crest Capital | Official Website</title>
@@ -1762,14 +1745,12 @@
           </div>
           <div class="decision-video-wrap" id="decisionVideoStage">
             <iframe
-              id="decisionFilm"
+              src="https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview"
               title="Aquila Crest Capital — The Decision"
-              src="about:blank"
-              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              loading="lazy"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowfullscreen
-              referrerpolicy="strict-origin-when-cross-origin"
-              style="width:100%;height:100%;display:block;border:0;background:#000;border-radius:16px;">
-            </iframe>
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
             <button class="decision-watch-overlay" id="decisionWatchOverlay" type="button" aria-label="Play The Decision film">
               <span class="decision-watch-kicker">AQUILA ORIGINAL</span>
@@ -4169,24 +4150,25 @@
 
 <script>
 
-    /* THE DECISION — Drive preview: wait for explicit user tap, then load autoplay.
-       This preserves the film's opening black sequence and avoids the broken direct-download
-       HTML5 source that cannot be streamed from Google Drive on iPhone. */
+    /* THE DECISION poster / playback controls */
     (function(){
       const stage = document.getElementById('decisionVideoStage');
       const overlay = document.getElementById('decisionWatchOverlay');
-      const frame = document.getElementById('decisionFilm');
-      if(!stage || !overlay || !frame) return;
-      const base = 'https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview';
-      let started = false;
+if(!stage || !overlay) return;
+
       overlay.addEventListener('click', function(){
-        if(started) return;
-        started = true;
         stage.classList.add('is-playing');
-        // The tap is the user gesture. Loading the preview with autoplay here lets
-        // Drive start playback from the beginning instead of autoplaying on page load.
-        frame.src = base + '?autoplay=1';
-      }, {passive:true});
+        const frame = stage.querySelector('iframe');
+        if(frame){
+          // Google Drive's preview player can remain paused/black on iOS when
+          // it is only focused. Reload the preview with autoplay after the
+          // user's explicit tap, which is a user gesture and is therefore
+          // much more reliable on mobile Safari.
+          const base = 'https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview';
+          frame.src = base + '?autoplay=1&rm=minimal';
+          setTimeout(function(){ try { frame.focus(); } catch(e){} }, 120);
+        }
+      });
     })();
 
 </script>
