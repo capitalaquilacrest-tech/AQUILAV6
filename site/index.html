@@ -102,7 +102,7 @@
       justify-content:center;
       gap:14px;
       color:#ffe39a;
-      font-size:14px;
+      font-size:10px;
       font-weight:950;
       letter-spacing:.26em;
       text-transform:uppercase;
@@ -589,7 +589,7 @@
         padding:calc(158px + env(safe-area-inset-top,0px)) 12px 32px;
       }
       .decision-kicker{
-        font-size:10px;
+        font-size:7px;
         letter-spacing:.19em;
         gap:8px;
       }
@@ -1745,8 +1745,7 @@
           </div>
           <div class="decision-video-wrap" id="decisionVideoStage">
             <iframe
-              src="about:blank"
-              data-video-src="https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview"
+              src="https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview"
               title="Aquila Crest Capital — The Decision"
               loading="lazy"
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
@@ -4151,31 +4150,25 @@
 
 <script>
 
-    /* THE DECISION — play only after the opening overlay is tapped.
-       The Drive iframe stays unloaded while the transparent-black opening
-       screen is visible, so the film cannot begin behind the overlay. */
+    /* THE DECISION poster / playback controls */
     (function(){
       const stage = document.getElementById('decisionVideoStage');
       const overlay = document.getElementById('decisionWatchOverlay');
-      if(!stage || !overlay) return;
+if(!stage || !overlay) return;
 
-      let started = false;
       overlay.addEventListener('click', function(){
-        if(started) return;
-        started = true;
-
-        const frame = stage.querySelector('iframe');
-        if(!frame) return;
-
         stage.classList.add('is-playing');
-        const base = frame.dataset.videoSrc;
-        if(base){
-          // The tap is the user gesture: load the Drive preview with autoplay
-          // only now, so playback begins at the actual start of the film.
+        const frame = stage.querySelector('iframe');
+        if(frame){
+          // Google Drive's preview player can remain paused/black on iOS when
+          // it is only focused. Reload the preview with autoplay after the
+          // user's explicit tap, which is a user gesture and is therefore
+          // much more reliable on mobile Safari.
+          const base = 'https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview';
           frame.src = base + '?autoplay=1&rm=minimal';
           setTimeout(function(){ try { frame.focus(); } catch(e){} }, 120);
         }
-      }, {once:true});
+      });
     })();
 
 </script>
