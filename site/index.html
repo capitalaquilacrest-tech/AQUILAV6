@@ -230,7 +230,7 @@
     .decision-video-wrap{
       position:relative;
       width:100%;
-      aspect-ratio:16 / 9;
+      aspect-ratio:16 / 10;
       overflow:hidden;
       border-radius:22px;
       background:#000;
@@ -314,12 +314,21 @@
       .decision-pretitle{font-size:8px;letter-spacing:.16em}
       .decision-title-wrap h1{font-size:clamp(52px,16vw,78px)}
       .decision-subtitle{font-size:14px;margin-top:13px}
-      .decision-film-shell{padding:6px}
+      .decision-film-shell{padding:4px}
       .decision-film-frame{padding:5px;border-radius:21px}
       .decision-film-frame::before{border-radius:23px}
       .decision-film-topline{height:22px;padding:0 7px 5px;font-size:6px}
       .decision-film-topline i{width:5px;height:5px}
-      .decision-video-wrap{border-radius:16px}
+      /* Extra vertical room on phones prevents the Drive player from visually
+         crowding/cutting the lower portion of the film. */
+      .decision-video-wrap{
+        aspect-ratio:16 / 10;
+        min-height:360px;
+        border-radius:16px;
+      }
+      .decision-video-wrap iframe{
+        min-height:360px;
+      }
       .decision-video-vignette{box-shadow:inset 0 0 45px rgba(0,0,0,.48),inset 0 -35px 55px rgba(0,0,0,.22)}
       .decision-after{margin-top:23px}
       .decision-brand{font-size:14px;letter-spacing:.13em}
@@ -570,6 +579,14 @@
         width:34px;
         height:34px;
         font-size:19px;
+      }
+    }
+
+
+    @media(max-width:390px){
+      .decision-video-wrap,
+      .decision-video-wrap iframe{
+        min-height:330px;
       }
     }
 
