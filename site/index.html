@@ -336,6 +336,12 @@
         min-width:0;
         min-height:0;
       }
+      .decision-video-wrap video{
+        width:100%;
+        height:100%;
+        object-fit:contain;
+        background:#000;
+      }
       .decision-video-wrap iframe{
         min-height:0;
       }
@@ -589,7 +595,7 @@
         padding:calc(158px + env(safe-area-inset-top,0px)) 12px 32px;
       }
       .decision-kicker{
-        font-size:7px;
+        font-size:10px;
         letter-spacing:.19em;
         gap:8px;
       }
@@ -598,7 +604,7 @@
         margin:14px auto 20px;
       }
       .decision-pretitle{
-        font-size:7px;
+        font-size:8px;
         letter-spacing:.16em;
         margin-bottom:9px;
       }
@@ -632,7 +638,7 @@
          is visible instead of being clipped at the bottom. */
       .decision-video-wrap{
         width:100%;
-        aspect-ratio:16 / 11.2;
+        aspect-ratio:16 / 9;
         height:auto;
         min-height:0;
         border-radius:16px;
@@ -642,6 +648,12 @@
         height:100%;
         min-width:0;
         min-height:0;
+      }
+      .decision-video-wrap video{
+        width:100%;
+        height:100%;
+        object-fit:contain;
+        background:#000;
       }
       .decision-video-vignette{
         box-shadow:inset 0 0 35px rgba(0,0,0,.38);
@@ -672,7 +684,7 @@
         padding-top:calc(150px + env(safe-area-inset-top,0px));
       }
       .decision-video-wrap{
-        aspect-ratio:16 / 11.6;
+        aspect-ratio:16 / 9;
       }
     }
 
@@ -1744,13 +1756,16 @@
             <span>16:9 CINEMATIC FILM</span>
           </div>
           <div class="decision-video-wrap" id="decisionVideoStage">
-            <iframe
-              src="https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview"
+            <video
+              id="decisionFilm"
+              playsinline
+              controls
+              preload="metadata"
               title="Aquila Crest Capital — The Decision"
-              loading="lazy"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-              allowfullscreen
-              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              poster=""
+              style="width:100%;height:100%;display:block;object-fit:contain;background:#000;border-radius:16px;">
+              <source src="https://drive.google.com/uc?export=download&id=1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe" type="video/mp4">
+            </video>
 
             <button class="decision-watch-overlay" id="decisionWatchOverlay" type="button" aria-label="Play The Decision film">
               <span class="decision-watch-kicker">AQUILA ORIGINAL</span>
@@ -4150,24 +4165,29 @@
 
 <script>
 
-    /* THE DECISION poster / playback controls */
+    /* THE DECISION native playback — avoids Google Drive iframe black/overlay behavior on iPhone */
     (function(){
       const stage = document.getElementById('decisionVideoStage');
       const overlay = document.getElementById('decisionWatchOverlay');
-if(!stage || !overlay) return;
+      const video = document.getElementById('decisionFilm');
+      if(!stage || !overlay || !video) return;
 
       overlay.addEventListener('click', function(){
         stage.classList.add('is-playing');
-        const frame = stage.querySelector('iframe');
-        if(frame){
-          // Google Drive's preview player can remain paused/black on iOS when
-          // it is only focused. Reload the preview with autoplay after the
-          // user's explicit tap, which is a user gesture and is therefore
-          // much more reliable on mobile Safari.
-          const base = 'https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview';
-          frame.src = base + '?autoplay=1&rm=minimal';
-          setTimeout(function(){ try { frame.focus(); } catch(e){} }, 120);
+        // User gesture starts the actual HTML5 video from frame 0.
+        // This preserves the film's opening black sequence instead of jumping ahead.
+        video.currentTime = 0;
+        const playPromise = video.play();
+        if(playPromise && playPromise.catch){
+          playPromise.catch(function(){
+            stage.classList.remove('is-playing');
+          });
         }
+      });
+
+      video.addEventListener('play', function(){ stage.classList.add('is-playing'); });
+      video.addEventListener('pause', function(){
+        // Do not restore the poster overlay after a user pause; native controls remain usable.
       });
     })();
 
