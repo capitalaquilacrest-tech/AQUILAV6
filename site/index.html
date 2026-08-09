@@ -385,6 +385,194 @@
       .decision-title-wrap h2{font-size:clamp(52px,16vw,78px)}
     }
 
+
+    /* =========================================================
+       THE DECISION — MOBILE VIDEO / THUMBNAIL / SPACING POLISH
+       ========================================================= */
+    .decision-video-wrap{
+      aspect-ratio:16 / 9;
+      min-height:0;
+    }
+    .decision-watch-overlay{
+      position:absolute;
+      inset:0;
+      z-index:8;
+      width:100%;
+      height:100%;
+      border:0;
+      border-radius:inherit;
+      cursor:pointer;
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      padding:28px;
+      background:
+        radial-gradient(circle at 50% 52%,rgba(255,216,107,.13),transparent 18%),
+        linear-gradient(180deg,rgba(1,6,16,.25),rgba(1,4,10,.78));
+      backdrop-filter:blur(1.5px);
+      -webkit-backdrop-filter:blur(1.5px);
+      transition:opacity .35s ease,visibility .35s ease,background .35s ease;
+    }
+    .decision-watch-overlay::before{
+      content:"";
+      position:absolute;
+      inset:8%;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      pointer-events:none;
+    }
+    .decision-watch-overlay:hover{
+      background:
+        radial-gradient(circle at 50% 52%,rgba(255,216,107,.20),transparent 20%),
+        linear-gradient(180deg,rgba(1,6,16,.12),rgba(1,4,10,.70));
+    }
+    .decision-watch-overlay.is-hidden{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    .decision-watch-kicker{
+      position:relative;
+      color:#ffd86b;
+      font-size:8px;
+      font-weight:950;
+      letter-spacing:.27em;
+    }
+    .decision-watch-overlay strong{
+      position:relative;
+      text-align:center;
+      font-size:clamp(19px,3vw,35px);
+      line-height:.98;
+      letter-spacing:-.025em;
+      text-shadow:0 5px 30px rgba(0,0,0,.8);
+    }
+    .decision-watch-overlay strong em{
+      font-style:normal;
+      color:#ffd86b;
+    }
+    .decision-watch-play{
+      position:relative;
+      display:grid;
+      place-items:center;
+      width:68px;
+      height:68px;
+      margin:5px 0;
+      border:1px solid rgba(255,216,107,.72);
+      border-radius:50%;
+      background:rgba(4,10,22,.72);
+      box-shadow:
+        0 0 0 9px rgba(255,216,107,.07),
+        0 0 38px rgba(255,216,107,.25),
+        inset 0 0 25px rgba(255,255,255,.05);
+      animation:decisionPlayPulse 2s ease-in-out infinite;
+    }
+    .decision-watch-play b{
+      margin-left:4px;
+      color:#ffd86b;
+      font-size:23px;
+      filter:drop-shadow(0 0 9px rgba(255,216,107,.45));
+    }
+    .decision-watch-label{
+      position:relative;
+      color:#fff;
+      font-size:10px;
+      font-weight:950;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .decision-watch-overlay small{
+      position:relative;
+      color:#b6c7df;
+      font-size:7px;
+      font-weight:850;
+      letter-spacing:.15em;
+    }
+    .decision-fullscreen{
+      position:absolute;
+      z-index:10;
+      top:15px;
+      right:15px;
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.28);
+      border-radius:10px;
+      color:#fff;
+      background:rgba(0,0,0,.58);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      cursor:pointer;
+      font-size:22px;
+      line-height:1;
+      transition:.2s ease;
+    }
+    .decision-fullscreen:hover{
+      border-color:rgba(255,216,107,.8);
+      color:#ffd86b;
+      transform:scale(1.04);
+    }
+    .decision-video-wrap.is-playing .decision-watch-overlay{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    @keyframes decisionPlayPulse{
+      0%,100%{transform:scale(1);box-shadow:0 0 0 9px rgba(255,216,107,.07),0 0 38px rgba(255,216,107,.25),inset 0 0 25px rgba(255,255,255,.05)}
+      50%{transform:scale(1.055);box-shadow:0 0 0 15px rgba(255,216,107,.03),0 0 55px rgba(255,216,107,.36),inset 0 0 25px rgba(255,255,255,.05)}
+    }
+
+    /* Kill the oversized dead space before the 9 Income Engines section. */
+    .decision-hero{
+      padding-bottom:48px;
+    }
+    .decision-after{
+      margin-top:25px;
+    }
+    .decision-hero + .income-hero .income-hero-inner{
+      padding-top:42px;
+    }
+    .decision-hero + .income-hero .income-shell{
+      margin-top:20px;
+    }
+
+    @media(max-width:700px){
+      .decision-hero{
+        padding-bottom:32px;
+      }
+      .decision-after{
+        margin-top:20px;
+      }
+      .decision-hero + .income-hero .income-hero-inner{
+        padding-top:36px;
+      }
+      .decision-hero + .income-hero .income-shell{
+        margin-top:18px;
+      }
+      .decision-watch-overlay{
+        gap:6px;
+        padding:18px;
+      }
+      .decision-watch-kicker{font-size:6px;letter-spacing:.21em}
+      .decision-watch-overlay strong{font-size:18px}
+      .decision-watch-play{
+        width:56px;height:56px;margin:3px 0;
+      }
+      .decision-watch-play b{font-size:19px}
+      .decision-watch-label{font-size:8px}
+      .decision-watch-overlay small{font-size:6px}
+      .decision-fullscreen{
+        top:10px;
+        right:10px;
+        width:34px;
+        height:34px;
+        font-size:19px;
+      }
+    }
+
 </style>
 
   <title>Aquila Crest Capital | Official Website</title>
@@ -1452,7 +1640,7 @@
             <span><i></i> AQUILA ORIGINAL</span>
             <span>16:9 CINEMATIC FILM</span>
           </div>
-          <div class="decision-video-wrap">
+          <div class="decision-video-wrap" id="decisionVideoStage">
             <iframe
               src="https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview"
               title="Aquila Crest Capital — The Decision"
@@ -1460,6 +1648,19 @@
               allow="autoplay; fullscreen; picture-in-picture"
               allowfullscreen
               referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+            <button class="decision-watch-overlay" id="decisionWatchOverlay" type="button" aria-label="Play The Decision film">
+              <span class="decision-watch-kicker">AQUILA ORIGINAL</span>
+              <strong>ONE DECISION<br><em>CAN CHANGE EVERYTHING.</em></strong>
+              <span class="decision-watch-play"><b>▶</b></span>
+              <span class="decision-watch-label">WATCH THE DECISION</span>
+              <small>TAP TO PLAY • 16:9 CINEMATIC FILM</small>
+            </button>
+
+            <button class="decision-fullscreen" id="decisionFullscreen" type="button" aria-label="View The Decision full screen" title="Full screen">
+              <span>⛶</span>
+            </button>
+
             <div class="decision-video-vignette" aria-hidden="true"></div>
           </div>
         </div>
@@ -3847,5 +4048,43 @@
     window.addEventListener("load",openChatFromLaunch);
 
   </script>
+
+<script>
+
+    /* THE DECISION poster / fullscreen controls */
+    (function(){
+      const stage = document.getElementById('decisionVideoStage');
+      const overlay = document.getElementById('decisionWatchOverlay');
+      const fullscreenBtn = document.getElementById('decisionFullscreen');
+      if(!stage || !overlay) return;
+
+      overlay.addEventListener('click', function(){
+        stage.classList.add('is-playing');
+        const frame = stage.querySelector('iframe');
+        if(frame){
+          try { frame.focus(); } catch(e){}
+        }
+      });
+
+      if(fullscreenBtn){
+        fullscreenBtn.addEventListener('click', async function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          try{
+            if(document.fullscreenElement){
+              await document.exitFullscreen();
+            }else if(stage.requestFullscreen){
+              await stage.requestFullscreen();
+            }else if(stage.webkitRequestFullscreen){
+              stage.webkitRequestFullscreen();
+            }
+          }catch(err){
+            // The Drive player's own full-screen control remains available.
+          }
+        });
+      }
+    })();
+
+</script>
 </body>
 </html>
