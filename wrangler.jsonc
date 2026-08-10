@@ -5,6 +5,13 @@
   "compatibility_date": "2026-07-30",
   "workers_dev": true,
   "preview_urls": true,
+  "rules": [
+    {
+      "type": "Text",
+      "globs": ["**/*.md"],
+      "fallthrough": true
+    }
+  ],
   "assets": {
     "directory": "./site",
     "binding": "ASSETS",
