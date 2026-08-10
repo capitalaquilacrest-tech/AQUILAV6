@@ -4,6 +4,8 @@ import CAPITAL_RESERVE_GROWTH_SCHEDULE from "./capital-reserve-growth-schedule.m
 
 const MAX_MESSAGE_LENGTH = 600;
 const MAX_HISTORY_MESSAGES = 8;
+const PUBLIC_DAILY_LIMIT = 10;
+const PUBLIC_BURST_LIMIT = 5;
 
 const APPROVED_STARTER_KNOWLEDGE = `
 Aquila Crest Capital public website knowledge (temporary starter source):
@@ -66,6 +68,94 @@ function getOutputText(payload) {
   return "";
 }
 
+function phDateKey(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Manila",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(date);
+}
+
+function minuteKey(date = new Date()) {
+  return date.toISOString().slice(0, 16);
+}
+
+async function hmacHex(secret, value) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(value));
+  return [...new Uint8Array(signature)].map(byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function getVisitorHash(request, env) {
+  const ip = request.headers.get("cf-connecting-ip") || "unknown";
+  const agent = request.headers.get("user-agent") || "unknown";
+  const language = request.headers.get("accept-language") || "unknown";
+  return hmacHex(env.AI_AUTH_SECRET, `${ip}|${agent}|${language}`);
+}
+
+async function reservePublicQuota(request, env) {
+  if (!env.AI_LIMITS || !env.AI_AUTH_SECRET) {
+    return { error: "AI access protection is not configured yet.", status: 503 };
+  }
+
+  const visitor = await getVisitorHash(request, env);
+  const dailyStorageKey = `public:day:${phDateKey()}:${visitor}`;
+  const burstStorageKey = `public:minute:${minuteKey()}:${visitor}`;
+  const [dailyRaw, burstRaw] = await Promise.all([
+    env.AI_LIMITS.get(dailyStorageKey),
+    env.AI_LIMITS.get(burstStorageKey)
+  ]);
+  const dailyCount = Math.max(0, Number.parseInt(dailyRaw || "0", 10) || 0);
+  const burstCount = Math.max(0, Number.parseInt(burstRaw || "0", 10) || 0);
+
+  if (dailyCount >= PUBLIC_DAILY_LIMIT) {
+    return {
+      error: "Naabot mo na ang 10 free AI questions ngayong araw. Bumalik bukas o mag-login bilang verified member kapag available na ang member access.",
+      code: "PUBLIC_DAILY_LIMIT",
+      status: 429,
+      remaining: 0
+    };
+  }
+
+  if (burstCount >= PUBLIC_BURST_LIMIT) {
+    return {
+      error: "Masyadong sunod-sunod ang questions. Maghintay muna nang isang minuto bago magtanong ulit.",
+      code: "PUBLIC_BURST_LIMIT",
+      status: 429,
+      remaining: Math.max(0, PUBLIC_DAILY_LIMIT - dailyCount)
+    };
+  }
+
+  await Promise.all([
+    env.AI_LIMITS.put(dailyStorageKey, String(dailyCount + 1), { expirationTtl: 172800 }),
+    env.AI_LIMITS.put(burstStorageKey, String(burstCount + 1), { expirationTtl: 180 })
+  ]);
+
+  return {
+    remaining: Math.max(0, PUBLIC_DAILY_LIMIT - dailyCount - 1),
+    dailyStorageKey,
+    burstStorageKey,
+    dailyCount,
+    burstCount
+  };
+}
+
+async function releaseReservedQuota(env, quota) {
+  if (!quota?.dailyStorageKey || !quota?.burstStorageKey) return;
+  await Promise.allSettled([
+    env.AI_LIMITS.put(quota.dailyStorageKey, String(Math.max(0, quota.dailyCount)), { expirationTtl: 172800 }),
+    env.AI_LIMITS.put(quota.burstStorageKey, String(Math.max(0, quota.burstCount)), { expirationTtl: 180 })
+  ]);
+}
+
 async function handleAssistant(request, env) {
   if (request.method !== "POST") return json({ error: "Method not allowed." }, 405, { allow: "POST" });
   if (!env.OPENAI_API_KEY) return json({ error: "AI Assistant is not configured yet." }, 503);
@@ -80,6 +170,13 @@ async function handleAssistant(request, env) {
   const message = typeof body?.message === "string" ? body.message.trim() : "";
   if (!message || message.length > MAX_MESSAGE_LENGTH) {
     return json({ error: `Message must be between 1 and ${MAX_MESSAGE_LENGTH} characters.` }, 400);
+  }
+
+  const quota = await reservePublicQuota(request, env);
+  if (quota.error) {
+    return json({ error: quota.error, code: quota.code, remaining: quota.remaining }, quota.status, {
+      "retry-after": quota.code === "PUBLIC_BURST_LIMIT" ? "60" : "3600"
+    });
   }
 
   const history = normalizeMessages(body?.history);
@@ -115,13 +212,20 @@ async function handleAssistant(request, env) {
 
   if (!openAIResponse.ok) {
     console.error("OpenAI request failed", openAIResponse.status, await openAIResponse.text());
+    await releaseReservedQuota(env, quota);
     return json({ error: "The AI Assistant is temporarily unavailable. Please try again later." }, 502);
   }
 
   const result = await openAIResponse.json();
   const answer = getOutputText(result);
-  if (!answer) return json({ error: "No answer was returned. Please try again." }, 502);
-  return json({ answer });
+  if (!answer) {
+    await releaseReservedQuota(env, quota);
+    return json({ error: "No answer was returned. Please try again." }, 502);
+  }
+  return json({ answer, remaining: quota.remaining, access: "public" }, 200, {
+    "x-ratelimit-limit": String(PUBLIC_DAILY_LIMIT),
+    "x-ratelimit-remaining": String(quota.remaining)
+  });
 }
 
 export default {
