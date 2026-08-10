@@ -6,6 +6,9 @@ const MAX_MESSAGE_LENGTH = 600;
 const MAX_HISTORY_MESSAGES = 8;
 const PUBLIC_DAILY_LIMIT = 10;
 const PUBLIC_BURST_LIMIT = 5;
+const MEMBER_BURST_LIMIT = 20;
+const MEMBER_SESSION_SECONDS = 60 * 60 * 24 * 7;
+const MEMBER_PORTAL_API_URL = "https://script.google.com/macros/s/AKfycbwsX7fvxdza7pGepFtME77y0BK3D6AzQ8qIQMQOe51RfPk2rK-sCCbexo8PpdC2cpRG/exec";
 
 const APPROVED_STARTER_KNOWLEDGE = `
 Aquila Crest Capital public website knowledge (temporary starter source):
@@ -94,6 +97,77 @@ async function hmacHex(secret, value) {
   return [...new Uint8Array(signature)].map(byte => byte.toString(16).padStart(2, "0")).join("");
 }
 
+function base64UrlEncode(value) {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function base64UrlDecode(value) {
+  const padded = value.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((value.length + 3) % 4);
+  const binary = atob(padded);
+  return new TextDecoder().decode(Uint8Array.from(binary, char => char.charCodeAt(0)));
+}
+
+async function createMemberToken(member, env) {
+  const payload = base64UrlEncode(JSON.stringify({
+    username: member.username,
+    fullName: member.fullName,
+    exp: Math.floor(Date.now() / 1000) + MEMBER_SESSION_SECONDS
+  }));
+  return `${payload}.${await hmacHex(env.AI_AUTH_SECRET, payload)}`;
+}
+
+async function getMemberSession(request, env) {
+  if (!env.AI_AUTH_SECRET) return null;
+  const cookie = request.headers.get("cookie") || "";
+  const match = cookie.match(/(?:^|;\s*)aquila_ai_session=([^;]+)/);
+  if (!match) return null;
+  try {
+    const [payload, signature] = decodeURIComponent(match[1]).split(".");
+    if (!payload || !signature || await hmacHex(env.AI_AUTH_SECRET, payload) !== signature) return null;
+    const member = JSON.parse(base64UrlDecode(payload));
+    if (!member?.username || !member?.fullName || Number(member.exp) <= Date.now() / 1000) return null;
+    return member;
+  } catch {
+    return null;
+  }
+}
+
+async function handleMemberLogin(request, env) {
+  if (request.method !== "POST") return json({ error: "Method not allowed." }, 405, { allow: "POST" });
+  if (!env.AI_AUTH_SECRET) return json({ error: "Member login is not configured yet." }, 503);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Invalid request." }, 400); }
+  const username = typeof body?.username === "string" ? body.username.trim() : "";
+  const password = typeof body?.password === "string" ? body.password : "";
+  if (!username || !password || username.length > 80 || password.length > 200) {
+    return json({ error: "Enter your username and password." }, 400);
+  }
+
+  const authResponse = await fetch(MEMBER_PORTAL_API_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ action: "AI_MEMBER_LOGIN", apiSecret: env.AI_AUTH_SECRET, username, password })
+  });
+  if (!authResponse.ok) return json({ error: "Member verification is temporarily unavailable." }, 502);
+  const result = await authResponse.json().catch(() => null);
+  if (!result?.success) return json({ error: result?.message || "Invalid username or password.", code: result?.code }, 401);
+
+  const member = { username: String(result.username), fullName: String(result.fullName || result.username) };
+  const token = await createMemberToken(member, env);
+  return json({ success: true, access: "member", member }, 200, {
+    "set-cookie": `aquila_ai_session=${encodeURIComponent(token)}; Max-Age=${MEMBER_SESSION_SECONDS}; Path=/; HttpOnly; Secure; SameSite=Lax`
+  });
+}
+
+function handleMemberLogout() {
+  return json({ success: true, access: "public" }, 200, {
+    "set-cookie": "aquila_ai_session=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
+  });
+}
+
 async function getVisitorHash(request, env) {
   const ip = request.headers.get("cf-connecting-ip") || "unknown";
   const agent = request.headers.get("user-agent") || "unknown";
@@ -172,8 +246,23 @@ async function releaseReservedQuota(env, quota) {
   ]);
 }
 
+async function reserveMemberQuota(member, env) {
+  if (!env.AI_LIMITS || !env.AI_AUTH_SECRET) return { error: "AI access protection is not configured yet.", status: 503 };
+  const memberHash = await hmacHex(env.AI_AUTH_SECRET, String(member.username).toLowerCase());
+  const storageKey = `member:minute:${minuteKey()}:${memberHash}`;
+  const raw = await env.AI_LIMITS.get(storageKey);
+  const count = Math.max(0, Number.parseInt(raw || "0", 10) || 0);
+  if (count >= MEMBER_BURST_LIMIT) {
+    return { error: "Masyadong sunod-sunod ang messages. Maghintay muna nang isang minuto.", code: "MEMBER_BURST_LIMIT", status: 429 };
+  }
+  await env.AI_LIMITS.put(storageKey, String(count + 1), { expirationTtl: 180 });
+  return { member: true, storageKey, count };
+}
+
 async function handleAssistant(request, env) {
+  const member = await getMemberSession(request, env);
   if (request.method === "GET") {
+    if (member) return json({ access: "member", unlimited: true, member: { username: member.username, fullName: member.fullName } });
     const status = await getPublicQuotaStatus(request, env);
     if (status.error) return json({ error: status.error }, status.status);
     return json(status);
@@ -193,7 +282,7 @@ async function handleAssistant(request, env) {
     return json({ error: `Message must be between 1 and ${MAX_MESSAGE_LENGTH} characters.` }, 400);
   }
 
-  const quota = await reservePublicQuota(request, env);
+  const quota = member ? await reserveMemberQuota(member, env) : await reservePublicQuota(request, env);
   if (quota.error) {
     return json({ error: quota.error, code: quota.code, remaining: quota.remaining }, quota.status, {
       "retry-after": quota.code === "PUBLIC_BURST_LIMIT" ? "60" : "3600"
@@ -233,17 +322,17 @@ async function handleAssistant(request, env) {
 
   if (!openAIResponse.ok) {
     console.error("OpenAI request failed", openAIResponse.status, await openAIResponse.text());
-    await releaseReservedQuota(env, quota);
+    if (!member) await releaseReservedQuota(env, quota);
     return json({ error: "The AI Assistant is temporarily unavailable. Please try again later." }, 502);
   }
 
   const result = await openAIResponse.json();
   const answer = getOutputText(result);
   if (!answer) {
-    await releaseReservedQuota(env, quota);
+    if (!member) await releaseReservedQuota(env, quota);
     return json({ error: "No answer was returned. Please try again." }, 502);
   }
-  return json({ answer, remaining: quota.remaining, access: "public" }, 200, {
+  return json({ answer, remaining: member ? null : quota.remaining, access: member ? "member" : "public", member: member ? { username: member.username, fullName: member.fullName } : undefined }, 200, {
     "x-ratelimit-limit": String(PUBLIC_DAILY_LIMIT),
     "x-ratelimit-remaining": String(quota.remaining)
   });
@@ -252,6 +341,11 @@ async function handleAssistant(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/api/ai-auth/login") {
+      try { return await handleMemberLogin(request, env); }
+      catch (error) { console.error("AI member login error", error); return json({ error: "Member verification is temporarily unavailable." }, 500); }
+    }
+    if (url.pathname === "/api/ai-auth/logout") return handleMemberLogout();
     if (url.pathname === "/api/ai-assistant") {
       try {
         return await handleAssistant(request, env);
