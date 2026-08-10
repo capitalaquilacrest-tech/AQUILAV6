@@ -1,5 +1,6 @@
 import AQUILA_POLICY_PROMPT from "./aquila-policy-prompt.md";
 import AQUILA_LANDING_KNOWLEDGE from "./aquila-landing-knowledge.md";
+import CAPITAL_RESERVE_GROWTH_SCHEDULE from "./capital-reserve-growth-schedule.md";
 
 const MAX_MESSAGE_LENGTH = 600;
 const MAX_HISTORY_MESSAGES = 8;
@@ -39,7 +40,7 @@ Rules:
 14. Never pressure the visitor to register, deposit, recruit, or act immediately. Do not use urgency, fear of missing out, exaggerated benefits, or guaranteed outcomes. Help the visitor make an informed choice and invite further questions.
 `;
 
-const SYSTEM_INSTRUCTIONS = `${SAFETY_INSTRUCTIONS}\n\nAUTHORITATIVE AQUILA SYSTEM INFORMATION:\n${AQUILA_POLICY_PROMPT}\n\nADDITIONAL APPROVED LANDING-PAGE KNOWLEDGE:\n${AQUILA_LANDING_KNOWLEDGE}`;
+const SYSTEM_INSTRUCTIONS = `${SAFETY_INSTRUCTIONS}\n\nAUTHORITATIVE AQUILA SYSTEM INFORMATION:\n${AQUILA_POLICY_PROMPT}\n\nADDITIONAL APPROVED LANDING-PAGE KNOWLEDGE:\n${AQUILA_LANDING_KNOWLEDGE}\n\nOFFICIAL CAPITAL RESERVE GROWTH SCHEDULE:\n${CAPITAL_RESERVE_GROWTH_SCHEDULE}`;
 
 const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(data), {
   status,
