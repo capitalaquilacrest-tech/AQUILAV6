@@ -1225,9 +1225,9 @@
     .chat-main{min-width:0;min-height:0;position:relative;background:linear-gradient(180deg,#f4f8fe,#fff);overflow:hidden}
     .chat-messages{width:100%;height:100%;min-width:0;overflow-y:auto;overflow-x:hidden;padding:14px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y;scrollbar-gutter:stable}
     .chat-empty{margin:auto;padding:26px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.55}.chat-empty strong{display:block;color:var(--navy);font-size:17px;margin-bottom:7px}
-    .chat-row{display:flex;flex-direction:column;align-items:flex-start;align-self:flex-start;width:fit-content;max-width:86%;min-width:0;transition:.25s}.chat-row.admin{align-self:flex-start;width:fit-content;max-width:94%}.chat-row.chat-highlight{filter:drop-shadow(0 0 8px rgba(219,168,43,.55));transform:translateX(3px)}.chat-row.chat-action-pending{opacity:.5;pointer-events:none}.chat-meta{max-width:100%;font-size:11px;line-height:1.35;color:#7c8ba4;margin:0 8px 4px;overflow-wrap:anywhere}.chat-meta b{color:var(--navy)}.chat-edited{font-style:italic}.chat-admin-badge{display:inline-block;margin-left:4px;padding:2px 5px;border-radius:6px;background:#e8f1ff;color:var(--blue);font-size:9px;font-weight:950}.chat-bubble{display:block;width:fit-content;max-width:100%;min-width:0;padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:14px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-quote{display:block;width:100%;max-width:100%;min-width:0;margin:0 0 7px;padding:7px 9px;border:0;border-left:3px solid var(--gold);border-radius:8px;background:rgba(6,26,68,.07);color:#53657f;text-align:left;font-size:12px;line-height:1.35;cursor:pointer;overflow:hidden}.chat-row.admin .chat-quote{background:rgba(255,255,255,.12);color:#e5edfb}.chat-quote b,.chat-quote span{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-quote b{color:var(--navy);margin-bottom:2px}.chat-row.admin .chat-quote b{color:#fff}.chat-message-actions{display:flex;max-width:100%;align-items:center;gap:8px;margin:4px 6px 0;flex-wrap:wrap}.chat-message-actions button{border:0;background:none;padding:3px 2px;color:#72829a;font-size:11px;font-weight:850;cursor:pointer}.chat-message-actions button:hover{color:var(--blue)}.chat-message-actions .chat-unsend{color:#ad2637}.chat-reaction-picker{display:none;max-width:100%;gap:3px;padding:4px;border:1px solid #dbe5f1;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(6,26,68,.13);flex-wrap:wrap}.chat-reaction-picker.show{display:flex}.chat-reaction-picker button{width:27px;height:27px;padding:0;border-radius:50%;font-size:15px}.chat-reaction-picker button:hover{background:#edf4ff}.chat-reaction-summary{display:flex;max-width:100%;gap:4px;flex-wrap:wrap;margin:4px 5px 0}.chat-reaction-pill{border:1px solid #dce6f3;border-radius:20px;padding:3px 7px;background:#fff;color:#465d7d;font-size:11px;cursor:pointer}.chat-reaction-pill.mine{border-color:#6fa3ef;background:#eaf2ff;color:#174e9f}.chat-mod-actions{display:none;max-width:100%;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:10px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
+    .chat-row{display:flex;flex-direction:column;align-items:flex-start;align-self:flex-start;width:fit-content;max-width:86%;min-width:0;transition:.25s}.chat-row.admin{align-self:flex-start;width:fit-content;max-width:94%}.chat-row.chat-highlight{filter:drop-shadow(0 0 8px rgba(219,168,43,.55));transform:translateX(3px)}.chat-row.chat-action-pending{opacity:.5;pointer-events:none}.chat-meta{max-width:100%;font-size:11px;line-height:1.35;color:#7c8ba4;margin:0 8px 4px;overflow-wrap:anywhere}.chat-meta b{color:var(--navy)}.chat-edited{font-style:italic}.chat-identity-badge{display:inline-block;margin-left:4px;padding:2px 6px;border-radius:999px;font-size:8px;font-weight:950;letter-spacing:.03em;vertical-align:1px}.chat-identity-badge.guest{border:1px solid #cad5e4;background:#f2f5f9;color:#65758b}.chat-identity-badge.unverified{border:1px solid #e5bd63;background:#fff8df;color:#8a6411}.chat-identity-badge.verified{border:1px solid #f3b84a;background:linear-gradient(110deg,#ff6b1a,#ffd34f,#0f5bd8,#ff6b1a);background-size:250% 250%;color:#fff;text-shadow:0 1px 2px rgba(79,29,0,.45);box-shadow:0 0 9px rgba(255,112,24,.42);animation:verifiedFire 2.1s ease-in-out infinite}.chat-identity-badge.admin{border:1px solid #8bb7f4;background:#e8f1ff;color:var(--blue)}@keyframes verifiedFire{0%,100%{background-position:0% 50%;box-shadow:0 0 7px rgba(255,112,24,.35)}50%{background-position:100% 50%;box-shadow:0 0 13px rgba(255,174,31,.62)}}.chat-bubble{display:block;width:fit-content;max-width:100%;min-width:0;padding:10px 12px;border-radius:16px 16px 16px 4px;background:#fff;color:var(--ink);border:1px solid var(--line);font-size:14px;line-height:1.48;box-shadow:0 5px 16px rgba(6,26,68,.06);white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.chat-row.admin .chat-bubble{background:linear-gradient(135deg,#071d49,#0b3a88);border-color:transparent;color:#fff}.chat-quote{display:block;width:100%;max-width:100%;min-width:0;margin:0 0 7px;padding:7px 9px;border:0;border-left:3px solid var(--gold);border-radius:8px;background:rgba(6,26,68,.07);color:#53657f;text-align:left;font-size:12px;line-height:1.35;cursor:pointer;overflow:hidden}.chat-row.admin .chat-quote{background:rgba(255,255,255,.12);color:#e5edfb}.chat-quote b,.chat-quote span{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat-quote b{color:var(--navy);margin-bottom:2px}.chat-row.admin .chat-quote b{color:#fff}.chat-message-actions{display:flex;max-width:100%;align-items:center;gap:8px;margin:4px 6px 0;flex-wrap:wrap}.chat-message-actions button{border:0;background:none;padding:3px 2px;color:#72829a;font-size:11px;font-weight:850;cursor:pointer}.chat-message-actions button:hover{color:var(--blue)}.chat-message-actions .chat-unsend{color:#ad2637}.chat-reaction-picker{display:none;max-width:100%;gap:3px;padding:4px;border:1px solid #dbe5f1;border-radius:20px;background:#fff;box-shadow:0 8px 20px rgba(6,26,68,.13);flex-wrap:wrap}.chat-reaction-picker.show{display:flex}.chat-reaction-picker button{width:27px;height:27px;padding:0;border-radius:50%;font-size:15px}.chat-reaction-picker button:hover{background:#edf4ff}.chat-reaction-summary{display:flex;max-width:100%;gap:4px;flex-wrap:wrap;margin:4px 5px 0}.chat-reaction-pill{border:1px solid #dce6f3;border-radius:20px;padding:3px 7px;background:#fff;color:#465d7d;font-size:11px;cursor:pointer}.chat-reaction-pill.mine{border-color:#6fa3ef;background:#eaf2ff;color:#174e9f}.chat-mod-actions{display:none;max-width:100%;gap:5px;margin:5px 4px 0;flex-wrap:wrap}.chat-panel.admin-mode .chat-row:not(.admin) .chat-mod-actions{display:flex}.chat-mod-actions button{border:1px solid #dce6f3;border-radius:8px;padding:5px 7px;background:#fff;color:#29456f;font-size:10px;font-weight:950;cursor:pointer}.chat-mod-actions button[data-action="delete"],.chat-mod-actions button[data-action="ban"]{color:#ad2637;background:#fff2f2;border-color:#ffd2d8}
     .chat-notice{align-self:center;width:94%;padding:9px 12px;border-radius:12px;text-align:center;font-size:11px;line-height:1.4;background:#eaf2ff;color:#194d9d;border:1px solid #cfe0fb;transition:.25s}.chat-notice.warning{background:#fff2f2;color:#a32635;border-color:#ffd2d8}.chat-notice.fade{opacity:0;transform:translateY(-5px)}
-    .chat-name-gate{position:absolute;inset:0;z-index:2;background:rgba(247,250,255,.97);padding:24px 20px;display:grid;place-content:center;text-align:center}.chat-name-gate.hidden{display:none}.chat-name-gate h3{margin:0;color:var(--navy);font-size:20px}.chat-name-gate p{color:var(--muted);font-size:12px;line-height:1.55;margin:8px 0 15px}.chat-name-gate input,.chat-login input,.chat-composer textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:13px;padding:12px;outline:none}.chat-name-gate input+input{margin-top:8px}.chat-name-gate input:focus,.chat-composer textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(15,91,216,.1)}.chat-name-gate button{width:100%;margin-top:9px;border:0;border-radius:13px;padding:12px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--red),var(--blue));cursor:pointer}.chat-admin-password{display:none}.chat-admin-password.show{display:block}.chat-private-note{min-height:18px;margin-top:8px;color:#ae2e3d;font-size:11px}
+    .chat-name-gate{position:absolute;inset:0;z-index:2;background:rgba(247,250,255,.98);padding:20px;display:grid;place-content:center;text-align:center}.chat-name-gate.hidden{display:none}.chat-name-gate>div{width:min(330px,100%)}.chat-name-gate h3{margin:0;color:var(--navy);font-size:20px}.chat-name-gate p{color:var(--muted);font-size:12px;line-height:1.55;margin:7px 0 12px}.chat-login-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.chat-name-gate .chat-mode-btn{margin:0;border:1px solid #b9d3f7;background:#fff;color:#075ec8}.chat-name-gate .chat-mode-btn.active{border-color:transparent;background:linear-gradient(135deg,#071d49,#0f5bd8);color:#fff}.chat-login-pane{display:none}.chat-login-pane.active{display:block}.chat-name-gate input,.chat-login input,.chat-composer textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:13px;padding:12px;outline:none}.chat-name-gate input+input{margin-top:8px}.chat-name-gate input:focus,.chat-composer textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(15,91,216,.1)}.chat-name-gate button{width:100%;margin-top:9px;border:0;border-radius:13px;padding:12px;color:#fff;font-weight:900;background:linear-gradient(135deg,var(--red),var(--blue));cursor:pointer}.chat-name-gate button:disabled{opacity:.55;cursor:wait}.chat-admin-password{display:none}.chat-admin-password.show{display:block}.chat-private-note{min-height:18px;margin-top:8px;color:#ae2e3d;font-size:11px}.chat-panel.member-mode .chat-change-name{display:none!important}
     .chat-media{display:block;max-width:100%;margin-top:7px}.chat-media-image{width:min(250px,100%);max-height:300px;border-radius:12px;object-fit:cover;cursor:zoom-in;background:#eaf0f8}.chat-media-audio{width:min(260px,100%);height:38px}.chat-media-status{font-size:10px;opacity:.72}.chat-row.admin .chat-media-audio{filter:invert(1) hue-rotate(180deg)}
     .chat-message-text{max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}.chat-inline-link{position:relative;z-index:1;color:#075ec8;font-weight:850;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;cursor:pointer;pointer-events:auto;touch-action:manipulation}.chat-row.admin .chat-inline-link{color:#9fd0ff}.chat-link-previews{display:grid;width:min(290px,100%);max-width:100%;gap:7px;margin-top:8px;white-space:normal}.chat-link-card{position:relative;z-index:1;display:flex;width:100%;min-width:0;align-items:center;gap:10px;padding:8px;border:1px solid #d9e5f2;border-radius:12px;background:linear-gradient(135deg,#f8fbff,#edf4fc);color:var(--ink);text-decoration:none;overflow:hidden;cursor:pointer;pointer-events:auto;touch-action:manipulation;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}.chat-link-card:hover{transform:translateY(-1px);border-color:#8eb5e7;box-shadow:0 7px 18px rgba(6,26,68,.11)}.chat-link-thumb{display:grid;place-items:center;flex:0 0 58px;width:58px;height:52px;border-radius:11px;background:#dce8f7;color:#174e9f;font-size:22px;font-weight:950;overflow:hidden}.chat-link-thumb img{display:block;width:100%;height:100%;object-fit:cover}.chat-link-card.telegram .chat-link-thumb{background:linear-gradient(135deg,#35aee2,#168acd);color:#fff}.chat-link-card.discord .chat-link-thumb{background:linear-gradient(135deg,#7289da,#5865f2);color:#fff}.chat-link-brand{display:grid;place-items:center;width:100%;height:100%;font-size:24px;font-weight:950;color:#fff}.chat-link-copy{display:block;min-width:0;flex:1}.chat-link-copy b,.chat-link-copy span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chat-link-copy b{color:var(--navy);font-size:12px;line-height:1.35}.chat-link-copy span{margin-top:3px;color:#647792;font-size:10px}.chat-link-open{flex:0 0 auto;color:#597493;font-size:17px;font-weight:950}.chat-row.admin .chat-link-card{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff}.chat-row.admin .chat-link-copy b,.chat-row.admin .chat-link-copy span,.chat-row.admin .chat-link-open{color:#fff}.chat-more-links{font-size:10px;font-weight:800;color:#71849e}.chat-row.admin .chat-more-links{color:#d8e8ff}
     .chat-photo-grid{display:grid;width:min(276px,100%);max-width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin-top:8px;overflow:hidden;border-radius:13px}.chat-photo-grid.one{grid-template-columns:1fr}.chat-photo-tile{position:relative;min-width:0;aspect-ratio:1/1;border:0;padding:0;background:#dfe8f5;overflow:hidden;cursor:pointer}.chat-photo-grid.one .chat-photo-tile{aspect-ratio:4/3}.chat-photo-tile img{display:block;width:100%;height:100%;object-fit:cover}.chat-photo-more{position:absolute;inset:0;display:grid;place-items:center;background:rgba(5,22,57,.66);color:#fff;font-size:25px;font-weight:950}
@@ -2338,11 +2338,19 @@
       </div>
       <div class="chat-name-gate" id="chatNameGate">
         <div>
-          <h3>Join the conversation</h3>
-          <p>Enter your name before joining. Your chosen display name will be visible to everyone in this public community chat.</p>
-          <input id="chatDisplayName" type="text" minlength="2" maxlength="30" autocomplete="name" placeholder="Your name" aria-label="Display name">
-          <input class="chat-admin-password" id="chatAdminPassword" type="password" autocomplete="current-password" placeholder="Admin password" aria-label="Admin password">
-          <button id="chatJoin" type="button">ENTER LIVE CHAT</button>
+          <h3>Login as</h3>
+          <p>Choose how you want to join the Aquila Community Live Chat.</p>
+          <div class="chat-login-modes"><button class="chat-mode-btn active" id="chatModeGuest" type="button">👤 GUEST</button><button class="chat-mode-btn" id="chatModeMember" type="button">✓ MEMBER</button></div>
+          <div class="chat-login-pane active" id="chatGuestPane">
+            <input id="chatDisplayName" type="text" minlength="2" maxlength="30" autocomplete="name" placeholder="Your display name" aria-label="Display name">
+            <input class="chat-admin-password" id="chatAdminPassword" type="password" autocomplete="current-password" placeholder="Admin password" aria-label="Admin password">
+            <button id="chatJoin" type="button">CONTINUE AS GUEST</button>
+          </div>
+          <form class="chat-login-pane" id="chatMemberForm">
+            <input id="chatMemberUsername" type="text" maxlength="80" autocomplete="username" placeholder="Member username" aria-label="Member username" required>
+            <input id="chatMemberPassword" type="password" maxlength="200" autocomplete="current-password" placeholder="Member password" aria-label="Member password" required>
+            <button id="chatMemberJoin" type="submit">VERIFY MEMBER</button>
+          </form>
           <div class="chat-private-note" id="chatNameNotice" role="alert"></div>
         </div>
       </div>
@@ -2890,6 +2898,13 @@
     const downloadNotifyTest = document.getElementById("downloadNotifyTest");
     const chatSoundToggle = document.getElementById("chatSoundToggle");
     const chatNameGate = document.getElementById("chatNameGate");
+    const chatModeGuest = document.getElementById("chatModeGuest");
+    const chatModeMember = document.getElementById("chatModeMember");
+    const chatGuestPane = document.getElementById("chatGuestPane");
+    const chatMemberForm = document.getElementById("chatMemberForm");
+    const chatMemberUsername = document.getElementById("chatMemberUsername");
+    const chatMemberPassword = document.getElementById("chatMemberPassword");
+    const chatMemberJoin = document.getElementById("chatMemberJoin");
     const chatDisplayName = document.getElementById("chatDisplayName");
     const chatAdminPassword = document.getElementById("chatAdminPassword");
     const chatJoin = document.getElementById("chatJoin");
@@ -2969,9 +2984,9 @@
     const mediaUrlCache = new Map();
     const allowedReactions = ["👍","❤️","😂","😮","😢"];
     const renderedMessageIds = new Set();
-    const richMessageFields = "id,sender_id,display_name,body,sender_role,status,created_at,edited_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds,media_items";
-    const legacyRichMessageFields = "id,sender_id,display_name,body,sender_role,status,created_at,edited_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds";
-    const basicMessageFields = "id,sender_id,display_name,body,sender_role,status,created_at";
+    const richMessageFields = "id,sender_id,display_name,body,sender_role,sender_identity,status,created_at,edited_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds,media_items";
+    const legacyRichMessageFields = "id,sender_id,display_name,body,sender_role,sender_identity,status,created_at,edited_at,reply_to,reply_to_display_name,reply_to_body,media_kind,media_path,media_mime_type,media_size_bytes,media_duration_seconds";
+    const basicMessageFields = "id,sender_id,display_name,body,sender_role,sender_identity,status,created_at";
 
     function chatConfigured(){
       return AQUILA_CHAT_CONFIG.supabaseUrl.startsWith("https://") && !AQUILA_CHAT_CONFIG.supabaseUrl.includes("PASTE_") && !AQUILA_CHAT_CONFIG.supabaseKey.includes("PASTE_");
@@ -3288,6 +3303,13 @@
       container.append(previews);
     }
     function isAdminName(value){return String(value||"").trim().replace(/\s+/g," ").toUpperCase()==="ACC ADMIN";}
+    function setChatLoginMode(mode){
+      const member=mode==="member";
+      chatModeGuest?.classList.toggle("active",!member);chatModeMember?.classList.toggle("active",member);
+      chatGuestPane?.classList.toggle("active",!member);chatMemberForm?.classList.toggle("active",member);
+      if(chatNameNotice)chatNameNotice.textContent="";
+      setTimeout(()=>member?chatMemberUsername?.focus():chatDisplayName?.focus(),40);
+    }
     function syncAdminGate(){
       const adminAttempt=isAdminName(chatDisplayName?.value);
       chatAdminPassword?.classList.toggle("show",adminAttempt);
@@ -3298,9 +3320,10 @@
     function setInlineAdminMode(enabled){
       chatPanel?.classList.toggle("admin-mode",enabled);
       chatPanel?.classList.toggle("visitor-mode",!enabled&&chatProfile?.role==="visitor");
+      chatPanel?.classList.toggle("member-mode",!enabled&&["verified","unverified"].includes(chatProfile?.identity_status));
       if(enabled||chatProfile?.role!=="visitor") chatRenameBox?.classList.remove("show");
       if(chatInput) chatInput.placeholder=enabled?"Reply as verified ACC Admin…":"Ask about Aquila Crest…";
-      if(chatPrivateState) chatPrivateState.textContent=enabled?"ACC Admin ✓":`Chatting as ${chatProfile?.public_name||"visitor"}`;
+      if(chatPrivateState){const label=chatProfile?.identity_status==="verified"?" · VERIFIED":chatProfile?.identity_status==="unverified"?" · UNVERIFIED":" · GUEST";chatPrivateState.textContent=enabled?"ACC Admin · OFFICIAL ADMIN":`Chatting as ${chatProfile?.public_name||"visitor"}${label}`;}
     }
     async function fetchVisibleMessages(){
       let result=await chatDb.from("chat_messages").select(richMessageFields).eq("status","visible").order("created_at",{ascending:false}).limit(AQUILA_CHAT_CONFIG.historyLimit);
@@ -3580,9 +3603,9 @@
       const meta=document.createElement("div"); meta.className="chat-meta";
       const name=document.createElement("b"); name.textContent=message.sender_role==="admin"?"ACC Admin":message.display_name;
       meta.append(name);
-      if(message.sender_role==="admin"){
-        const badge=document.createElement("span"); badge.className="chat-admin-badge"; badge.textContent="VERIFIED ✓"; meta.append(badge);
-      }
+      const identity=message.sender_role==="admin"?"admin":(["verified","unverified"].includes(message.sender_identity)?message.sender_identity:"guest");
+      const badge=document.createElement("span");badge.className=`chat-identity-badge ${identity}`;
+      badge.textContent=identity==="admin"?"🛡 OFFICIAL ADMIN":identity==="verified"?"🔥 VERIFIED":identity==="unverified"?"◇ UNVERIFIED":"● GUEST";meta.append(badge);
       meta.append(document.createTextNode(` · ${formatChatTime(message.created_at)}`));
       if(message.edited_at){const edited=document.createElement("span");edited.className="chat-edited";edited.textContent=" · Edited";meta.append(edited);}
       const bubble=document.createElement("div"); bubble.className="chat-bubble";
@@ -3643,7 +3666,7 @@
         }
         const userId=chatSession.user.id;
         const [profileResult,messagesResult,noticesResult,supportResult]=await Promise.all([
-          chatDb.from("chat_profiles").select("user_id,public_name,role,strikes,mute_until,banned_at").eq("user_id",userId).maybeSingle(),
+          chatDb.from("chat_profiles").select("user_id,public_name,role,identity_status,member_username,identity_verified_at,strikes,mute_until,banned_at").eq("user_id",userId).maybeSingle(),
           fetchVisibleMessages(),
           chatDb.from("chat_notices").select("id,body,notice_type,expires_at").gt("expires_at",new Date().toISOString()).order("created_at",{ascending:true}),
           chatDb.from("chat_support_status").select("is_online,status_text").eq("id",1).maybeSingle()
@@ -3725,9 +3748,26 @@
         const {data,error}=await chatDb.rpc("chat_set_display_name",{p_display_name:name});
         if(error) throw error;
         if(!data?.ok){chatNameNotice.textContent=data?.notice||"Hindi puwedeng gamitin ang pangalang ito.";return;}
-        chatProfile={...(chatProfile||{}),public_name:data.public_name,role:"visitor"}; chatNameNotice.textContent=""; unlockComposer(); chatInput?.focus();
+        chatProfile={...(chatProfile||{}),public_name:data.public_name,role:"visitor",identity_status:"guest",member_username:null}; chatNameNotice.textContent=""; unlockComposer(); chatInput?.focus();
       }catch(error){chatNameNotice.textContent="Hindi ma-save ang name ngayon. Subukan ulit.";console.error(error)}
       finally{chatJoin.disabled=false;}
+    }
+    async function loginChatMember(event){
+      event?.preventDefault();
+      const username=chatMemberUsername?.value.trim()||"";const password=chatMemberPassword?.value||"";
+      if(!username||!password){chatNameNotice.textContent="Ilagay ang member username at password.";return;}
+      chatMemberJoin.disabled=true;chatMemberJoin.textContent="VERIFYING…";chatNameNotice.textContent="Checking member account…";
+      try{
+        await initLiveChat();
+        const accessToken=chatSession?.access_token;if(!accessToken)throw new Error("Your chat session expired. Refresh the page and try again.");
+        const response=await fetch("/api/chat-member/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({username,password,accessToken})});
+        const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||"Member login failed.");
+        const {data:profile,error}=await chatDb.from("chat_profiles").select("user_id,public_name,role,identity_status,member_username,identity_verified_at,strikes,mute_until,banned_at").eq("user_id",chatSession.user.id).single();
+        if(error||!profile)throw new Error("Verified chat profile could not be loaded.");
+        chatProfile=profile;chatMemberPassword.value="";chatNameNotice.textContent="";unlockComposer();await reloadChatMessages();chatInput?.focus();
+        renderChatNotice(profile.identity_status==="verified"?`Welcome, ${profile.public_name}. Your VERIFIED member badge is active.`:`Welcome, ${profile.public_name}. Your account is currently marked UNVERIFIED.`,"info",6500);
+      }catch(error){chatNameNotice.textContent=error.message||"Member login failed.";if(chatMemberPassword)chatMemberPassword.value="";chatMemberPassword?.focus();}
+      finally{chatMemberJoin.disabled=false;chatMemberJoin.textContent="VERIFY MEMBER";}
     }
     function openVisitorNameEditor(){
       if(!chatDb||chatProfile?.role!=="visitor")return;
@@ -3757,7 +3797,7 @@
         await initLiveChat();
         const {data,error}=await chatDb.auth.signInWithPassword({email:AQUILA_CHAT_CONFIG.adminEmail,password});
         if(error) throw error;
-        const {data:profile,error:profileError}=await chatDb.from("chat_profiles").select("user_id,public_name,role,strikes,mute_until,banned_at").eq("user_id",data.user.id).maybeSingle();
+        const {data:profile,error:profileError}=await chatDb.from("chat_profiles").select("user_id,public_name,role,identity_status,member_username,identity_verified_at,strikes,mute_until,banned_at").eq("user_id",data.user.id).maybeSingle();
         if(profileError||profile?.role!=="admin"){
           await chatDb.auth.signOut();
           const restored=await chatDb.auth.signInAnonymously();
@@ -3802,12 +3842,13 @@
       const {data,error}=await chatDb.auth.signInAnonymously();
       if(error){location.reload();return;}
       chatSession=data.session;chatProfile=null;setInlineAdminMode(false);
-      chatPanel?.classList.remove("visitor-mode","admin-mode");
+      chatPanel?.classList.remove("visitor-mode","admin-mode","member-mode");
       chatNameGate?.classList.remove("hidden");closeVisitorNameEditor();cancelEditOwnMessage();
       if(voiceRecording)await finishVoiceRecording();stopVoiceTracks();clearPendingMedia();cancelReply();
       if(chatInput){chatInput.value="";chatInput.style.height="auto";chatInput.disabled=true;}
       if(chatSend)chatSend.disabled=true;if(chatPhotoButton)chatPhotoButton.disabled=true;if(chatVoiceButton)chatVoiceButton.disabled=true;
       if(chatDisplayName)chatDisplayName.value="";if(chatAdminPassword)chatAdminPassword.value="";
+      if(chatMemberForm)chatMemberForm.reset();setChatLoginMode("guest");
       if(chatPrivateState)chatPrivateState.textContent="Chatting as visitor";
       chatMentionSuggest?.classList.remove("show");syncAdminGate();
       subscribeToLiveChat(data.user.id);await reloadChatMessages();
@@ -3972,6 +4013,9 @@
       if(!event.target.closest("#chatMessages")&&!event.target.closest("textarea,input,select")&&!event.target.closest(".chat-photo-viewer"))event.preventDefault();
     },{passive:false});
     chatJoin?.addEventListener("click",joinLiveChat);
+    chatModeGuest?.addEventListener("click",()=>setChatLoginMode("guest"));
+    chatModeMember?.addEventListener("click",()=>setChatLoginMode("member"));
+    chatMemberForm?.addEventListener("submit",loginChatMember);
     chatDisplayName?.addEventListener("input",syncAdminGate);
     chatDisplayName?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
     chatAdminPassword?.addEventListener("keydown",event=>{if(event.key==="Enter") joinLiveChat()});
