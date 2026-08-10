@@ -9,6 +9,8 @@ const PUBLIC_BURST_LIMIT = 5;
 const MEMBER_BURST_LIMIT = 20;
 const MEMBER_SESSION_SECONDS = 60 * 60 * 24 * 7;
 const MEMBER_PORTAL_API_URL = "https://script.google.com/macros/s/AKfycbzcUHswAZKxJ6WXRM5RThhSmVn0U0wxbshY2wPVhj7jFzCih-J1A8SoKR10Y6Ue1RUx/exec";
+const SUPABASE_URL = "https://jkewnkgkcjiszwvszkkw.supabase.co";
+const CHAT_LOGIN_LIMIT = 10;
 
 const APPROVED_STARTER_KNOWLEDGE = `
 Aquila Crest Capital public website knowledge (temporary starter source):
@@ -166,6 +168,84 @@ function handleMemberLogout() {
   return json({ success: true, access: "public" }, 200, {
     "set-cookie": "aquila_ai_session=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax"
   });
+}
+
+async function reserveChatLoginAttempt(request, env) {
+  if (!env.AI_LIMITS || !env.AI_AUTH_SECRET) return { ok: true };
+  const visitor = await getVisitorHash(request, env);
+  const key = `chat-login:10m:${Math.floor(Date.now() / 600000)}:${visitor}`;
+  const raw = await env.AI_LIMITS.get(key);
+  const count = Math.max(0, Number.parseInt(raw || "0", 10) || 0);
+  if (count >= CHAT_LOGIN_LIMIT) return { error: "Too many login attempts. Please wait 10 minutes and try again.", status: 429 };
+  await env.AI_LIMITS.put(key, String(count + 1), { expirationTtl: 900 });
+  return { ok: true };
+}
+
+async function getSupabaseUser(accessToken, env) {
+  if (!env.SUPABASE_SECRET_KEY || !accessToken) return null;
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    headers: { apikey: env.SUPABASE_SECRET_KEY, authorization: `Bearer ${accessToken}` }
+  });
+  if (!response.ok) return null;
+  const user = await response.json().catch(() => null);
+  return user?.id ? user : null;
+}
+
+async function saveChatIdentity(userId, identity, env) {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/chat_profiles?on_conflict=user_id`, {
+    method: "POST",
+    headers: {
+      apikey: env.SUPABASE_SECRET_KEY,
+      "content-type": "application/json",
+      prefer: "resolution=merge-duplicates,return=representation"
+    },
+    body: JSON.stringify({
+      user_id: userId,
+      public_name: identity.fullName.slice(0, 30),
+      role: "visitor",
+      identity_status: identity.status.toLowerCase(),
+      member_username: identity.username,
+      identity_verified_at: new Date().toISOString()
+    })
+  });
+  if (!response.ok) {
+    console.error("Chat identity profile update failed", response.status, await response.text());
+    return null;
+  }
+  const rows = await response.json().catch(() => []);
+  return Array.isArray(rows) ? rows[0] : null;
+}
+
+async function handleChatMemberLogin(request, env) {
+  if (request.method !== "POST") return json({ error: "Method not allowed." }, 405, { allow: "POST" });
+  if (!env.AI_AUTH_SECRET || !env.SUPABASE_SECRET_KEY) return json({ error: "Community member login is not configured yet." }, 503);
+  const attempt = await reserveChatLoginAttempt(request, env);
+  if (attempt.error) return json({ error: attempt.error }, attempt.status, { "retry-after": "600" });
+
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Invalid request." }, 400); }
+  const username = typeof body?.username === "string" ? body.username.trim() : "";
+  const password = typeof body?.password === "string" ? body.password : "";
+  const accessToken = typeof body?.accessToken === "string" ? body.accessToken : "";
+  if (!username || !password || username.length > 80 || password.length > 200) return json({ error: "Enter your member username and password." }, 400);
+
+  const supabaseUser = await getSupabaseUser(accessToken, env);
+  if (!supabaseUser) return json({ error: "Your chat session expired. Refresh the page and try again." }, 401);
+
+  const authResponse = await fetch(MEMBER_PORTAL_API_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ action: "CHAT_MEMBER_LOGIN", apiSecret: env.AI_AUTH_SECRET, username, password })
+  });
+  if (!authResponse.ok) return json({ error: "Member verification is temporarily unavailable." }, 502);
+  const result = await authResponse.json().catch(() => null);
+  if (!result?.success) return json({ error: result?.message || "Invalid username or password.", code: result?.code }, 401);
+
+  const identity = { username: String(result.username), fullName: String(result.fullName || result.username), status: String(result.status || "UNVERIFIED").toUpperCase() };
+  if (identity.status !== "VERIFIED" && identity.status !== "UNVERIFIED") return json({ error: "This member status cannot access Community Live Chat." }, 403);
+  const profile = await saveChatIdentity(supabaseUser.id, identity, env);
+  if (!profile) return json({ error: "The verified chat profile could not be activated." }, 502);
+  return json({ success: true, identity: { username: identity.username, fullName: identity.fullName, status: identity.status } });
 }
 
 async function getVisitorHash(request, env) {
@@ -341,6 +421,10 @@ async function handleAssistant(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/api/chat-member/login") {
+      try { return await handleChatMemberLogin(request, env); }
+      catch (error) { console.error("Community member login error", error); return json({ error: "Community member login is temporarily unavailable." }, 500); }
+    }
     if (url.pathname === "/api/ai-auth/login") {
       try { return await handleMemberLogin(request, env); }
       catch (error) { console.error("AI member login error", error); return json({ error: "Member verification is temporarily unavailable." }, 500); }
