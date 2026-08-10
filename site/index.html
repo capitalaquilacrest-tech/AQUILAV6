@@ -1745,10 +1745,10 @@
           </div>
           <div class="decision-video-wrap" id="decisionVideoStage">
             <iframe
-              src="https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview"
+              src="https://www.youtube.com/embed/rhPY-zcegQQ?rel=0&modestbranding=1"
               title="Aquila Crest Capital — The Decision"
               loading="lazy"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture; web-share"
               allowfullscreen
               referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
@@ -4164,8 +4164,8 @@ if(!stage || !overlay) return;
           // it is only focused. Reload the preview with autoplay after the
           // user's explicit tap, which is a user gesture and is therefore
           // much more reliable on mobile Safari.
-          const base = 'https://drive.google.com/file/d/1E4V9XjBEnxVzq5AJhcFOefwjGVrALaGe/preview';
-          frame.src = base + '?autoplay=1&rm=minimal';
+          const base = 'https://www.youtube.com/embed/rhPY-zcegQQ';
+          frame.src = base + '?autoplay=1&rel=0&modestbranding=1';
           setTimeout(function(){ try { frame.focus(); } catch(e){} }, 120);
         }
       });
