@@ -676,6 +676,71 @@
       }
     }
 
+    .ai-login-label {
+      display: block;
+      margin-top: 3px;
+      color: #526681;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .ai-member-name {
+      color: #071d49;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .ai-identity-fire {
+      display: block;
+      width: max-content;
+      max-width: 100%;
+      margin-top: 5px;
+      padding: 3px 9px;
+      border: 1px solid #ffb329;
+      border-radius: 999px;
+      background: linear-gradient(
+        110deg,
+        #8f1010,
+        #ff4b0b,
+        #ffb000,
+        #ff4b0b,
+        #8f1010
+      );
+      background-size: 260% 100%;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 1000;
+      letter-spacing: .045em;
+      text-shadow: 0 1px 2px #6f1200;
+      box-shadow: 0 0 9px rgba(255, 93, 0, .62);
+      animation: aiIdentityFire 1.35s linear infinite;
+    }
+
+    @keyframes aiIdentityFire {
+      0% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 6px rgba(255, 65, 0, .48);
+      }
+
+      50% {
+        transform: scale(1.035);
+        box-shadow:
+          0 0 10px #ff9d00,
+          0 0 17px rgba(255, 55, 0, .72);
+      }
+
+      100% {
+        background-position: 100% 50%;
+        box-shadow: 0 0 6px rgba(255, 65, 0, .48);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ai-identity-fire {
+        animation: none;
+      }
+    }
+
 </style>
 
   <title>Aquila Crest Capital | Official Website</title>
@@ -4360,13 +4425,38 @@ if(!stage || !overlay) return;
     let memberAccess=false;
 
     function showMember(member){
-      memberAccess=true;dailyExhausted=false;
-      quotaLabel.textContent="Unlimited access";quotaLabel.classList.remove("empty");
-      accessCopy.innerHTML=`<strong>✓ Unlimited AI Access Active</strong>Logged in as ${escapeHtml(member.fullName||member.username)} · Identity verified`;
-      accessActions.innerHTML='<button class="ai-access-btn logout" id="aiLogout" type="button">LOG OUT</button>';
-      loginForm.classList.remove("show");loginError.classList.remove("show");
-      input.disabled=false;send.disabled=false;input.placeholder="Magtanong tungkol sa Aquila…";
-      document.getElementById("aiLogout")?.addEventListener("click",logoutMember);
+      memberAccess=true;
+      dailyExhausted=false;
+
+      quotaLabel.textContent="Unlimited access";
+      quotaLabel.classList.remove("empty");
+
+      accessCopy.innerHTML=`
+        <strong>✓ Unlimited AI Access Active</strong>
+        <span class="ai-login-label">
+          LOGGED IN AS:
+          <b class="ai-member-name">
+            ${escapeHtml(member.fullName||member.username)}
+          </b>
+        </span>
+        <span class="ai-identity-fire">
+          🔥 IDENTITY VERIFIED 🔥
+        </span>
+      `;
+
+      accessActions.innerHTML=
+        '<button class="ai-access-btn logout" id="aiLogout" type="button">LOG OUT</button>';
+
+      loginForm.classList.remove("show");
+      loginError.classList.remove("show");
+
+      input.disabled=false;
+      send.disabled=false;
+      input.placeholder="Magtanong tungkol sa Aquila…";
+
+      document
+        .getElementById("aiLogout")
+        ?.addEventListener("click",logoutMember);
     }
     function showGuest(){
       memberAccess=false;
