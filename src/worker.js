@@ -148,6 +148,22 @@ async function reservePublicQuota(request, env) {
   };
 }
 
+async function getPublicQuotaStatus(request, env) {
+  if (!env.AI_LIMITS || !env.AI_AUTH_SECRET) {
+    return { error: "AI access protection is not configured yet.", status: 503 };
+  }
+  const visitor = await getVisitorHash(request, env);
+  const dailyStorageKey = `public:day:${phDateKey()}:${visitor}`;
+  const dailyRaw = await env.AI_LIMITS.get(dailyStorageKey);
+  const used = Math.max(0, Number.parseInt(dailyRaw || "0", 10) || 0);
+  return {
+    access: "public",
+    limit: PUBLIC_DAILY_LIMIT,
+    used: Math.min(PUBLIC_DAILY_LIMIT, used),
+    remaining: Math.max(0, PUBLIC_DAILY_LIMIT - used)
+  };
+}
+
 async function releaseReservedQuota(env, quota) {
   if (!quota?.dailyStorageKey || !quota?.burstStorageKey) return;
   await Promise.allSettled([
@@ -157,7 +173,12 @@ async function releaseReservedQuota(env, quota) {
 }
 
 async function handleAssistant(request, env) {
-  if (request.method !== "POST") return json({ error: "Method not allowed." }, 405, { allow: "POST" });
+  if (request.method === "GET") {
+    const status = await getPublicQuotaStatus(request, env);
+    if (status.error) return json({ error: status.error }, status.status);
+    return json(status);
+  }
+  if (request.method !== "POST") return json({ error: "Method not allowed." }, 405, { allow: "GET, POST" });
   if (!env.OPENAI_API_KEY) return json({ error: "AI Assistant is not configured yet." }, 503);
 
   let body;
