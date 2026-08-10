@@ -12,6 +12,12 @@
       "fallthrough": true
     }
   ],
+  "kv_namespaces": [
+    {
+      "binding": "AI_LIMITS",
+      "id": "9e1c9ebb099e4a69af6f0caa346866f0"
+    }
+  ],
   "assets": {
     "directory": "./site",
     "binding": "ASSETS",
