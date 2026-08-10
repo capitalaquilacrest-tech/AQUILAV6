@@ -4209,5 +4209,67 @@ if(!stage || !overlay) return;
     })();
 
 </script>
+<script>
+  (function(){
+    const orb=document.getElementById("aiOrb");
+    const panel=document.getElementById("aiPanel");
+    const close=document.getElementById("aiClose");
+    const form=document.getElementById("aiForm");
+    const input=document.getElementById("aiInput");
+    const send=document.getElementById("aiSend");
+    const messages=document.getElementById("aiMessages");
+    const suggestions=document.getElementById("aiSuggestions");
+    const history=[];
+    let waiting=false;
+
+    function setOpen(open){
+      panel.classList.toggle("show",open);
+      panel.setAttribute("aria-hidden",String(!open));
+      orb.setAttribute("aria-expanded",String(open));
+      if(open){document.getElementById("chatClose")?.click();setTimeout(()=>input.focus(),80);}
+    }
+    function addMessage(role,text,pending=false){
+      const row=document.createElement("div");
+      row.className=`ai-message ${role}${pending?" pending":""}`;
+      const bubble=document.createElement("div");
+      bubble.className="ai-bubble";
+      bubble.textContent=text;
+      row.appendChild(bubble);
+      messages.appendChild(row);
+      messages.scrollTop=messages.scrollHeight;
+      return row;
+    }
+    async function ask(question){
+      const text=question.trim();
+      if(!text||waiting)return;
+      suggestions?.remove();
+      addMessage("user",text);
+      input.value="";
+      waiting=true;input.disabled=true;send.disabled=true;
+      const pending=addMessage("assistant","Sinusuri ko ang approved Aquila information…",true);
+      try{
+        const response=await fetch("/api/ai-assistant",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({message:text,history:history.slice(-8)})});
+        const data=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(data.error||"Hindi available ang AI Assistant ngayon.");
+        pending.remove();
+        addMessage("assistant",data.answer);
+        history.push({role:"user",content:text},{role:"assistant",content:data.answer});
+        if(history.length>8)history.splice(0,history.length-8);
+      }catch(error){
+        pending.remove();
+        addMessage("assistant",error.message||"Hindi available ang AI Assistant ngayon. Pakisubukan ulit mamaya.");
+      }finally{
+        waiting=false;input.disabled=false;send.disabled=false;input.focus();
+      }
+    }
+    orb?.addEventListener("click",()=>setOpen(!panel.classList.contains("show")));
+    close?.addEventListener("click",()=>setOpen(false));
+    form?.addEventListener("submit",event=>{event.preventDefault();ask(input.value);});
+    input?.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();form.requestSubmit();}});
+    suggestions?.addEventListener("click",event=>{const button=event.target.closest("button");if(button)ask(button.textContent);});
+    document.getElementById("supportOrb")?.addEventListener("click",()=>setOpen(false));
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&panel.classList.contains("show"))setOpen(false);});
+  })();
+</script>
 </body>
 </html>
