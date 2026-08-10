@@ -193,6 +193,7 @@ async function getSupabaseUser(accessToken, env) {
 
 async function saveChatIdentity(userId, identity, env) {
   const profile = {
+    display_name: identity.fullName.slice(0, 30),
     public_name: identity.fullName.slice(0, 30),
     role: "visitor",
     identity_status: identity.status.toLowerCase(),
