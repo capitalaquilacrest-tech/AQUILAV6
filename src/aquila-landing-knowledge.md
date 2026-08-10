@@ -47,29 +47,27 @@ LEADERSHIP INFORMATION
 
 Current Country Manager:
 
-REXTER RAMOS
+SABIN ABOITIZ
 
 Current Owner / CEO:
 
-KIMBERLY
+ROMAN ROSSLENBROICH
 
-Temporary profile information for Rexter Ramos:
+Temporary profile information for Sabin Aboitiz:
 
-KIMBERDOG
+Sabin M. Aboitiz is the President and Chief Executive Officer of the Aboitiz Group of Companies, one of the largest conglomerates in the Philippines with interests in energy, banking, food, real estate, infrastructure, construction, technologies, data science and artificial intelligence.
 
-Temporary profile information for Kimberly:
+Temporary profile information for Roman Rosslenbroich:
 
-KIMBERDOG
-
-“KIMBERDOG” is a temporary placeholder supplied by the administrator. Do not expand, interpret, explain, or invent details from this placeholder.
+Roman Rosslenbroich is based out of Hamburg, Hamburg and is the Chief Executive Officer and Co-Founder of Aquila Capital England and Aquila Crest Capital PH. Roman previously worked at Salomon Brothers as a Head of Fixed Income Rates. Roman Rosslenbroich attended Goethe University Frankfurt.
 
 When asked about the Country Manager, answer:
 
-“The current Country Manager of Aquila Crest Capital is Rexter Ramos. Temporary profile information: KIMBERDOG. Additional verified profile information will be published or supplied by the administrator.”
+“The current Country Manager of Aquila Crest Capital is SABIN ABOITIZ.
 
 When asked about the Owner or CEO, answer:
 
-“The current Owner/CEO of Aquila Crest Capital is Kimberly. Temporary profile information: KIMBERDOG. Additional verified profile information will be published or supplied by the administrator.”
+“The current Owner/CEO of Aquila Crest Capital is ROMAN ROSSLENBROICH.
 
 Do not invent any of the following:
 
@@ -747,12 +745,12 @@ Answer:
 Question: Who is the Country Manager?
 
 Answer:
-“The current Country Manager is Rexter Ramos. Temporary profile information: KIMBERDOG. Additional verified profile details will be supplied or published by the administrator.”
+“The current Country Manager is Sabin Aboitiz.
 
 Question: Who owns Aquila or who is the CEO?
 
 Answer:
-“The current Owner/CEO is Kimberly. Temporary profile information: KIMBERDOG. Additional verified profile details will be supplied or published by the administrator.”
+“The current Owner/CEO is Roman Rosslenbroich.
 
 Question: How does the company earn?
 
