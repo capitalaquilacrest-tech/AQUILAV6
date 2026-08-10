@@ -3055,6 +3055,8 @@
     let chatSession = null;
     let chatProfile = null;
     let chatChannel = null;
+    let chatLiveFallbackTimer = null;
+    let chatReconnectTimer = null;
     let chatReady = false;
     let unreadCount = 0;
     let latestVisibleMessageAt = "";
@@ -3458,10 +3460,11 @@
       }
       if(chatPrivateState){const label=chatProfile?.identity_status==="verified"?" · VERIFIED":chatProfile?.identity_status==="unverified"?" · UNVERIFIED":" · GUEST";chatPrivateState.textContent=enabled?"ACC Admin · OFFICIAL ADMIN":`Chatting as ${chatProfile?.public_name||"visitor"}${label}`;}
     }
-    async function fetchVisibleMessages({before=null,limit=AQUILA_CHAT_CONFIG.initialMessageLimit}={}){
+    async function fetchVisibleMessages({before=null,after=null,limit=AQUILA_CHAT_CONFIG.initialMessageLimit}={}){
       const runQuery=fields=>{
         let query=chatDb.from("chat_messages").select(fields).eq("status","visible").order("created_at",{ascending:false}).limit(limit);
         if(before)query=query.lt("created_at",before);
+        if(after)query=query.gt("created_at",after);
         return query;
       };
       let result=await runQuery(richMessageFields);
@@ -3821,8 +3824,8 @@
         (notices||[]).forEach(n=>renderChatNotice(n));
         if(chatProfile){
           unlockComposer();
-          await reloadChatMessages();
           subscribeToLiveChat(userId);
+          await reloadChatMessages();
         }
         if(support){ setConnection(support.status_text|| (support.is_online?"Support online":"Support offline"),support.is_online); }
       }catch(error){
@@ -3858,9 +3861,45 @@
         .subscribe(async status=>{
           if(status==="SUBSCRIBED"){
             await chatChannel.track({online_at:new Date().toISOString()});
-            if(chatStatusText?.textContent==="Connecting…") setConnection("Community connected",true);
+            setConnection("Community connected",true);
+            startChatLiveFallback();
+            await syncNewChatMessages();
+          }else if(["CHANNEL_ERROR","TIMED_OUT","CLOSED"].includes(status)){
+            setConnection("Reconnecting…",false);
+            startChatLiveFallback();
+            scheduleChatRealtimeReconnect(userId);
           }
         });
+    }
+    function startChatLiveFallback(){
+      if(chatLiveFallbackTimer)return;
+      chatLiveFallbackTimer=window.setInterval(()=>{
+        if(!document.hidden&&chatPanel?.classList.contains("show")&&chatProfile)syncNewChatMessages();
+      },5000);
+    }
+    function scheduleChatRealtimeReconnect(userId){
+      if(chatReconnectTimer)return;
+      chatReconnectTimer=window.setTimeout(async()=>{
+        chatReconnectTimer=null;
+        if(!chatDb||!chatProfile||!navigator.onLine)return;
+        const failedChannel=chatChannel;chatChannel=null;
+        if(failedChannel){try{await chatDb.removeChannel(failedChannel);}catch(_){} }
+        subscribeToLiveChat(userId);
+      },3000);
+    }
+    async function syncNewChatMessages(){
+      if(!chatDb||!chatProfile)return;
+      const after=latestVisibleMessageAt||null;
+      const {data,error}=await fetchVisibleMessages({after,limit:20});
+      if(error){console.error("Live chat catch-up:",error);return;}
+      if(!data?.length)return;
+      const userId=chatSession?.user?.id;
+      const lastSeen=storedChatLastSeenAt();
+      const closed=!chatPanel?.classList.contains("show")||document.hidden;
+      data.forEach(rememberLatestVisibleMessage);
+      data.reverse().forEach(message=>renderChatMessage(message,Boolean(closed&&lastSeen&&String(message.created_at||"")>lastSeen&&message.sender_id!==userId)));
+      if(!closed)markChatMessagesSeen();
+      await reloadReactions();
     }
     async function reconcileChatMessages(){
       if(!chatDb||!chatProfile) return;
@@ -3947,6 +3986,7 @@
       finally{chatJoin.disabled=false;}
     }
     async function resetChatSubscription(userId){
+      if(chatReconnectTimer){clearTimeout(chatReconnectTimer);chatReconnectTimer=null;}
       if(chatChannel){await chatDb.removeChannel(chatChannel);chatChannel=null;}
       subscribeToLiveChat(userId);
     }
@@ -4007,6 +4047,8 @@
     }
     async function logoutInlineAdmin(){
       if(!chatDb)return;
+      if(chatLiveFallbackTimer){clearInterval(chatLiveFallbackTimer);chatLiveFallbackTimer=null;}
+      if(chatReconnectTimer){clearTimeout(chatReconnectTimer);chatReconnectTimer=null;}
       if(chatChannel){await chatDb.removeChannel(chatChannel);chatChannel=null;}
       try{await chatDb.auth.signOut();}catch(error){console.warn("Chat logout:",error)}
       const {data,error}=await chatDb.auth.signInAnonymously();
@@ -4164,14 +4206,19 @@
       if(document.hidden)return;
       clearTimeout(unreadReturnSyncTimer);
       unreadReturnSyncTimer=setTimeout(async()=>{
-        if(chatPanel?.classList.contains("show")&&chatProfile){markChatMessagesSeen();return;}
         if(!chatReady)await initLiveChat();
-        if(chatDb&&chatSession&&chatProfile)await reconcileChatMessages();
+        if(chatDb&&chatSession&&chatProfile){
+          await syncNewChatMessages();
+          if(chatPanel?.classList.contains("show"))markChatMessagesSeen();
+        }
       },180);
     }
     document.addEventListener("visibilitychange",syncUnreadOnReturn);
     window.addEventListener("pageshow",syncUnreadOnReturn);
-    window.addEventListener("online",syncUnreadOnReturn);
+    window.addEventListener("online",async()=>{
+      if(chatDb&&chatProfile&&chatSession?.user?.id)await resetChatSubscription(chatSession.user.id);
+      syncUnreadOnReturn();
+    });
     chatClose?.addEventListener("click",()=>setChatOpen(false));
     chatMessages?.addEventListener("load",()=>scrollChatToLatestOnOpen(),true);
     chatMessages?.addEventListener("touchstart",()=>{
