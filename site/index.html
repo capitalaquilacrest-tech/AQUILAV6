@@ -3110,15 +3110,50 @@
       Object.assign(document.body.style,{position:"fixed",top:`-${chatPageScrollY}px`,left:"0",right:"0",width:"100%",overflow:"hidden"});
     }
     function unlockLandingPageForChat(){
-      if(!document.body.classList.contains("aquila-chat-open"))return;
+      if(
+        !document.body.classList.contains("aquila-chat-open") &&
+        !chatPageLockStyles
+      ) return;
+
+      const restoreScrollY=chatPageScrollY;
+
+      if(chatPanel?.contains(document.activeElement)){
+        document.activeElement?.blur?.();
+      }
+
       document.documentElement.classList.remove("aquila-chat-open");
       document.body.classList.remove("aquila-chat-open");
-      if(chatPageLockStyles)Object.assign(document.body.style,chatPageLockStyles);
+
+      if(chatPageLockStyles){
+        Object.assign(document.body.style,chatPageLockStyles);
+      }
+
       chatPageLockStyles=null;
-      window.scrollTo(0,chatPageScrollY);
+
+      window.scrollTo(0,restoreScrollY);
+
+      requestAnimationFrame(()=>{
+        window.scrollTo(0,restoreScrollY);
+      });
+
+      setTimeout(()=>{
+        window.scrollTo(0,restoreScrollY);
+      },120);
+
+      setTimeout(()=>{
+        window.scrollTo(0,restoreScrollY);
+      },320);
     }
     function setChatOpen(open){
-      if(open)lockLandingPageForChat();else unlockLandingPageForChat();
+      if(open){
+        lockLandingPageForChat();
+      }else{
+        if(chatPanel?.contains(document.activeElement)){
+          document.activeElement?.blur?.();
+        }
+
+        unlockLandingPageForChat();
+      }
       chatPanel?.classList.toggle("show",open);
       chatPanel?.setAttribute("aria-hidden",String(!open));
       supportOrb?.setAttribute("aria-expanded",String(open));
@@ -4580,10 +4615,30 @@ if(!stage || !overlay) return;
     }
 
     function setOpen(open){
+      if(!open && panel.contains(document.activeElement)){
+        document.activeElement?.blur?.();
+      }
+
       panel.classList.toggle("show",open);
       panel.setAttribute("aria-hidden",String(!open));
       orb.setAttribute("aria-expanded",String(open));
-      if(open){document.getElementById("chatClose")?.click();setTimeout(()=>input.focus(),80);}
+
+      if(open){
+        document.getElementById("chatClose")?.click();
+        setTimeout(()=>input.focus(),80);
+      }else{
+        requestAnimationFrame(()=>{
+          window.scrollBy(0,0);
+        });
+
+        setTimeout(()=>{
+          window.scrollBy(0,0);
+        },120);
+
+        setTimeout(()=>{
+          window.scrollBy(0,0);
+        },320);
+      }
     }
     function appendSafeRichText(container,text){
       const pattern=/\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)|(https?:\/\/[^\s<]+|mailto:[^\s<]+)/gi;
