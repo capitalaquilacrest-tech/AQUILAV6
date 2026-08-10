@@ -192,28 +192,37 @@ async function getSupabaseUser(accessToken, env) {
 }
 
 async function saveChatIdentity(userId, identity, env) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/chat_profiles?on_conflict=user_id`, {
-    method: "POST",
-    headers: {
-      apikey: env.SUPABASE_SECRET_KEY,
-      "content-type": "application/json",
-      prefer: "resolution=merge-duplicates,return=representation"
-    },
-    body: JSON.stringify({
-      user_id: userId,
-      public_name: identity.fullName.slice(0, 30),
-      role: "visitor",
-      identity_status: identity.status.toLowerCase(),
-      member_username: identity.username,
-      identity_verified_at: new Date().toISOString()
-    })
+  const profile = {
+    public_name: identity.fullName.slice(0, 30),
+    role: "visitor",
+    identity_status: identity.status.toLowerCase(),
+    member_username: identity.username,
+    identity_verified_at: new Date().toISOString()
+  };
+  const headers = { apikey: env.SUPABASE_SECRET_KEY, "content-type": "application/json", prefer: "return=representation" };
+  let response = await fetch(`${SUPABASE_URL}/rest/v1/chat_profiles?user_id=eq.${encodeURIComponent(userId)}`, {
+    method: "PATCH", headers, body: JSON.stringify(profile)
   });
-  if (!response.ok) {
-    console.error("Chat identity profile update failed", response.status, await response.text());
-    return null;
+  let rows = response.ok ? await response.json().catch(() => []) : [];
+  if (response.ok && Array.isArray(rows) && rows[0]) return { profile: rows[0] };
+
+  if (response.ok) {
+    response = await fetch(`${SUPABASE_URL}/rest/v1/chat_profiles`, {
+      method: "POST", headers, body: JSON.stringify({ user_id: userId, ...profile })
+    });
+    rows = response.ok ? await response.json().catch(() => []) : [];
+    if (response.ok && Array.isArray(rows) && rows[0]) return { profile: rows[0] };
   }
-  const rows = await response.json().catch(() => []);
-  return Array.isArray(rows) ? rows[0] : null;
+
+  const errorText = await response.text().catch(() => "");
+  console.error("Chat identity profile activation failed", response.status, errorText);
+  let detail = `Database ${response.status}`;
+  try {
+    const parsed = JSON.parse(errorText);
+    if (parsed?.code) detail += ` · ${parsed.code}`;
+    if (parsed?.message) detail += ` · ${String(parsed.message).slice(0, 120)}`;
+  } catch {}
+  return { error: detail };
 }
 
 async function handleChatMemberLogin(request, env) {
@@ -243,8 +252,8 @@ async function handleChatMemberLogin(request, env) {
 
   const identity = { username: String(result.username), fullName: String(result.fullName || result.username), status: String(result.status || "UNVERIFIED").toUpperCase() };
   if (identity.status !== "VERIFIED" && identity.status !== "UNVERIFIED") return json({ error: "This member status cannot access Community Live Chat." }, 403);
-  const profile = await saveChatIdentity(supabaseUser.id, identity, env);
-  if (!profile) return json({ error: "The verified chat profile could not be activated." }, 502);
+  const activation = await saveChatIdentity(supabaseUser.id, identity, env);
+  if (!activation?.profile) return json({ error: `The verified chat profile could not be activated. ${activation?.error || "Database update failed."}` }, 502);
   return json({ success: true, identity: { username: identity.username, fullName: identity.fullName, status: identity.status } });
 }
 
