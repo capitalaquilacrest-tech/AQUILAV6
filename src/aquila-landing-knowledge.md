@@ -59,7 +59,7 @@ Sabin M. Aboitiz is the President and Chief Executive Officer of the Aboitiz Gro
 
 Temporary profile information for Roman Rosslenbroich:
 
-Roman Rosslenbroich is based out of Hamburg, Hamburg and is the Chief Executive Officer and Co-Founder of Aquila Capital England and Aquila Crest Capital PH. Roman previously worked at Salomon Brothers as a Head of Fixed Income Rates. Roman Rosslenbroich attended Goethe University Frankfurt.
+Roman Rosslenbroich is based out of Hamburg, Hamburg and is the Chief Executive Officer and Co-Founder of Aquila Capital England. Roman previously worked at Salomon Brothers as a Head of Fixed Income Rates. Roman Rosslenbroich attended Goethe University Frankfurt.
 
 When asked about the Country Manager, answer:
 
