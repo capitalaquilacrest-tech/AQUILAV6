@@ -2789,6 +2789,27 @@
         closeMemberPortalModal();
       }
     });
+
+    window.addEventListener("message", async event => {
+      if (
+        !memberPortalFrame ||
+        event.source !== memberPortalFrame.contentWindow
+      ) {
+        return;
+      }
+
+      if (
+        event.data?.type !==
+        "AQUILA_DASHBOARD_LOGOUT"
+      ) {
+        return;
+      }
+
+      await logoutMember();
+
+      closeMemberPortalModal();
+      memberPortalFrame.removeAttribute("src");
+    });
     const dashboardShowcaseImage = document.querySelector(".dashboard-art img");
 
     if (dashboardShowcaseImage) {
