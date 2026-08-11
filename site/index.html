@@ -4139,6 +4139,14 @@
         );
       }
     });
+    window.addEventListener("aquila:ai-member-logout",async()=>{
+      try{
+        await initLiveChat();
+        await logoutInlineAdmin();
+      }catch(error){
+        console.error("AI to Live Chat logout sync:",error);
+      }
+    });
     function openVisitorNameEditor(){
       if(!chatDb||chatProfile?.role!=="visitor")return;
       if(chatRenameInput)chatRenameInput.value=chatProfile.public_name||"";
@@ -4260,6 +4268,7 @@
     }
     async function logoutInlineAdmin(){
       if(!chatDb)return;
+      await fetch("/api/ai-auth/logout",{method:"POST"}).catch(()=>{});
       if(chatLiveFallbackTimer){clearInterval(chatLiveFallbackTimer);chatLiveFallbackTimer=null;}
       if(chatReconnectTimer){clearTimeout(chatReconnectTimer);chatReconnectTimer=null;}
       if(chatChannel){await chatDb.removeChannel(chatChannel);chatChannel=null;}
@@ -4279,6 +4288,7 @@
       chatMessages.querySelectorAll(".chat-row,.chat-notice").forEach(node=>node.remove());renderedMessageIds.clear();
       chatLoadEarlier?.classList.remove("show");chatHistoryEnd?.classList.remove("show");oldestLoadedMessageAt="";chatHistoryHasMore=false;
       setTimeout(()=>chatDisplayName?.focus(),80);
+      window.dispatchEvent(new CustomEvent("aquila:chat-member-logout"));
     }
     function createChatUploadId(){
       if(globalThis.crypto?.randomUUID)return globalThis.crypto.randomUUID();
@@ -4785,6 +4795,12 @@ if(!stage || !overlay) return;
       }
     );
 
+    window.addEventListener("aquila:chat-member-logout",async()=>{
+      showGuest();
+      loginForm.reset();
+      await refreshQuota();
+    });
+
     async function loginMember(event){
       event.preventDefault();loginError.classList.remove("show");loginSubmit.disabled=true;loginSubmit.textContent="CHECKING…";
       try{
@@ -4811,7 +4827,11 @@ if(!stage || !overlay) return;
       finally{loginSubmit.disabled=false;loginSubmit.textContent="VERIFY";}
     }
     async function logoutMember(){
-      await fetch("/api/ai-auth/logout",{method:"POST"}).catch(()=>{});showGuest();loginForm.reset();await refreshQuota();
+      await fetch("/api/ai-auth/logout",{method:"POST"}).catch(()=>{});
+      showGuest();
+      loginForm.reset();
+      await refreshQuota();
+      window.dispatchEvent(new CustomEvent("aquila:ai-member-logout"));
     }
 
     function setOpen(open){
