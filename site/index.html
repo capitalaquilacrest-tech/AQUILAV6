@@ -696,45 +696,49 @@
       max-width: 100%;
       margin-top: 5px;
       padding: 3px 9px;
-      border: 1px solid #ffb329;
+      border: 1px solid #54e6a2;
       border-radius: 999px;
       background: linear-gradient(
         110deg,
-        #8f1010,
-        #ff4b0b,
-        #ffb000,
-        #ff4b0b,
-        #8f1010
+        #064e3b,
+        #079669,
+        #35e795,
+        #079669,
+        #064e3b
       );
       background-size: 260% 100%;
       color: #fff;
       font-size: 10px;
       font-weight: 1000;
       letter-spacing: .045em;
-      text-shadow: 0 1px 2px #6f1200;
-      box-shadow: 0 0 9px rgba(255, 93, 0, .62);
-      animation: aiIdentityFire 1.35s linear infinite;
+      text-shadow: 0 1px 2px #023d2c;
+      box-shadow:
+        0 0 9px rgba(20, 210, 125, .58);
+      animation:
+        aiIdentityFire 1.35s linear infinite;
     }
 
     @keyframes aiIdentityFire {
       0% {
         background-position: 0% 50%;
-        box-shadow: 0 0 6px rgba(255, 65, 0, .48);
+        box-shadow:
+          0 0 6px rgba(20, 210, 125, .45);
       }
 
       50% {
         transform: scale(1.035);
         box-shadow:
-          0 0 10px #ff9d00,
-          0 0 17px rgba(255, 55, 0, .72);
+          0 0 11px #36e795,
+          0 0 18px rgba(0, 190, 110, .72);
       }
 
       100% {
         background-position: 100% 50%;
-        box-shadow: 0 0 6px rgba(255, 65, 0, .48);
+        box-shadow:
+          0 0 6px rgba(20, 210, 125, .45);
       }
     }
-
+    
     @media (prefers-reduced-motion: reduce) {
       .ai-identity-fire {
         animation: none;
