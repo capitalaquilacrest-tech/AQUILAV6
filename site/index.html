@@ -4104,6 +4104,41 @@
       }catch(error){chatNameNotice.textContent=error.message||"Member login failed.";if(chatMemberPassword)chatMemberPassword.value="";chatMemberPassword?.focus();}
       finally{chatMemberJoin.disabled=false;chatMemberJoin.textContent="VERIFY MEMBER";}
     }
+    window.addEventListener("aquila:ai-member-login",async()=>{
+      try{
+        await initLiveChat();
+
+        const {data:profile,error}=await chatDb
+          .from("chat_profiles")
+          .select("user_id,public_name,role,identity_status,member_username,identity_verified_at,strikes,mute_until,banned_at")
+          .eq("user_id",chatSession.user.id)
+          .single();
+
+        if(error||!profile){
+          throw new Error("Verified Live Chat profile could not be loaded.");
+        }
+
+        chatProfile=profile;
+        chatNameNotice.textContent="";
+        unlockComposer();
+        await resetChatSubscription(chatSession.user.id);
+        await reloadChatMessages();
+        chatInput?.focus();
+
+        renderChatNotice(
+          `Welcome, ${profile.public_name}. Your VERIFIED member badge is active.`,
+          "info",
+          6500
+        );
+      }catch(error){
+        console.error("AI to Live Chat login sync:",error);
+        renderChatNotice(
+          "AI login succeeded, but Live Chat could not refresh automatically. Please reopen the chat.",
+          "warning",
+          6500
+        );
+      }
+    });
     function openVisitorNameEditor(){
       if(!chatDb||chatProfile?.role!=="visitor")return;
       if(chatRenameInput)chatRenameInput.value=chatProfile.public_name||"";
@@ -4753,10 +4788,25 @@ if(!stage || !overlay) return;
     async function loginMember(event){
       event.preventDefault();loginError.classList.remove("show");loginSubmit.disabled=true;loginSubmit.textContent="CHECKING…";
       try{
-        const response=await fetch("/api/ai-auth/login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({username:usernameInput.value,password:passwordInput.value})});
+        await initLiveChat();
+        const accessToken=chatSession?.access_token||"";
+        if(!accessToken)throw new Error("Live Chat session unavailable. Refresh the page and try again.");
+        
+        const response=await fetch("/api/ai-auth/login",{
+          method:"POST",
+          headers:{"content-type":"application/json"},
+          body:JSON.stringify({
+            username:usernameInput.value,
+            password:passwordInput.value,
+            accessToken
+          })
+        });
         const data=await response.json().catch(()=>({}));
         if(!response.ok)throw new Error(data.error||"Member login failed.");
-        passwordInput.value="";showMember(data.member);addMessage("assistant",`Welcome, ${data.member.fullName}! Identity verified. Unlimited AI access is active. Maaari ka nang magtanong anytime tungkol sa Aquila.`);
+        passwordInput.value="";
+        showMember(data.member);
+        window.dispatchEvent(new CustomEvent("aquila:ai-member-login"));
+        addMessage("assistant",`Welcome, ${data.member.fullName}! Identity verified. Unlimited AI access is active. Maaari ka nang magtanong anytime tungkol sa Aquila.`);
       }catch(error){loginError.textContent=error.message;loginError.classList.add("show");passwordInput.value="";passwordInput.focus();}
       finally{loginSubmit.disabled=false;loginSubmit.textContent="VERIFY";}
     }
