@@ -2817,7 +2817,6 @@
         messageType ===
         "AQUILA_DASHBOARD_LOGIN"
       ) {
-        alert("LANDING RECEIVED LOGIN TICKET");
         try {
           await initLiveChat();
 
@@ -2868,13 +2867,8 @@
               "aquila:ai-member-login"
             )
           );
-
-        alert("LANDING SYNC COMPLETE");
+          
         } catch (error) {
-          alert(
-            "LANDING SYNC ERROR: " +
-            error.message
-          );
           console.error(
             "Dashboard to landing login sync:",
             error
