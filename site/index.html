@@ -2798,17 +2798,77 @@
         return;
       }
 
+      const messageType = event.data?.type;
+
       if (
-        event.data?.type !==
-        "AQUILA_DASHBOARD_LOGOUT"
+        messageType ===
+        "AQUILA_DASHBOARD_LOGIN"
       ) {
+        try {
+          await initLiveChat();
+
+          const accessToken =
+            chatSession?.access_token || "";
+
+          if (!accessToken) {
+            throw new Error(
+              "Live Chat session is unavailable."
+            );
+          }
+
+          const response = await fetch(
+            "/api/landing-sso/consume",
+            {
+              method: "POST",
+              headers: {
+                "content-type":
+                  "application/json"
+              },
+              body: JSON.stringify({
+                ticket: event.data?.ticket || "",
+                accessToken
+              })
+            }
+          );
+
+          const result =
+            await response
+              .json()
+              .catch(() => ({}));
+
+          if (!response.ok || !result.success) {
+            throw new Error(
+              result.error ||
+              "Landing login synchronization failed."
+            );
+          }
+
+          showMember(result.member);
+
+          window.dispatchEvent(
+            new CustomEvent(
+              "aquila:ai-member-login"
+            )
+          );
+        } catch (error) {
+          console.error(
+            "Dashboard to landing login sync:",
+            error
+          );
+        }
+
         return;
       }
 
-      await logoutMember();
+      if (
+        messageType ===
+        "AQUILA_DASHBOARD_LOGOUT"
+      ) {
+        await logoutMember();
 
-      closeMemberPortalModal();
-      memberPortalFrame.removeAttribute("src");
+        closeMemberPortalModal();
+        memberPortalFrame.removeAttribute("src");
+      }
     });
     const dashboardShowcaseImage = document.querySelector(".dashboard-art img");
 
