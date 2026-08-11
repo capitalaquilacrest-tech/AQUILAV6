@@ -144,6 +144,7 @@ async function handleMemberLogin(request, env) {
   try { body = await request.json(); } catch { return json({ error: "Invalid request." }, 400); }
   const username = typeof body?.username === "string" ? body.username.trim() : "";
   const password = typeof body?.password === "string" ? body.password : "";
+  const accessToken = typeof body?.accessToken === "string" ? body.accessToken : "";
   if (!username || !password || username.length > 80 || password.length > 200) {
     return json({ error: "Enter your username and password." }, 400);
   }
@@ -157,9 +158,45 @@ async function handleMemberLogin(request, env) {
   const result = await authResponse.json().catch(() => null);
   if (!result?.success) return json({ error: result?.message || "Invalid username or password.", code: result?.code }, 401);
 
-  const member = { username: String(result.username), fullName: String(result.fullName || result.username) };
+  const member = {
+    username: String(result.username),
+    fullName: String(result.fullName || result.username)
+  };
+
+  let chatLinked = false;
+
+  if (accessToken && env.SUPABASE_SECRET_KEY) {
+    const supabaseUser = await getSupabaseUser(accessToken, env);
+
+    if (!supabaseUser) {
+      return json({
+        error: "Your Live Chat session expired. Refresh the page and try again."
+      }, 401);
+    }
+
+    const activation = await saveChatIdentity(supabaseUser.id, {
+      username: member.username,
+      fullName: member.fullName,
+      status: "VERIFIED"
+    }, env);
+
+    if (!activation?.profile) {
+      return json({
+        error: `AI login succeeded, but Live Chat could not be linked. ${activation?.error || "Database update failed."}`
+      }, 502);
+    }
+
+    chatLinked = true;
+  }
+
   const token = await createMemberToken(member, env);
-  return json({ success: true, access: "member", member }, 200, {
+
+  return json({
+    success: true,
+    access: "member",
+    member,
+    chatLinked
+  }, 200, {
     "set-cookie": `aquila_ai_session=${encodeURIComponent(token)}; Max-Age=${MEMBER_SESSION_SECONDS}; Path=/; HttpOnly; Secure; SameSite=Lax`
   });
 }
