@@ -1807,6 +1807,126 @@
     @media(prefers-reduced-motion:reduce){
       .intro::before,.intro::after,.liquid-arc,.liquid-thread,.liquid-glint{animation:none!important}
     }
+    .portal-modal{
+      position:fixed;
+      inset:0;
+      z-index:100000;
+      display:none;
+      padding:12px;
+      background:rgba(2,12,34,.78);
+      -webkit-backdrop-filter:blur(10px);
+      backdrop-filter:blur(10px);
+      overscroll-behavior:contain;
+    }
+
+    .portal-modal.show{
+      display:grid;
+      place-items:center;
+    }
+
+    .portal-modal-shell{
+      width:min(1100px,100%);
+      height:calc(100dvh - 24px);
+      max-height:920px;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      border:1px solid rgba(255,211,92,.72);
+      border-radius:24px;
+      background:#fff;
+      box-shadow:0 28px 100px rgba(0,0,0,.48);
+    }
+
+    .portal-modal-header{
+      flex:0 0 auto;
+      min-height:68px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:
+        max(12px,env(safe-area-inset-top))
+        16px
+        12px;
+      color:#fff;
+      background:
+        linear-gradient(135deg,#071f53,#1258c7 58%,#be1838);
+    }
+
+    .portal-modal-header div{
+      min-width:0;
+    }
+
+    .portal-modal-header strong{
+      display:block;
+      font-size:15px;
+      letter-spacing:.06em;
+    }
+
+    .portal-modal-header span{
+      display:block;
+      margin-top:3px;
+      color:#dce9ff;
+      font-size:11px;
+      line-height:1.35;
+    }
+
+    .portal-modal-close{
+      flex:0 0 42px;
+      width:42px;
+      height:42px;
+      border:1px solid rgba(255,255,255,.35);
+      border-radius:13px;
+      color:#fff;
+      background:rgba(255,255,255,.14);
+      font-size:28px;
+      line-height:1;
+      cursor:pointer;
+    }
+
+    .portal-modal-close:hover{
+      background:rgba(255,255,255,.25);
+    }
+
+    #memberPortalFrame{
+      flex:1 1 auto;
+      width:100%;
+      min-height:0;
+      border:0;
+      background:#f4f7fc;
+    }
+
+    body.portal-modal-open{
+      overflow:hidden;
+    }
+
+    @media(max-width:800px){
+      .portal-modal{
+        padding:0;
+      }
+
+      .portal-modal-shell{
+        width:100%;
+        height:100dvh;
+        max-height:none;
+        border:0;
+        border-radius:0;
+      }
+
+      .portal-modal-header{
+        min-height:62px;
+        padding-left:14px;
+        padding-right:10px;
+      }
+
+      .portal-modal-header strong{
+        font-size:13px;
+      }
+
+      .portal-modal-header span{
+        font-size:10px;
+      }
+    }
 </style>
 </head>
 <body>
@@ -2540,6 +2660,43 @@
     </div>
   </footer>
 
+  <div
+    class="portal-modal"
+    id="memberPortalModal"
+    aria-hidden="true"
+  >
+    <div
+      class="portal-modal-shell"
+      role="dialog"
+      aria-modal="true"
+      aria-label="ACC Member Portal"
+    >
+      <div class="portal-modal-header">
+        <div>
+          <strong>ACC MEMBER PORTAL</strong>
+          <span>Secure login, registration, and account recovery</span>
+        </div>
+
+        <button
+          class="portal-modal-close"
+          id="memberPortalClose"
+          type="button"
+          aria-label="Close Member Portal"
+        >
+          ×
+        </button>
+      </div>
+
+      <iframe
+        id="memberPortalFrame"
+        title="ACC Member Portal"
+        data-src="https://script.google.com/macros/s/AKfycbzcUHswAZKxJ6WXRM5RThhSmVn0U0wxbshY2wPVhj7jFzCih-J1A8SoKR10Y6Ue1RUx/exec"
+        referrerpolicy="no-referrer"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </div>
+  
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const DASHBOARD_URL = "https://script.google.com/macros/s/AKfycbzcUHswAZKxJ6WXRM5RThhSmVn0U0wxbshY2wPVhj7jFzCih-J1A8SoKR10Y6Ue1RUx/exec";
@@ -2549,6 +2706,89 @@
     const progress = document.getElementById("progress");
     const frame = document.getElementById("dashboardFrame");
     const stage = document.getElementById("stage");
+    const memberPortalModal =
+      document.getElementById("memberPortalModal");
+
+    const memberPortalFrame =
+      document.getElementById("memberPortalFrame");
+
+    const memberPortalClose =
+      document.getElementById("memberPortalClose");
+
+    let memberPortalReturnFocus = null;
+
+    function openMemberPortalModal() {
+      if (!memberPortalModal || !memberPortalFrame) {
+        window.location.href = DASHBOARD_URL;
+        return;
+      }
+
+      memberPortalReturnFocus =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+
+      if (!memberPortalFrame.getAttribute("src")) {
+        memberPortalFrame.setAttribute(
+          "src",
+          memberPortalFrame.dataset.src ||
+          DASHBOARD_URL
+        );
+      }
+
+      memberPortalModal.classList.add("show");
+      memberPortalModal.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      document.body.classList.add(
+        "portal-modal-open"
+      );
+
+      setTimeout(() => {
+        memberPortalClose?.focus();
+      }, 50);
+    }
+
+    function closeMemberPortalModal() {
+      if (!memberPortalModal) return;
+
+      memberPortalModal.classList.remove("show");
+      memberPortalModal.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      document.body.classList.remove(
+        "portal-modal-open"
+      );
+
+      memberPortalReturnFocus?.focus?.();
+    }
+
+    memberPortalClose?.addEventListener(
+      "click",
+      closeMemberPortalModal
+    );
+
+    memberPortalModal?.addEventListener(
+      "click",
+      event => {
+        if (event.target === memberPortalModal) {
+          closeMemberPortalModal();
+        }
+      }
+    );
+
+    document.addEventListener("keydown", event => {
+      if (
+        event.key === "Escape" &&
+        memberPortalModal?.classList.contains("show")
+      ) {
+        closeMemberPortalModal();
+      }
+    });
     const dashboardShowcaseImage = document.querySelector(".dashboard-art img");
 
     if (dashboardShowcaseImage) {
@@ -2753,7 +2993,10 @@
             return;
           }
 
-          window.location.href = DASHBOARD_URL;
+          button.disabled = false;
+          button.textContent = originalText;
+          openMemberPortalModal();
+          return;
 
         } catch (error) {
           console.error(
@@ -2761,7 +3004,10 @@
             error
           );
 
-          window.location.href = DASHBOARD_URL;
+          button.disabled = false;
+          button.textContent = originalText;
+          openMemberPortalModal();
+          return;
         }
 
         setTimeout(() => {
@@ -4792,7 +5038,35 @@ if(!stage || !overlay) return;
     let dailyExhausted=false;
     let memberAccess=false;
 
+    function updateDashboardAccessButtons(isLoggedIn) {
+      document
+        .querySelectorAll("[data-dashboard]")
+        .forEach(button => {
+          const currentLabel =
+            String(button.textContent || "")
+              .trim()
+              .toUpperCase();
+
+          const isDashboardLoginButton =
+            currentLabel === "LOGIN DASHBOARD" ||
+            currentLabel === "VIEW DASHBOARD" ||
+            button.dataset.dashboardAccessButton === "true";
+
+          if (!isDashboardLoginButton) return;
+
+          const newLabel =
+            isLoggedIn
+              ? "VIEW DASHBOARD"
+              : "LOGIN DASHBOARD";
+
+          button.dataset.dashboardAccessButton = "true";
+          button.dataset.dashboardOriginalText = newLabel;
+          button.textContent = newLabel;
+        });
+    }
+
     function showMember(member){
+      updateDashboardAccessButtons(true);
       memberAccess=true;
       dailyExhausted=false;
 
@@ -4827,6 +5101,7 @@ if(!stage || !overlay) return;
         ?.addEventListener("click",logoutMember);
     }
     function showGuest(){
+      updateDashboardAccessButtons(false);
       memberAccess=false;
       accessCopy.innerHTML='<strong>Unlimited AI Access</strong>Already have an account? <span class="ai-access-action">LOG IN</span>. New user? <span class="ai-access-action">CREATE ACCOUNT</span> and <span class="ai-access-action">COMPLETE ID VERIFICATION</span>.<span class="ai-no-deposit">🔥 NO DEPOSIT REQUIRED 🔥</span>';
       accessActions.innerHTML='<button class="ai-access-btn" id="aiLoginToggle" type="button">LOG IN</button><a class="ai-access-btn secondary" href="https://script.google.com/macros/s/AKfycbzcUHswAZKxJ6WXRM5RThhSmVn0U0wxbshY2wPVhj7jFzCih-J1A8SoKR10Y6Ue1RUx/exec" target="_blank" rel="noopener">CREATE ACCOUNT</a>';
