@@ -2882,7 +2882,24 @@
         messageType ===
         "AQUILA_DASHBOARD_LOGOUT"
       ) {
-        await logoutMember();
+        await fetch(
+          "/api/ai-auth/logout",
+          {
+            method: "POST"
+          }
+        ).catch(() => {});
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "aquila:chat-member-logout"
+          )
+        );
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "aquila:ai-member-logout"
+          )
+        );
 
         closeMemberPortalModal();
         memberPortalFrame.removeAttribute("src");
