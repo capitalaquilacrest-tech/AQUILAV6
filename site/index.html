@@ -4097,6 +4097,9 @@
         const {data:profile,error}=await chatDb.from("chat_profiles").select("user_id,public_name,role,identity_status,member_username,identity_verified_at,strikes,mute_until,banned_at").eq("user_id",chatSession.user.id).single();
         if(error||!profile)throw new Error("Verified chat profile could not be loaded.");
         chatProfile=profile;chatMemberPassword.value="";chatNameNotice.textContent="";unlockComposer();subscribeToLiveChat(chatSession.user.id);await reloadChatMessages();chatInput?.focus();
+        window.dispatchEvent(
+          new CustomEvent("aquila:member-auth-changed")
+        );
         renderChatNotice(profile.identity_status==="verified"?`Welcome, ${profile.public_name}. Your VERIFIED member badge is active.`:`Welcome, ${profile.public_name}. Your account is currently marked UNVERIFIED.`,"info",6500);
       }catch(error){chatNameNotice.textContent=error.message||"Member login failed.";if(chatMemberPassword)chatMemberPassword.value="";chatMemberPassword?.focus();}
       finally{chatMemberJoin.disabled=false;chatMemberJoin.textContent="VERIFY MEMBER";}
@@ -4739,6 +4742,13 @@ if(!stage || !overlay) return;
         else quotaLabel.textContent="Free access status unavailable";
       }catch(_){quotaLabel.textContent="Free access status unavailable";}
     }
+
+    window.addEventListener(
+      "aquila:member-auth-changed",
+      ()=>{
+        refreshQuota();
+      }
+    );
 
     async function loginMember(event){
       event.preventDefault();loginError.classList.remove("show");loginSubmit.disabled=true;loginSubmit.textContent="CHECKING…";
