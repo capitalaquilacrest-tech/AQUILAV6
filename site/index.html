@@ -810,7 +810,10 @@
   <meta name="twitter:title" content="Aquila Crest Capital | Official Website">
   <meta name="twitter:description" content="The official corporate website of Aquila Crest Capital & Renewable Inc.">
   <meta name="twitter:image" content="https://aquilacrestcapital.com/assets/og-image.jpg">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+  >
   <meta name="theme-color" content="#071d49">
   <link rel="canonical" href="https://aquilacrestcapital.com/">
   <link rel="manifest" href="/manifest.webmanifest">
@@ -4752,17 +4755,8 @@ if(!stage || !overlay) return;
     }
 
     function setOpen(open){
-      if(open){
-        // Close Live Chat first, then lock the landing page
-        // exactly like the Live Chat behavior.
-        document.getElementById("chatClose")?.click();
-        lockLandingPageForChat();
-      }else{
-        if(panel.contains(document.activeElement)){
-          document.activeElement?.blur?.();
-        }
-
-        unlockLandingPageForChat();
+      if(!open && panel.contains(document.activeElement)){
+        document.activeElement.blur();
       }
 
       panel.classList.toggle("show",open);
@@ -4770,6 +4764,8 @@ if(!stage || !overlay) return;
       orb.setAttribute("aria-expanded",String(open));
 
       if(open){
+        document.getElementById("chatClose")?.click();
+
         setTimeout(()=>{
           input?.focus({
             preventScroll:true
