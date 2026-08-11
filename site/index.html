@@ -784,6 +784,19 @@
       touch-action: manipulation;
     }
 
+    /* AI fields: same no-zoom behavior as Live Chat */
+    #aiPanel input,
+    #aiPanel textarea,
+    #aiLoginForm input,
+    #aiUsername,
+    #aiPassword,
+    #aiInput {
+      font-size: 16px !important;
+      line-height: 1.35 !important;
+      -webkit-text-size-adjust: 100%;
+      touch-action: manipulation;
+    }
+
 </style>
 
   <title>Aquila Crest Capital | Official Website</title>
@@ -4750,8 +4763,17 @@ if(!stage || !overlay) return;
     }
 
     function setOpen(open){
-      if(!open && panel.contains(document.activeElement)){
-        document.activeElement?.blur?.();
+      if(open){
+        // Close Live Chat first, then lock the landing page
+        // exactly like the Live Chat behavior.
+        document.getElementById("chatClose")?.click();
+        lockLandingPageForChat();
+      }else{
+        if(panel.contains(document.activeElement)){
+          document.activeElement?.blur?.();
+        }
+
+        unlockLandingPageForChat();
       }
 
       panel.classList.toggle("show",open);
@@ -4759,20 +4781,11 @@ if(!stage || !overlay) return;
       orb.setAttribute("aria-expanded",String(open));
 
       if(open){
-        document.getElementById("chatClose")?.click();
-        setTimeout(()=>input.focus(),80);
-      }else{
-        requestAnimationFrame(()=>{
-          window.scrollBy(0,0);
-        });
-
         setTimeout(()=>{
-          window.scrollBy(0,0);
-        },120);
-
-        setTimeout(()=>{
-          window.scrollBy(0,0);
-        },320);
+          input?.focus({
+            preventScroll:true
+          });
+        },180);
       }
     }
     function appendSafeRichText(container,text){
