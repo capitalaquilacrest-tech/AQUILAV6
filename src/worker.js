@@ -9,6 +9,7 @@ const PUBLIC_BURST_LIMIT = 5;
 const MEMBER_BURST_LIMIT = 20;
 const MEMBER_SESSION_SECONDS = 60 * 60 * 24 * 7;
 const DASHBOARD_SSO_TICKET_SECONDS = 90;
+const LANDING_SSO_TICKET_SECONDS = 90;
 const MEMBER_PORTAL_API_URL = "https://script.google.com/macros/s/AKfycbzcUHswAZKxJ6WXRM5RThhSmVn0U0wxbshY2wPVhj7jFzCih-J1A8SoKR10Y6Ue1RUx/exec";
 const SUPABASE_URL = "https://jkewnkgkcjiszwvszkkw.supabase.co";
 const CHAT_LOGIN_LIMIT = 10;
@@ -127,6 +128,18 @@ async function getDashboardSsoStorageKey(ticket, env) {
   return `dashboard-sso:${ticketHash}`;
 }
 
+async function getLandingSsoStorageKey(
+  ticket,
+  env
+) {
+  const ticketHash = await hmacHex(
+    env.AI_AUTH_SECRET,
+    ticket
+  );
+
+  return `landing-sso:${ticketHash}`;
+}
+
 async function createMemberToken(member, env) {
   const payload = base64UrlEncode(JSON.stringify({
     username: member.username,
@@ -150,6 +163,283 @@ async function getMemberSession(request, env) {
   } catch {
     return null;
   }
+}
+
+async function handleLandingSsoStart(request, env) {
+  if (request.method !== "POST") {
+    return json(
+      { error: "Method not allowed." },
+      405,
+      { allow: "POST" }
+    );
+  }
+
+  if (!env.AI_LIMITS || !env.AI_AUTH_SECRET) {
+    return json(
+      {
+        error:
+          "Landing automatic login is not configured."
+      },
+      503
+    );
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json(
+      { error: "Invalid request." },
+      400
+    );
+  }
+
+  const suppliedSecret =
+    typeof body?.apiSecret === "string"
+      ? body.apiSecret
+      : "";
+
+  const username =
+    typeof body?.username === "string"
+      ? body.username.trim()
+      : "";
+
+  const fullName =
+    typeof body?.fullName === "string"
+      ? body.fullName.trim()
+      : username;
+
+  const [suppliedProof, expectedProof] =
+    await Promise.all([
+      hmacHex(
+        suppliedSecret,
+        "landing-sso-start"
+      ),
+      hmacHex(
+        env.AI_AUTH_SECRET,
+        "landing-sso-start"
+      )
+    ]);
+
+  if (
+    !suppliedSecret ||
+    suppliedProof !== expectedProof
+  ) {
+    return json(
+      { error: "Unauthorized request." },
+      401
+    );
+  }
+
+  if (!username || username.length > 80) {
+    return json(
+      { error: "Invalid member identity." },
+      400
+    );
+  }
+
+  const ticket = createDashboardSsoTicket();
+  const storageKey =
+    await getLandingSsoStorageKey(
+      ticket,
+      env
+    );
+
+  await env.AI_LIMITS.put(
+    storageKey,
+    JSON.stringify({
+      username,
+      fullName: fullName || username,
+      createdAt: Date.now()
+    }),
+    {
+      expirationTtl:
+        LANDING_SSO_TICKET_SECONDS
+    }
+  );
+
+  return json(
+    {
+      success: true,
+      ticket
+    },
+    200,
+    {
+      "cache-control": "no-store"
+    }
+  );
+}
+
+async function handleLandingSsoConsume(
+  request,
+  env
+) {
+  if (request.method !== "POST") {
+    return json(
+      { error: "Method not allowed." },
+      405,
+      { allow: "POST" }
+    );
+  }
+
+  if (
+    !env.AI_LIMITS ||
+    !env.AI_AUTH_SECRET ||
+    !env.SUPABASE_SECRET_KEY
+  ) {
+    return json(
+      {
+        error:
+          "Landing automatic login is not configured."
+      },
+      503
+    );
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json(
+      { error: "Invalid request." },
+      400
+    );
+  }
+
+  const ticket =
+    typeof body?.ticket === "string"
+      ? body.ticket.trim().toLowerCase()
+      : "";
+
+  const accessToken =
+    typeof body?.accessToken === "string"
+      ? body.accessToken
+      : "";
+
+  if (!/^[a-f0-9]{64}$/.test(ticket)) {
+    return json(
+      {
+        error:
+          "Invalid or expired automatic login ticket."
+      },
+      401
+    );
+  }
+
+  const supabaseUser =
+    await getSupabaseUser(accessToken, env);
+
+  if (!supabaseUser) {
+    return json(
+      {
+        error:
+          "Live Chat session is unavailable. Refresh and try again."
+      },
+      401
+    );
+  }
+
+  const storageKey =
+    await getLandingSsoStorageKey(
+      ticket,
+      env
+    );
+
+  const storedMember =
+    await env.AI_LIMITS.get(storageKey);
+
+  if (!storedMember) {
+    return json(
+      {
+        error:
+          "This automatic login ticket is invalid, expired, or already used."
+      },
+      401
+    );
+  }
+
+  await env.AI_LIMITS.delete(storageKey);
+
+  let member;
+
+  try {
+    member = JSON.parse(storedMember);
+  } catch {
+    return json(
+      {
+        error:
+          "Invalid automatic login ticket data."
+      },
+      401
+    );
+  }
+
+  if (!member?.username) {
+    return json(
+      {
+        error:
+          "Invalid automatic login member data."
+      },
+      401
+    );
+  }
+
+  const normalizedMember = {
+    username: String(member.username),
+    fullName: String(
+      member.fullName || member.username
+    )
+  };
+
+  const activation = await saveChatIdentity(
+    supabaseUser.id,
+    {
+      username: normalizedMember.username,
+      fullName: normalizedMember.fullName,
+      status: "VERIFIED"
+    },
+    env
+  );
+
+  if (!activation?.profile) {
+    return json(
+      {
+        error:
+          `Landing login succeeded, but Live Chat could not be linked. ${
+            activation?.error ||
+            "Database update failed."
+          }`
+      },
+      502
+    );
+  }
+
+  const memberToken =
+    await createMemberToken(
+      normalizedMember,
+      env
+    );
+
+  return json(
+    {
+      success: true,
+      access: "member",
+      member: normalizedMember,
+      chatLinked: true
+    },
+    200,
+    {
+      "cache-control": "no-store",
+      "set-cookie":
+        `aquila_ai_session=${
+          encodeURIComponent(memberToken)
+        }; Max-Age=${
+          MEMBER_SESSION_SECONDS
+        }; Path=/; HttpOnly; Secure; SameSite=Lax`
+    }
+  );
 }
 
 async function handleDashboardSsoStart(request, env) {
@@ -646,6 +936,52 @@ async function handleAssistant(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/api/landing-sso/start") {
+      try {
+        return await handleLandingSsoStart(
+          request,
+          env
+        );
+      } catch (error) {
+        console.error(
+          "Landing SSO start error",
+          error
+        );
+
+        return json(
+          {
+            error:
+              "Landing automatic login is temporarily unavailable."
+          },
+          500
+        );
+      }
+    }
+
+    if (
+      url.pathname ===
+      "/api/landing-sso/consume"
+    ) {
+      try {
+        return await handleLandingSsoConsume(
+          request,
+          env
+        );
+      } catch (error) {
+        console.error(
+          "Landing SSO consume error",
+          error
+        );
+
+        return json(
+          {
+            error:
+              "Landing automatic login is temporarily unavailable."
+          },
+          500
+        );
+      }
+    }
     if (url.pathname === "/api/dashboard-sso/start") {
       try {
         return await handleDashboardSsoStart(request, env);
