@@ -2711,12 +2711,58 @@
     }
 
     document.querySelectorAll("[data-dashboard]").forEach(button => {
-      button.addEventListener("click", () => {
+      button.addEventListener("click", async () => {
         if (!DASHBOARD_URL || DASHBOARD_URL.includes("PASTE_YOUR")) {
-          alert("Dashboard link is not connected yet. Add the current Google Apps Script web app URL to DASHBOARD_URL.");
+          alert(
+            "Dashboard link is not connected yet. Add the current Google Apps Script web app URL to DASHBOARD_URL."
+          );
           return;
         }
-        window.location.href = DASHBOARD_URL;
+
+        const originalText = button.textContent;
+
+        button.disabled = true;
+        button.textContent = "OPENING...";
+
+        try {
+          const response = await fetch(
+            "/api/dashboard-sso/start",
+            {
+              method: "POST",
+              headers: {
+                accept: "application/json"
+              },
+              cache: "no-store"
+            }
+          );
+
+          const result =
+            await response.json().catch(() => ({}));
+
+          if (
+            response.ok &&
+            result.success &&
+            result.dashboardUrl
+          ) {
+            window.location.href = result.dashboardUrl;
+            return;
+          }
+
+          window.location.href = DASHBOARD_URL;
+
+        } catch (error) {
+          console.error(
+            "Dashboard automatic login:",
+            error
+          );
+
+          window.location.href = DASHBOARD_URL;
+        }
+
+        setTimeout(() => {
+          button.disabled = false;
+          button.textContent = originalText;
+        }, 4000);
       });
     });
 
