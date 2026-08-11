@@ -2791,10 +2791,23 @@
     });
 
     window.addEventListener("message", async event => {
-      if (
-        !memberPortalFrame ||
-        event.source !== memberPortalFrame.contentWindow
-      ) {
+      let trustedDashboardOrigin = false;
+
+      try {
+        const dashboardHostname =
+          new URL(event.origin).hostname;
+
+        trustedDashboardOrigin =
+          dashboardHostname ===
+            "script.google.com" ||
+          dashboardHostname.endsWith(
+            ".googleusercontent.com"
+          );
+      } catch (_) {
+        trustedDashboardOrigin = false;
+      }
+
+      if (!trustedDashboardOrigin) {
         return;
       }
 
@@ -2804,6 +2817,7 @@
         messageType ===
         "AQUILA_DASHBOARD_LOGIN"
       ) {
+        alert("LANDING RECEIVED LOGIN TICKET");
         try {
           await initLiveChat();
 
@@ -2850,7 +2864,13 @@
               "aquila:ai-member-login"
             )
           );
+
+        alert("LANDING SYNC COMPLETE");
         } catch (error) {
+          alert(
+            "LANDING SYNC ERROR: " +
+            error.message
+          );
           console.error(
             "Dashboard to landing login sync:",
             error
