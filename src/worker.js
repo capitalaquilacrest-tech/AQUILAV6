@@ -8,6 +8,7 @@ const PUBLIC_DAILY_LIMIT = 10;
 const PUBLIC_BURST_LIMIT = 5;
 const MEMBER_BURST_LIMIT = 20;
 const MEMBER_SESSION_SECONDS = 60 * 60 * 24 * 7;
+const DASHBOARD_SSO_TICKET_SECONDS = 90;
 const MEMBER_PORTAL_API_URL = "https://script.google.com/macros/s/AKfycbzcUHswAZKxJ6WXRM5RThhSmVn0U0wxbshY2wPVhj7jFzCih-J1A8SoKR10Y6Ue1RUx/exec";
 const SUPABASE_URL = "https://jkewnkgkcjiszwvszkkw.supabase.co";
 const CHAT_LOGIN_LIMIT = 10;
@@ -112,6 +113,20 @@ function base64UrlDecode(value) {
   return new TextDecoder().decode(Uint8Array.from(binary, char => char.charCodeAt(0)));
 }
 
+function createDashboardSsoTicket() {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+
+  return Array.from(
+    bytes,
+    byte => byte.toString(16).padStart(2, "0")
+  ).join("");
+}
+
+async function getDashboardSsoStorageKey(ticket, env) {
+  const ticketHash = await hmacHex(env.AI_AUTH_SECRET, ticket);
+  return `dashboard-sso:${ticketHash}`;
+}
+
 async function createMemberToken(member, env) {
   const payload = base64UrlEncode(JSON.stringify({
     username: member.username,
@@ -135,6 +150,143 @@ async function getMemberSession(request, env) {
   } catch {
     return null;
   }
+}
+
+async function handleDashboardSsoStart(request, env) {
+  if (request.method !== "POST") {
+    return json(
+      { error: "Method not allowed." },
+      405,
+      { allow: "POST" }
+    );
+  }
+
+  if (!env.AI_LIMITS || !env.AI_AUTH_SECRET) {
+    return json({
+      error: "Dashboard automatic login is not configured yet."
+    }, 503);
+  }
+
+  const member = await getMemberSession(request, env);
+
+  if (!member) {
+    return json({
+      success: false,
+      code: "LOGIN_REQUIRED",
+      dashboardUrl: MEMBER_PORTAL_API_URL
+    }, 401);
+  }
+
+  const ticket = createDashboardSsoTicket();
+  const storageKey = await getDashboardSsoStorageKey(ticket, env);
+
+  await env.AI_LIMITS.put(
+    storageKey,
+    JSON.stringify({
+      username: member.username,
+      fullName: member.fullName,
+      createdAt: Date.now()
+    }),
+    {
+      expirationTtl: DASHBOARD_SSO_TICKET_SECONDS
+    }
+  );
+
+  return json({
+    success: true,
+    dashboardUrl:
+      `${MEMBER_PORTAL_API_URL}?sso=${encodeURIComponent(ticket)}`
+  }, 200, {
+    "cache-control": "no-store"
+  });
+}
+
+async function handleDashboardSsoConsume(request, env) {
+  if (request.method !== "POST") {
+    return json(
+      { error: "Method not allowed." },
+      405,
+      { allow: "POST" }
+    );
+  }
+
+  if (!env.AI_LIMITS || !env.AI_AUTH_SECRET) {
+    return json({
+      error: "Dashboard automatic login is not configured yet."
+    }, 503);
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "Invalid request." }, 400);
+  }
+
+  const ticket =
+    typeof body?.ticket === "string"
+      ? body.ticket.trim().toLowerCase()
+      : "";
+
+  const suppliedSecret =
+    typeof body?.apiSecret === "string"
+      ? body.apiSecret
+      : "";
+
+  if (!/^[a-f0-9]{64}$/.test(ticket)) {
+    return json({
+      error: "Invalid or expired dashboard ticket."
+    }, 401);
+  }
+
+  const [suppliedProof, expectedProof] = await Promise.all([
+    hmacHex(suppliedSecret, "dashboard-sso-consume"),
+    hmacHex(env.AI_AUTH_SECRET, "dashboard-sso-consume")
+  ]);
+
+  if (!suppliedSecret || suppliedProof !== expectedProof) {
+    return json({ error: "Unauthorized request." }, 401);
+  }
+
+  const storageKey =
+    await getDashboardSsoStorageKey(ticket, env);
+
+  const storedMember = await env.AI_LIMITS.get(storageKey);
+
+  if (!storedMember) {
+    return json({
+      error: "This dashboard ticket is invalid, expired, or already used."
+    }, 401);
+  }
+
+  await env.AI_LIMITS.delete(storageKey);
+
+  let member;
+
+  try {
+    member = JSON.parse(storedMember);
+  } catch {
+    return json({
+      error: "Invalid dashboard ticket data."
+    }, 401);
+  }
+
+  if (!member?.username) {
+    return json({
+      error: "Invalid dashboard member data."
+    }, 401);
+  }
+
+  return json({
+    success: true,
+    member: {
+      username: String(member.username),
+      fullName: String(member.fullName || member.username)
+    }
+  }, 200, {
+    "cache-control": "no-store"
+  });
 }
 
 async function handleMemberLogin(request, env) {
@@ -494,6 +646,29 @@ async function handleAssistant(request, env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/api/dashboard-sso/start") {
+      try {
+        return await handleDashboardSsoStart(request, env);
+      } catch (error) {
+        console.error("Dashboard SSO start error", error);
+
+        return json({
+          error: "Dashboard automatic login is temporarily unavailable."
+        }, 500);
+      }
+    }
+
+    if (url.pathname === "/api/dashboard-sso/consume") {
+      try {
+        return await handleDashboardSsoConsume(request, env);
+      } catch (error) {
+        console.error("Dashboard SSO consume error", error);
+
+        return json({
+          error: "Dashboard automatic login is temporarily unavailable."
+        }, 500);
+      }
+    }
     if (url.pathname === "/api/chat-member/login") {
       try { return await handleChatMemberLogin(request, env); }
       catch (error) { console.error("Community member login error", error); return json({ error: "Community member login is temporarily unavailable." }, 500); }
