@@ -2733,10 +2733,30 @@
           : null;
 
       if (!memberPortalFrame.getAttribute("src")) {
+        const returnedDashboardUrl =
+          new URL(result.dashboardUrl, window.location.origin);
+
+        const freshDashboardUrl =
+          new URL(DASHBOARD_URL);
+
+        returnedDashboardUrl.searchParams.forEach(
+          (value, key) => {
+            freshDashboardUrl.searchParams.set(
+              key,
+              value
+            );
+          }
+        );
+
+        /* Prevent the iframe from reusing an old dashboard page. */
+        freshDashboardUrl.searchParams.set(
+          "refresh",
+          Date.now().toString()
+        );
+
         memberPortalFrame.setAttribute(
           "src",
-          memberPortalFrame.dataset.src ||
-          DASHBOARD_URL
+          freshDashboardUrl.toString()
         );
       }
 
