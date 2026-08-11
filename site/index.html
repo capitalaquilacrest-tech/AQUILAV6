@@ -2989,7 +2989,15 @@
             result.success &&
             result.dashboardUrl
           ) {
-            window.location.href = result.dashboardUrl;
+            memberPortalFrame.setAttribute(
+              "src",
+              result.dashboardUrl
+            );
+
+            button.disabled = false;
+            button.textContent = originalText;
+
+            openMemberPortalModal();
             return;
           }
 
