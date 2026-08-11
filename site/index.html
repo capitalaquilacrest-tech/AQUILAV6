@@ -2857,7 +2857,11 @@
             );
           }
 
-          showMember(result.member);
+          window.dispatchEvent(
+            new CustomEvent(
+              "aquila:member-auth-changed"
+            )
+          );
 
           window.dispatchEvent(
             new CustomEvent(
