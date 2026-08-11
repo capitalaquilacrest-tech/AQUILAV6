@@ -255,7 +255,33 @@ async function handleChatMemberLogin(request, env) {
   if (identity.status !== "VERIFIED" && identity.status !== "UNVERIFIED") return json({ error: "This member status cannot access Community Live Chat." }, 403);
   const activation = await saveChatIdentity(supabaseUser.id, identity, env);
   if (!activation?.profile) return json({ error: `The verified chat profile could not be activated. ${activation?.error || "Database update failed."}` }, 502);
-  return json({ success: true, identity: { username: identity.username, fullName: identity.fullName, status: identity.status } });
+  const responseBody = {
+    success: true,
+    identity: {
+      username: identity.username,
+      fullName: identity.fullName,
+      status: identity.status
+    },
+    aiAccess: identity.status === "VERIFIED"
+  };
+
+  if (identity.status === "VERIFIED") {
+    const member = {
+      username: identity.username,
+      fullName: identity.fullName
+    };
+
+    const token = await createMemberToken(member, env);
+
+    return json(responseBody, 200, {
+      "set-cookie":
+        `aquila_ai_session=${encodeURIComponent(token)}; ` +
+        `Max-Age=${MEMBER_SESSION_SECONDS}; ` +
+        `Path=/; HttpOnly; Secure; SameSite=Lax`
+    });
+  }
+
+  return json(responseBody);
 }
 
 async function getVisitorHash(request, env) {
