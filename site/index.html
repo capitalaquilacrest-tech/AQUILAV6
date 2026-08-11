@@ -3871,36 +3871,141 @@
     }
     function subscribeToLiveChat(userId){
       if(chatChannel) return;
-      chatChannel=chatDb.channel("aquila-public-chat",{config:{presence:{key:userId}}})
-        .on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},payload=>{
-          if(payload.eventType==="INSERT"){
-            const isOwnMessage=payload.new?.sender_id===chatSession?.user?.id;
-            rememberLatestVisibleMessage(payload.new);
-            renderChatMessage(payload.new,!isOwnMessage);
-            if(!isOwnMessage&&payload.new?.status==="visible"&&chatPanel?.classList.contains("show")&&!document.hidden)markChatMessagesSeen();
-            if(!isOwnMessage&&payload.new?.status==="visible")playCuteChatSound();
+
+      const channel=chatDb.channel("aquila-public-chat",{
+        config:{
+          presence:{
+            key:userId
           }
-          else if(payload.eventType==="UPDATE"){
-            removeChatMessage(payload.new.id);
-            if(payload.new.status==="visible")renderChatMessage(payload.new,false);
+        }
+      });
+
+      chatChannel=channel;
+
+      channel
+        .on(
+          "postgres_changes",
+          {
+            event:"*",
+            schema:"public",
+            table:"chat_messages"
+          },
+          payload=>{
+            // Ignore events from an old channel.
+            if(channel!==chatChannel) return;
+
+            if(payload.eventType==="INSERT"){
+              const isOwnMessage=
+                payload.new?.sender_id===chatSession?.user?.id;
+
+              rememberLatestVisibleMessage(payload.new);
+              renderChatMessage(payload.new,!isOwnMessage);
+
+              if(
+                !isOwnMessage &&
+                payload.new?.status==="visible" &&
+                chatPanel?.classList.contains("show") &&
+                !document.hidden
+              ){
+                markChatMessagesSeen();
+              }
+
+              if(
+                !isOwnMessage &&
+                payload.new?.status==="visible"
+              ){
+                playCuteChatSound();
+              }
+            }else if(payload.eventType==="UPDATE"){
+              removeChatMessage(payload.new.id);
+
+              if(payload.new.status==="visible"){
+                renderChatMessage(payload.new,false);
+              }
+            }else if(payload.old?.id){
+              removeChatMessage(payload.old.id);
+            }
           }
-          else if(payload.old?.id) removeChatMessage(payload.old.id);
-        })
-        .on("postgres_changes",{event:"*",schema:"public",table:"chat_reactions"},()=>reloadReactions())
-        .on("postgres_changes",{event:"INSERT",schema:"public",table:"chat_notices"},payload=>renderChatNotice(payload.new))
-        .on("postgres_changes",{event:"UPDATE",schema:"public",table:"chat_support_status"},payload=>setConnection(payload.new.status_text,payload.new.is_online))
+        )
+
+        .on(
+          "postgres_changes",
+          {
+            event:"*",
+            schema:"public",
+            table:"chat_reactions"
+          },
+          ()=>{
+            if(channel===chatChannel) reloadReactions();
+          }
+        )
+
+        .on(
+          "postgres_changes",
+          {
+            event:"INSERT",
+            schema:"public",
+            table:"chat_notices"
+          },
+          payload=>{
+            if(channel===chatChannel){
+              renderChatNotice(payload.new);
+            }
+          }
+        )
+
+        .on(
+          "postgres_changes",
+          {
+            event:"UPDATE",
+            schema:"public",
+            table:"chat_support_status"
+          },
+          payload=>{
+            if(channel===chatChannel){
+              setConnection(
+                payload.new.status_text,
+                payload.new.is_online
+              );
+            }
+          }
+        )
+
         .on("presence",{event:"sync"},()=>{
-          const count=Object.values(chatChannel.presenceState()).reduce((total,list)=>total+list.length,0);
-          if(chatOnlineCount) chatOnlineCount.textContent=`${count} online`;
+          if(channel!==chatChannel) return;
+
+          const count=Object
+            .values(channel.presenceState())
+            .reduce(
+              (total,list)=>total+list.length,
+              0
+            );
+
+          if(chatOnlineCount){
+            chatOnlineCount.textContent=`${count} online`;
+          }
         })
+
         .subscribe(async status=>{
+          // Do nothing if this event came from an old channel.
+          if(channel!==chatChannel) return;
+
           if(status==="SUBSCRIBED"){
-            await chatChannel.track({online_at:new Date().toISOString()});
+            await channel.track({
+              online_at:new Date().toISOString()
+            });
+
             setConnection("Community connected",true);
             startChatLiveFallback();
             await syncNewChatMessages();
-          }else if(["CHANNEL_ERROR","TIMED_OUT","CLOSED"].includes(status)){
-            setConnection("Reconnecting…",false);
+          }else if(
+            ["CHANNEL_ERROR","TIMED_OUT","CLOSED"].includes(status)
+          ){
+            /*
+             * Reconnect silently.
+             * Huwag palitan ng “Connecting” para hindi kumurap
+             * ang Community connected status.
+             */
             startChatLiveFallback();
             scheduleChatRealtimeReconnect(userId);
           }
@@ -4021,8 +4126,27 @@
       finally{chatJoin.disabled=false;}
     }
     async function resetChatSubscription(userId){
-      if(chatReconnectTimer){clearTimeout(chatReconnectTimer);chatReconnectTimer=null;}
-      if(chatChannel){await chatDb.removeChannel(chatChannel);chatChannel=null;}
+      if(chatReconnectTimer){
+        clearTimeout(chatReconnectTimer);
+        chatReconnectTimer=null;
+      }
+
+      const oldChannel=chatChannel;
+
+      /*
+       * I-null muna para ma-ignore ang CLOSED event
+       * na manggagaling sa lumang channel.
+       */
+      chatChannel=null;
+
+      if(oldChannel){
+        try{
+          await chatDb.removeChannel(oldChannel);
+        }catch(error){
+          console.warn("Old chat channel cleanup:",error);
+        }
+      }
+
       subscribeToLiveChat(userId);
     }
     async function reloadChatMessages(){
