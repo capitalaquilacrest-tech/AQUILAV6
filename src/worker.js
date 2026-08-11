@@ -10,7 +10,7 @@ const MEMBER_BURST_LIMIT = 20;
 const MEMBER_SESSION_SECONDS = 60 * 60 * 24 * 7;
 const DASHBOARD_SSO_TICKET_SECONDS = 90;
 const LANDING_SSO_TICKET_SECONDS = 90;
-const MEMBER_PORTAL_API_URL = "https://script.google.com/macros/s/AKfycbzcUHswAZKxJ6WXRM5RThhSmVn0U0wxbshY2wPVhj7jFzCih-J1A8SoKR10Y6Ue1RUx/exec";
+const MEMBER_PORTAL_API_URL = "https://script.google.com/macros/s/AKfycbwsX7fvxdza7pGepFtME77y0BK3D6AzQ8qIQMQOe51RfPk2rK-sCCbexo8PpdC2cpRG/exec";
 const SUPABASE_URL = "https://jkewnkgkcjiszwvszkkw.supabase.co";
 const CHAT_LOGIN_LIMIT = 10;
 
