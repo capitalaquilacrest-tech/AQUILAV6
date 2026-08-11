@@ -2719,7 +2719,12 @@
           return;
         }
 
-        const originalText = button.textContent;
+        const originalText =
+          button.dataset.dashboardOriginalText ||
+          button.textContent;
+
+        button.dataset.dashboardOriginalText =
+          originalText;
 
         button.disabled = true;
         button.textContent = "OPENING...";
@@ -2764,6 +2769,21 @@
           button.textContent = originalText;
         }, 4000);
       });
+    });
+
+    window.addEventListener("pageshow", () => {
+      document
+        .querySelectorAll("[data-dashboard]")
+        .forEach(button => {
+          const originalText =
+            button.dataset.dashboardOriginalText;
+
+          button.disabled = false;
+
+          if (originalText) {
+            button.textContent = originalText;
+          }
+        });
     });
 
     const observer = new IntersectionObserver(entries => {
