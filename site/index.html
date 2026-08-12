@@ -2926,7 +2926,27 @@
         );
 
         closeMemberPortalModal();
-        memberPortalFrame.removeAttribute("src");
+
+        if (memberPortalFrame) {
+          memberPortalFrame.removeAttribute("src");
+        }
+
+        /* Fully reset the portal modal after logout */
+        if (memberPortalModal) {
+          memberPortalModal.classList.remove("show");
+          memberPortalModal.setAttribute("aria-hidden", "true");
+        }
+
+        document.body.classList.remove("portal-modal-open");
+
+        /* Make every dashboard button clickable again */
+        document.querySelectorAll("[data-dashboard]").forEach(button => {
+          button.disabled = false;
+          button.textContent = "LOGIN DASHBOARD";
+          button.dataset.dashboardOriginalText = "LOGIN DASHBOARD";
+        });
+
+        memberPortalReturnFocus = null;
       }
     });
     const dashboardShowcaseImage = document.querySelector(".dashboard-art img");
