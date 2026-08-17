@@ -6140,6 +6140,161 @@ if(!stage || !overlay) return;
       loadAdminSupportInbox
     );
 
+    async function loadMemberSupportThread(
+      ticketId
+    ){
+      if(
+        !currentMember?.username||
+        currentMember.role==="ACC ADMIN"||
+        !notificationList
+      ){
+        return;
+      }
+
+      const accessToken=
+        window.getAquilaChatAccessToken?.()||"";
+
+      notificationList.hidden=false;
+      notificationList.textContent=
+        "Loading conversation…";
+
+      try{
+        const response=await fetch(
+          "/api/member/support-thread"+
+          `?ticketId=${encodeURIComponent(ticketId)}`,
+          {
+            method:"GET",
+            headers:{
+              authorization:
+                accessToken
+                  ?`Bearer ${accessToken}`
+                  :"",
+              accept:"application/json"
+            },
+            cache:"no-store"
+          }
+        );
+
+        const result=
+          await response.json().catch(()=>({}));
+
+        if(!response.ok||!result.success){
+          throw new Error(
+            result.error||
+            "Conversation could not be loaded."
+          );
+        }
+
+        const ticket=result.ticket;
+        notificationList.textContent="";
+
+        const threadHeader=
+          document.createElement("div");
+
+        threadHeader.className=
+          "notification-thread-header";
+
+        const backButton=
+          document.createElement("button");
+
+        backButton.type="button";
+        backButton.className=
+          "notification-thread-back";
+        backButton.textContent=
+          "← Notifications";
+
+        backButton.addEventListener(
+          "click",
+          loadMemberNotifications
+        );
+
+        const title=
+          document.createElement("strong");
+
+        title.textContent=
+          ticket.subject||
+          "Support concern";
+
+        const details=
+          document.createElement("span");
+
+        details.textContent=
+          `Your ticket · ${ticket.status}`;
+
+        threadHeader.append(
+          backButton,
+          title,
+          details
+        );
+
+        notificationList.append(
+          threadHeader
+        );
+
+        const original=
+          document.createElement("div");
+
+        original.className=
+          "notification-message member";
+
+        const originalSender=
+          document.createElement("strong");
+
+        originalSender.textContent="You";
+
+        const originalText=
+          document.createElement("p");
+
+        originalText.textContent=
+          ticket.originalMessage||
+          "No original message provided.";
+
+        original.append(
+          originalSender,
+          originalText
+        );
+
+        notificationList.append(original);
+
+        result.messages.forEach(message=>{
+          const bubble=
+            document.createElement("div");
+
+          const isAdmin=
+            message.senderRole==="ACC ADMIN"||
+            message.senderRole==="ADMIN";
+
+          bubble.className=
+            `notification-message ${
+              isAdmin?"admin":"member"
+            }`;
+
+          const sender=
+            document.createElement("strong");
+
+          sender.textContent=isAdmin
+            ?"ACC Admin"
+            :"You";
+
+          const text=
+            document.createElement("p");
+
+          text.textContent=message.message;
+
+          bubble.append(
+            sender,
+            text
+          );
+
+          notificationList.append(bubble);
+        });
+      }catch(error){
+        notificationList.textContent=
+          error.message||
+          "Conversation is temporarily unavailable.";
+      }
+    }
+
     async function loadMemberNotifications(){
       if(
         !currentMember?.username||
@@ -6215,6 +6370,20 @@ if(!stage || !overlay) return;
 
             item.dataset.ticketId=
               notification.ticketId||"";
+
+            if(
+              notification.sourceType==="SUPPORT"&&
+              notification.ticketId
+            ){
+              item.addEventListener(
+                "click",
+                ()=>{
+                  loadMemberSupportThread(
+                    notification.ticketId
+                  );
+                }
+              );
+            }
 
             const title=
               document.createElement("strong");
