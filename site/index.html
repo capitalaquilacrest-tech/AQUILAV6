@@ -1224,6 +1224,7 @@
     .notification-detail-body{display:grid;gap:12px;color:#172b4d;font-size:13px;line-height:1.6}
     .notification-detail-body p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
     .notification-detail-body img{display:block;width:100%;max-height:420px;object-fit:contain;border:1px solid #dce6f3;border-radius:14px;background:#f5f8fc}
+    .announcement-media-frame{display:grid;place-items:center;min-height:72px;border-radius:14px;background:#f5f8fc;color:#687991;font-size:11px;overflow:hidden}.announcement-media-frame img{grid-area:1/1;width:100%;height:auto;max-height:none;object-fit:contain;border:0;border-radius:14px}.announcement-media-frame span{grid-area:1/1;padding:18px;text-align:center}
     .notification-compose-overlay{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;padding:18px;background:rgba(2,8,23,.72);backdrop-filter:blur(8px)}
     .notification-compose-modal{width:min(560px,100%);max-height:92vh;overflow:auto;border-radius:22px;background:#fff;box-shadow:0 30px 100px rgba(0,0,0,.42)}
     .notification-compose-head{display:flex;align-items:center;justify-content:space-between;padding:17px 19px;background:linear-gradient(135deg,#071d49,#0f5bd8);color:#fff}
@@ -6455,7 +6456,7 @@ if(!stage || !overlay) return;
       const title=document.createElement("strong");title.textContent=notification.title||"Notification";
       const meta=document.createElement("span");meta.textContent=notification.sourceType==="ANNOUNCEMENT"?"ACC ANNOUNCEMENT":"MESSAGE FROM ACC ADMIN";header.append(back,title,meta);notificationList.append(header);
       const body=document.createElement("div");body.className="notification-detail-body";const text=document.createElement("p");text.textContent=notification.message||"";body.append(text);
-      (notification.media||[]).forEach(media=>{if(!media.url)return;const img=document.createElement("img");img.src=media.url;img.alt=media.altText||notification.title||"Announcement image";img.loading="lazy";img.referrerPolicy="no-referrer";body.append(img);});notificationList.append(body);
+      for(const media of (notification.media||[])){if(!media.mediaId)continue;const frame=document.createElement("div");frame.className="announcement-media-frame";const loading=document.createElement("span");loading.textContent="Loading image…";frame.append(loading);body.append(frame);try{const token=window.getAquilaChatAccessToken?.()||"";const response=await fetch(`/api/announcement/media?mediaId=${encodeURIComponent(media.mediaId)}`,{headers:{authorization:token?`Bearer ${token}`:""},cache:"no-store"});if(!response.ok)throw new Error("Image unavailable");const blob=await response.blob(),url=URL.createObjectURL(blob),img=document.createElement("img");img.src=url;img.alt=media.altText||notification.title||"Announcement image";img.onload=()=>loading.remove();img.onerror=()=>{loading.textContent="The announcement image could not be displayed.";};frame.append(img);}catch(_){loading.textContent="The announcement image is temporarily unavailable.";}}notificationList.append(body);
     }
 
     async function loadMemberNotifications(){
