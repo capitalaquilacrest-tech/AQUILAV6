@@ -2013,6 +2013,63 @@
     </div>
   </nav>
 
+  <div
+    class="notification-panel"
+    id="notificationPanel"
+    role="dialog"
+    aria-label="Notifications"
+    aria-hidden="true"
+  >
+    <div class="notification-panel-header">
+      <div>
+        <strong>Notifications</strong>
+        <span id="notificationPanelSubtitle">
+          Announcements, messages, and support updates
+        </span>
+      </div>
+
+      <button
+        class="notification-close"
+        id="notificationClose"
+        type="button"
+        aria-label="Close notifications"
+      >
+        ×
+      </button>
+    </div>
+
+    <div
+      class="notification-login-note"
+      id="notificationLoginNote"
+    >
+      Log in to view your notifications.
+    </div>
+
+    <div
+      class="notification-admin-actions"
+      id="notificationAdminActions"
+      hidden
+    >
+      <button type="button" data-admin-support>
+        Support Inbox
+      </button>
+
+      <button type="button" data-admin-announcement>
+        Create Announcement
+      </button>
+
+      <button type="button" data-admin-message>
+        Message Member
+      </button>
+    </div>
+
+    <div
+      class="notification-list"
+      id="notificationList"
+      hidden
+    ></div>
+  </div>
+
   <section class="decision-hero" id="decision-film">
     <div class="decision-atmosphere" aria-hidden="true">
       <span class="decision-orb decision-orb-blue"></span>
