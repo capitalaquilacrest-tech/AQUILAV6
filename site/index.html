@@ -1094,6 +1094,69 @@
       -webkit-box-orient:vertical;
     }
 
+    .notification-thread-header{
+      display:grid;
+      gap:7px;
+      padding-bottom:12px;
+      border-bottom:1px solid #e1e9f4;
+    }
+
+    .notification-thread-back{
+      width:max-content;
+      padding:7px 10px;
+      border:1px solid #bfd0e8;
+      border-radius:9px;
+      color:#123f86;
+      background:#fff;
+      font-size:11px;
+      font-weight:850;
+      cursor:pointer;
+    }
+
+    .notification-thread-header>strong{
+      color:#09275d;
+      font-size:16px;
+      line-height:1.3;
+      overflow-wrap:anywhere;
+    }
+
+    .notification-thread-header>span{
+      color:#0f5bd8;
+      font-size:10px;
+      font-weight:900;
+    }
+
+    .notification-message{
+      display:grid;
+      gap:6px;
+      padding:12px;
+      border-radius:14px;
+    }
+
+    .notification-message.member{
+      border:1px solid #dbe5f1;
+      color:#172b4d;
+      background:#f5f8fc;
+    }
+
+    .notification-message.admin{
+      margin-left:24px;
+      color:#fff;
+      background:linear-gradient(135deg,#123f86,#071c46);
+    }
+
+    .notification-message strong{
+      font-size:11px;
+    }
+
+    .notification-message p{
+      margin:0;
+      font-size:13px;
+      line-height:1.5;
+      white-space:pre-wrap;
+      overflow-wrap:anywhere;
+    }
+
     .notification-admin-actions button:disabled{
       opacity:.58;
       cursor:wait;
