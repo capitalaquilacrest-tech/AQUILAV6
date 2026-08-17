@@ -5677,6 +5677,88 @@ if(!stage || !overlay) return;
     const adminSupportButton=
       document.querySelector("[data-admin-support]");
 
+    async function sendAdminSupportReply(
+      event,
+      ticketId,
+      textarea,
+      sendButton
+    ){
+      event.preventDefault();
+
+      textarea.setCustomValidity("");
+
+      const message=
+        String(textarea.value||"").trim();
+
+      if(!message){
+        textarea.setCustomValidity(
+          "Please enter your reply."
+        );
+        textarea.reportValidity();
+        return;
+      }
+
+      const accessToken=
+        window.getAquilaChatAccessToken?.()||"";
+
+      if(!accessToken){
+        textarea.setCustomValidity(
+          "Admin session is unavailable."
+        );
+        textarea.reportValidity();
+        return;
+      }
+
+      textarea.disabled=true;
+      sendButton.disabled=true;
+      sendButton.textContent="Sending…";
+
+      try{
+        const response=await fetch(
+          "/api/admin/support-reply",
+          {
+            method:"POST",
+            headers:{
+              "content-type":"application/json",
+              authorization:`Bearer ${accessToken}`,
+              accept:"application/json"
+            },
+            body:JSON.stringify({
+              ticketId,
+              message
+            })
+          }
+        );
+
+        const result=
+          await response.json().catch(()=>({}));
+
+        if(!response.ok||!result.success){
+          throw new Error(
+            result.error||
+            "Reply could not be saved."
+          );
+        }
+
+        textarea.value="";
+
+        await loadAdminSupportThread(
+          ticketId
+        );
+      }catch(error){
+        textarea.disabled=false;
+        sendButton.disabled=false;
+        sendButton.textContent="Send Reply";
+
+        textarea.setCustomValidity(
+          error.message||
+          "Reply could not be saved."
+        );
+
+        textarea.reportValidity();
+      }
+    }
+
     async function loadAdminSupportThread(
       ticketId
     ){
@@ -5838,6 +5920,49 @@ if(!stage || !overlay) return;
 
           notificationList.append(bubble);
         });
+        if(ticket.status!=="CLOSED"){
+          const replyForm=
+            document.createElement("form");
+
+          replyForm.className=
+            "notification-reply-form";
+
+          const textarea=
+            document.createElement("textarea");
+
+          textarea.className=
+            "notification-reply-input";
+          textarea.placeholder=
+            "Write your reply to the member…";
+          textarea.maxLength=2000;
+          textarea.required=true;
+          textarea.rows=3;
+
+          const sendButton=
+            document.createElement("button");
+
+          sendButton.type="submit";
+          sendButton.textContent="Send Reply";
+
+          replyForm.append(
+            textarea,
+            sendButton
+          );
+
+          replyForm.addEventListener(
+            "submit",
+            event=>{
+              sendAdminSupportReply(
+                event,
+                ticket.ticketId,
+                textarea,
+                sendButton
+              );
+            }
+          );
+
+          notificationList.append(replyForm);
+        }
       }catch(error){
         notificationList.textContent=
           error.message||
