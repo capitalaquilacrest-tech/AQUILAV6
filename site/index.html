@@ -5640,7 +5640,7 @@ if(!stage || !overlay) return;
       try{
         const response=await fetch(
           "/api/admin/support-thread"+
-      `    ?ticketId=${encodeURIComponent(ticketId)}`,
+            `?ticketId=${encodeURIComponent(ticketId)}`,
           {
             method:"GET",
             headers:{
@@ -5651,13 +5651,23 @@ if(!stage || !overlay) return;
           }
         );
 
-        const result=
-          await response.json().catch(()=>({}));
+        const responseText=
+          await response.text();
+
+        let result={};
+
+        try{
+          result=JSON.parse(responseText);
+        }catch(_){
+          result={};
+        }
 
         if(!response.ok||!result.success){
           throw new Error(
             result.error||
-            "Conversation could not be loaded."
+            `Conversation request failed `+
+            `(HTTP ${response.status}, `+
+            `${response.headers.get("content-type")||"unknown"}).`
           );
         }
 
