@@ -1138,7 +1138,8 @@ async function handleAdminSupportReply(
         apiSecret:env.AI_AUTH_SECRET,
         adminUsername:admin.username,
         ticketId,
-        message
+        message,
+        files:Array.isArray(body?.files)?body.files:[]
       })
     }
   );
@@ -1386,7 +1387,7 @@ async function handleMemberNotificationAction(request,env,action){
   if(request.method!=="POST")return json({success:false,error:"Method not allowed."},405,{allow:"POST"});
   const member=await getVerifiedMember(request,env);if(!member)return json({success:false,error:"Verified member access required."},401);
   let body;try{body=await request.json();}catch(_){return json({success:false,error:"Invalid request."},400);}
-  const response=await fetch(MEMBER_PORTAL_API_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...body,action,apiSecret:env.AI_AUTH_SECRET,username:member.username})});
+  const response=await fetch(MEMBER_PORTAL_API_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...body,action,apiSecret:env.AI_AUTH_SECRET,username:member.username,fullName:member.fullName})});
   const result=response.ok?await response.json().catch(()=>null):null;
   if(!response.ok||!result?.success)return json({success:false,error:result?.message||"The request could not be completed."},result?.code==="TICKET_CLOSED"||result?.code==="REOPEN_EXPIRED"?409:502);
   return json(result,200,{"cache-control":"no-store"});
@@ -1400,6 +1401,21 @@ async function handleAdminNotificationAction(request,env,action){
   const result=response.ok?await response.json().catch(()=>null):null;
   if(!response.ok||!result?.success)return json({success:false,error:result?.message||"The admin request could not be completed."},502);
   return json(result,200,{"cache-control":"no-store"});
+}
+
+async function handleSupportMedia(request,env){
+  if(request.method!=="GET")return json({success:false,error:"Method not allowed."},405,{allow:"GET"});
+  const url=new URL(request.url),mediaId=String(url.searchParams.get("mediaId")||"").trim();
+  if(!mediaId)return json({success:false,error:"Media ID is required."},400);
+  const token=(request.headers.get("authorization")||"").replace(/^Bearer\s+/i,"").trim();
+  const admin=await getVerifiedAdmin(token,env);let member=null;
+  if(!admin)member=await getVerifiedMember(request,env);
+  if(!admin&&!member)return json({success:false,error:"Authorized member access required."},401);
+  const response=await fetch(MEMBER_PORTAL_API_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:"SUPPORT_MEDIA_FETCH",apiSecret:env.AI_AUTH_SECRET,mediaId,isAdmin:Boolean(admin),username:admin?.username||member?.username||""})});
+  const result=response.ok?await response.json().catch(()=>null):null;
+  if(!response.ok||!result?.success)return json({success:false,error:result?.message||"Photo is unavailable."},result?.code==="FORBIDDEN"?403:404);
+  const binary=Uint8Array.from(atob(result.base64),character=>character.charCodeAt(0));
+  return new Response(binary,{status:200,headers:{"content-type":result.mimeType||"application/octet-stream","content-disposition":`inline; filename="${String(result.fileName||"support-photo").replace(/[\"\\]/g,"-")}"`,"cache-control":"private, no-store","x-content-type-options":"nosniff"}});
 }
 
 async function saveChatIdentity(userId, identity, env) {
@@ -1883,6 +1899,14 @@ export default {
     if(url.pathname==="/api/member/support-reply"){
       try{return await handleMemberNotificationAction(request,env,"MEMBER_SUPPORT_REPLY");}
       catch(error){console.error("Member support reply error",error);return json({success:false,error:"Your reply could not be saved."},500);}
+    }
+    if(url.pathname==="/api/member/support-ticket"){
+      try{return await handleMemberNotificationAction(request,env,"MEMBER_CREATE_TICKET");}
+      catch(error){console.error("Member support ticket error",error);return json({success:false,error:"Support ticket could not be submitted."},500);}
+    }
+    if(url.pathname==="/api/support/media"){
+      try{return await handleSupportMedia(request,env);}
+      catch(error){console.error("Support media error",error);return json({success:false,error:"Photo is temporarily unavailable."},500);}
     }
     if(url.pathname==="/api/member/ticket-action"){
       try{return await handleMemberNotificationAction(request,env,"MEMBER_TICKET_ACTION");}
