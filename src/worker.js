@@ -685,6 +685,69 @@ async function getSupabaseUser(accessToken, env) {
   return user?.id ? user : null;
 }
 
+async function getVerifiedAdmin(
+  accessToken,
+  env
+) {
+  const user=await getSupabaseUser(
+    accessToken,
+    env
+  );
+
+  if(!user?.id){
+    return null;
+  }
+
+  const profileUrl=
+    `${SUPABASE_URL}/rest/v1/chat_profiles`+
+    `?user_id=eq.${encodeURIComponent(user.id)}`+
+    `&select=user_id,public_name,role,member_username`+
+    `&limit=1`;
+
+  const response=await fetch(profileUrl,{
+    headers:{
+      apikey:env.SUPABASE_SECRET_KEY,
+      authorization:
+        `Bearer ${env.SUPABASE_SECRET_KEY}`
+    }
+  });
+
+  if(!response.ok){
+    return null;
+  }
+
+  const profiles=
+    await response.json().catch(()=>[]);
+
+  const profile=Array.isArray(profiles)
+    ?profiles[0]
+    :null;
+
+  if(
+    !profile||
+    profile.user_id!==user.id||
+    String(profile.role||"")
+      .trim()
+      .toLowerCase()!=="admin"
+  ){
+    return null;
+  }
+
+  return {
+    userId:user.id,
+    username:String(
+      profile.member_username||
+      profile.public_name||
+      "ACC ADMIN"
+    ).trim(),
+    fullName:String(
+      profile.public_name||
+      "ACC Admin"
+    ).trim(),
+    role:"ACC ADMIN"
+  };
+}
+
 async function saveChatIdentity(userId, identity, env) {
   const profile = {
     display_name: identity.fullName.slice(0, 30),
