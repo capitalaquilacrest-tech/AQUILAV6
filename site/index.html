@@ -5562,6 +5562,110 @@ if(!stage || !overlay) return;
       }
     );
 
+    const adminSupportButton=
+      document.querySelector("[data-admin-support]");
+
+    async function loadAdminSupportInbox(){
+      if(
+        currentMember?.role!=="ACC ADMIN"||
+        !notificationList
+      ){
+        return;
+      }
+
+      const accessToken=
+        window.getAquilaChatAccessToken?.()||"";
+
+      if(!accessToken){
+        notificationList.hidden=false;
+        notificationList.textContent=
+          "Admin session is unavailable. Open Live Chat and try again.";
+        return;
+      }
+
+      adminSupportButton.disabled=true;
+      adminSupportButton.textContent=
+        "Loading Support Inbox…";
+
+      notificationList.hidden=false;
+      notificationList.textContent=
+        "Loading support tickets…";
+
+      try{
+        const response=await fetch(
+          "/api/admin/support-inbox",
+          {
+            method:"GET",
+            headers:{
+              authorization:`Bearer ${accessToken}`,
+              accept:"application/json"
+            },
+            cache:"no-store"
+          }
+        );
+
+        const result=
+          await response.json().catch(()=>({}));
+
+        if(!response.ok||!result.success){
+          throw new Error(
+            result.error||
+            "Support inbox could not be loaded."
+          );
+        }
+
+        notificationList.textContent="";
+
+        if(!result.tickets.length){
+          const empty=document.createElement("div");
+          empty.className="notification-login-note";
+          empty.textContent="No support tickets found.";
+          notificationList.append(empty);
+          return;
+        }
+
+        result.tickets.forEach(ticket=>{
+          const item=document.createElement("button");
+          item.type="button";
+          item.className="notification-ticket-item";
+          item.dataset.ticketId=ticket.ticketId;
+
+          const subject=document.createElement("strong");
+          subject.textContent=
+            ticket.subject||"Support concern";
+
+          const member=document.createElement("span");
+          member.textContent=
+            `${ticket.fullName||ticket.username} · ${ticket.status}`;
+
+          const preview=document.createElement("small");
+          preview.textContent=
+            ticket.message||"No message provided.";
+
+          item.append(
+            subject,
+            member,
+            preview
+          );
+
+          notificationList.append(item);
+        });
+      }catch(error){
+        notificationList.textContent=
+          error.message||
+          "Support inbox is temporarily unavailable.";
+      }finally{
+        adminSupportButton.disabled=false;
+        adminSupportButton.textContent=
+          "Support Inbox";
+      }
+    }
+
+    adminSupportButton?.addEventListener(
+      "click",
+      loadAdminSupportInbox
+    );
+
     function updateDashboardAccessButtons(isLoggedIn) {
       document
         .querySelectorAll("[data-dashboard]")
