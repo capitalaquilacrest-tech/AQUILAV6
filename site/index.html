@@ -6128,6 +6128,119 @@ if(!stage || !overlay) return;
       loadAdminSupportInbox
     );
 
+    async function loadMemberNotifications(){
+      if(
+        !currentMember?.username||
+        currentMember.role==="ACC ADMIN"||
+        !notificationList
+      ){
+        return;
+      }
+
+      const accessToken=
+        window.getAquilaChatAccessToken?.()||"";
+
+      notificationList.hidden=false;
+      notificationList.textContent=
+        "Loading notifications…";
+
+      try{
+        const response=await fetch(
+          "/api/member/notifications",
+          {
+            method:"GET",
+            headers:{
+              authorization:
+                accessToken
+                  ?`Bearer ${accessToken}`
+                  :"",
+              accept:"application/json"
+            },
+            cache:"no-store"
+          }
+        );
+
+        const result=
+          await response.json().catch(()=>({}));
+
+        if(!response.ok||!result.success){
+          throw new Error(
+            result.error||
+            "Notifications could not be loaded."
+          );
+        }
+
+        notificationList.textContent="";
+
+        if(!result.notifications.length){
+          const empty=
+            document.createElement("div");
+
+          empty.className=
+            "notification-login-note";
+
+          empty.textContent=
+            "You have no notifications yet.";
+
+          notificationList.append(empty);
+          return;
+        }
+
+        result.notifications.forEach(
+          notification=>{
+            const item=
+              document.createElement("button");
+
+            item.type="button";
+            item.className=
+              "notification-ticket-item";
+
+            item.dataset.sourceType=
+              notification.sourceType;
+
+            item.dataset.sourceId=
+              notification.sourceId;
+
+            item.dataset.ticketId=
+              notification.ticketId||"";
+
+            const title=
+              document.createElement("strong");
+
+            title.textContent=
+              notification.title||
+              "Support update";
+
+            const type=
+              document.createElement("span");
+
+            type.textContent=
+              notification.sourceType==="SUPPORT"
+                ?"SUPPORT REPLY"
+                :"NOTIFICATION";
+
+            const message=
+              document.createElement("small");
+
+            message.textContent=
+              notification.message||"";
+
+            item.append(
+              title,
+              type,
+              message
+            );
+
+            notificationList.append(item);
+          }
+        );
+      }catch(error){
+        notificationList.textContent=
+          error.message||
+          "Notifications are temporarily unavailable.";
+      }
+    }
+
     function updateDashboardAccessButtons(isLoggedIn) {
       document
         .querySelectorAll("[data-dashboard]")
