@@ -1269,7 +1269,8 @@ async function handleMemberNotifications(
       notifications:
         Array.isArray(result.notifications)
           ?result.notifications
-          :[]
+          :[],
+      unreadCount:Math.max(0,Number(result.unreadCount)||0)
     },
     200,
     {
@@ -1379,6 +1380,26 @@ async function handleMemberSupportThread(
       "cache-control":"no-store"
     }
   );
+}
+
+async function handleMemberNotificationAction(request,env,action){
+  if(request.method!=="POST")return json({success:false,error:"Method not allowed."},405,{allow:"POST"});
+  const member=await getVerifiedMember(request,env);if(!member)return json({success:false,error:"Verified member access required."},401);
+  let body;try{body=await request.json();}catch(_){return json({success:false,error:"Invalid request."},400);}
+  const response=await fetch(MEMBER_PORTAL_API_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...body,action,apiSecret:env.AI_AUTH_SECRET,username:member.username})});
+  const result=response.ok?await response.json().catch(()=>null):null;
+  if(!response.ok||!result?.success)return json({success:false,error:result?.message||"The request could not be completed."},result?.code==="TICKET_CLOSED"||result?.code==="REOPEN_EXPIRED"?409:502);
+  return json(result,200,{"cache-control":"no-store"});
+}
+
+async function handleAdminNotificationAction(request,env,action){
+  if(request.method!=="POST")return json({success:false,error:"Method not allowed."},405,{allow:"POST"});
+  const token=(request.headers.get("authorization")||"").replace(/^Bearer\s+/i,"").trim();const admin=await getVerifiedAdmin(token,env);if(!admin)return json({success:false,error:"Verified ACC Admin access required."},403);
+  let body;try{body=await request.json();}catch(_){return json({success:false,error:"Invalid request."},400);}
+  const response=await fetch(MEMBER_PORTAL_API_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...body,action,apiSecret:env.AI_AUTH_SECRET,adminUsername:admin.username})});
+  const result=response.ok?await response.json().catch(()=>null):null;
+  if(!response.ok||!result?.success)return json({success:false,error:result?.message||"The admin request could not be completed."},502);
+  return json(result,200,{"cache-control":"no-store"});
 }
 
 async function saveChatIdentity(userId, identity, env) {
@@ -1857,6 +1878,31 @@ export default {
           500
         );
       }
+    }
+
+    if(url.pathname==="/api/member/support-reply"){
+      try{return await handleMemberNotificationAction(request,env,"MEMBER_SUPPORT_REPLY");}
+      catch(error){console.error("Member support reply error",error);return json({success:false,error:"Your reply could not be saved."},500);}
+    }
+    if(url.pathname==="/api/member/ticket-action"){
+      try{return await handleMemberNotificationAction(request,env,"MEMBER_TICKET_ACTION");}
+      catch(error){console.error("Member ticket action error",error);return json({success:false,error:"Ticket status could not be updated."},500);}
+    }
+    if(url.pathname==="/api/member/notification-read"){
+      try{return await handleMemberNotificationAction(request,env,"MARK_NOTIFICATION_READ");}
+      catch(error){return json({success:false,error:"Read status could not be saved."},500);}
+    }
+    if(url.pathname==="/api/admin/announcement"){
+      try{return await handleAdminNotificationAction(request,env,"ADMIN_CREATE_ANNOUNCEMENT");}
+      catch(error){console.error("Announcement publish error",error);return json({success:false,error:"Announcement could not be published."},500);}
+    }
+    if(url.pathname==="/api/admin/member-message"){
+      try{return await handleAdminNotificationAction(request,env,"ADMIN_SEND_MESSAGE");}
+      catch(error){console.error("Member message error",error);return json({success:false,error:"Member message could not be sent."},500);}
+    }
+    if(url.pathname==="/api/admin/ticket-action"){
+      try{return await handleAdminNotificationAction(request,env,"ADMIN_TICKET_ACTION");}
+      catch(error){return json({success:false,error:"Ticket could not be updated."},500);}
     }
     
     if (url.pathname === "/api/chat-member/login") {
