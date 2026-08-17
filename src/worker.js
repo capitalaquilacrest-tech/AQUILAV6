@@ -1928,6 +1928,10 @@ export default {
       try{return await handleAdminNotificationAction(request,env,"ADMIN_TICKET_ACTION");}
       catch(error){return json({success:false,error:"Ticket could not be updated."},500);}
     }
+    if(url.pathname==="/api/admin/support-read"){
+      try{return await handleAdminNotificationAction(request,env,"ADMIN_MARK_SUPPORT_READ");}
+      catch(error){return json({success:false,error:"Support read status could not be saved."},500);}
+    }
     
     if (url.pathname === "/api/chat-member/login") {
       try { return await handleChatMemberLogin(request, env); }
