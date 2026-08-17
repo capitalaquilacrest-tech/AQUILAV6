@@ -952,6 +952,8 @@
       width:min(390px,calc(100vw - 32px));
       max-height:calc(100vh - 106px);
       overflow:auto;
+      overscroll-behavior:contain;
+      touch-action:pan-y;
       padding:18px;
       border:1px solid rgba(13,54,112,.14);
       border-radius:20px;
@@ -1210,6 +1212,8 @@
     }
 
     .notification-ticket-item.unread{border-color:#0f5bd8;background:#eef5ff;box-shadow:inset 4px 0 #0f5bd8}
+    .notification-ticket-meta{display:flex!important;align-items:center;gap:6px;flex-wrap:wrap}.notification-status-badge,.notification-unread-badge{display:inline-flex!important;width:auto!important;margin:0!important;padding:2px 7px;border-radius:999px;font-size:9px!important;font-weight:950}.notification-status-badge.open{background:#e9f8ef;color:#087443}.notification-status-badge.answered{background:#eaf2ff;color:#075ec8}.notification-unread-badge{background:#d71932;color:#fff}.notification-ticket-date{color:#687991!important;font-size:10px!important}
+    .ai-messages{overscroll-behavior:contain;touch-action:pan-y}
     .nav-notification.has-unread{animation:notificationBellPulse 1.8s ease-in-out infinite}
     @keyframes notificationBellPulse{50%{box-shadow:0 0 0 6px rgba(255,193,7,.2),0 16px 34px rgba(5,24,61,.38)}}
     .notification-ticket-controls{display:grid;gap:10px;padding-top:12px;border-top:1px solid #e1e9f4}
@@ -4067,6 +4071,8 @@
     }
     function setChatOpen(open){
       if(open){
+        document.getElementById("notificationClose")?.click();
+        document.getElementById("aiClose")?.click();
         lockLandingPageForChat();
       }else{
         if(chatPanel?.contains(document.activeElement)){
@@ -5668,8 +5674,18 @@ if(!stage || !overlay) return;
     const notificationClose=
       document.getElementById("notificationClose");
 
+    if(!window.aquilaSetPagePopupLock){
+      let popupScrollY=0,popupSaved=null;
+      window.aquilaSetPagePopupLock=function(open){
+        if(open&&!popupSaved){popupScrollY=window.scrollY||0;popupSaved={position:document.body.style.position,top:document.body.style.top,left:document.body.style.left,right:document.body.style.right,width:document.body.style.width,overflow:document.body.style.overflow};Object.assign(document.body.style,{position:"fixed",top:`-${popupScrollY}px`,left:"0",right:"0",width:"100%",overflow:"hidden"});document.documentElement.style.overscrollBehavior="none";}
+        if(!open&&popupSaved){Object.assign(document.body.style,popupSaved);popupSaved=null;document.documentElement.style.overscrollBehavior="";window.scrollTo(0,popupScrollY);}
+      };
+    }
+
     function setNotificationPanel(open){
       if(!notificationButton||!notificationPanel)return;
+
+      if(open){document.getElementById("chatClose")?.click();document.getElementById("aiClose")?.click();}
 
       notificationPanel.classList.toggle("show",open);
       notificationPanel.setAttribute(
@@ -5681,6 +5697,7 @@ if(!stage || !overlay) return;
         "aria-expanded",
         String(open)
       );
+      window.aquilaSetPagePopupLock?.(open);
     }
 
     notificationButton?.addEventListener("click",()=>{
@@ -6170,6 +6187,7 @@ if(!stage || !overlay) return;
           );
         }
 
+        updateNotificationBadge(result.tickets.filter(ticket=>ticket.unread).length);
         notificationList.textContent="";
 
         if(!result.tickets.length){
@@ -6183,14 +6201,13 @@ if(!stage || !overlay) return;
         result.tickets.forEach(ticket=>{
           const item=document.createElement("button");
           item.type="button";
-          item.className="notification-ticket-item";
+          item.className=`notification-ticket-item${ticket.unread?" unread":""}`;
           item.dataset.ticketId=ticket.ticketId;
           item.addEventListener(
             "click",
-            ()=>{
-              loadAdminSupportThread(
-                ticket.ticketId
-              );
+            async ()=>{
+              if(ticket.unread){try{await adminNotificationPost("/api/admin/support-read",{ticketId:ticket.ticketId,sourceVersion:ticket.sourceVersion||"1"});ticket.unread=false;}catch(_){} }
+              await loadAdminSupportThread(ticket.ticketId);
             }
           );
 
@@ -6198,13 +6215,17 @@ if(!stage || !overlay) return;
           subject.textContent=
             ticket.subject||"Support concern";
 
-          const member=document.createElement("span");
-          member.textContent=
-            `${ticket.fullName||ticket.username} · ${ticket.status}`;
+          const member=document.createElement("span");member.className="notification-ticket-meta";
+          const memberName=document.createElement("b");memberName.textContent=ticket.fullName||ticket.username;
+          const status=document.createElement("em");status.className=`notification-status-badge ${String(ticket.status||"OPEN").toLowerCase()}`;status.textContent=ticket.status||"OPEN";
+          member.append(memberName,status);
+          if(ticket.unread){const unread=document.createElement("em");unread.className="notification-unread-badge";unread.textContent="UNREAD";member.append(unread);}
 
           const preview=document.createElement("small");
-          preview.textContent=
-            ticket.message||"No message provided.";
+          const activity=ticket.lastActivity||ticket.dateSubmitted;
+          const parsed=activity?new Date(activity):null;
+          preview.className="notification-ticket-date";
+          preview.textContent=`${parsed&&!isNaN(parsed.getTime())?parsed.toLocaleString("en-PH",{dateStyle:"medium",timeStyle:"short"}):activity||"Date unavailable"} · Last message: ${ticket.lastMessageBy||"Member"}`;
 
           item.append(
             subject,
@@ -6717,6 +6738,7 @@ if(!stage || !overlay) return;
     }
 
     function setOpen(open){
+      if(open){document.getElementById("notificationClose")?.click();document.getElementById("chatClose")?.click();}
       if(!open && panel.contains(document.activeElement)){
         document.activeElement.blur();
       }
@@ -6725,9 +6747,9 @@ if(!stage || !overlay) return;
       panel.setAttribute("aria-hidden",String(!open));
       orb.setAttribute("aria-expanded",String(open));
 
-      if(open){
-        document.getElementById("chatClose")?.click();
+      window.aquilaSetPagePopupLock?.(open);
 
+      if(open){
         setTimeout(()=>{
           input?.focus({
             preventScroll:true
