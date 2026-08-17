@@ -4560,6 +4560,27 @@
       if(chatPhotoButton) chatPhotoButton.disabled=false;
       if(chatVoiceButton) chatVoiceButton.disabled=false;
       setInlineAdminMode(chatProfile?.role==="admin");
+      window.dispatchEvent(
+        new CustomEvent(
+          "aquila:chat-identity-changed",
+          {
+            detail:{
+              username:String(
+                chatProfile?.member_username||
+                chatProfile?.public_name||
+                ""
+              ).trim(),
+              fullName:String(
+                chatProfile?.public_name||
+                "ACC Admin"
+              ).trim(),
+              role:chatProfile?.role==="admin"
+                ?"ACC ADMIN"
+                :"MEMBER"
+            }
+          }
+        )
+      );
     }
     async function initLiveChat(){
       if(chatReady) return;
@@ -5513,6 +5534,27 @@ if(!stage || !overlay) return;
       }
     }
 
+    window.addEventListener(
+      "aquila:chat-identity-changed",
+      event=>{
+        const identity=event.detail||{};
+
+        currentMember={
+          username:String(identity.username||"").trim(),
+          fullName:String(
+            identity.fullName||
+            identity.username||
+            "Member"
+          ).trim(),
+          role:String(identity.role||"MEMBER")
+            .trim()
+            .toUpperCase()
+        };
+
+        syncNotificationAccess();
+      }
+    );
+
     function updateDashboardAccessButtons(isLoggedIn) {
       document
         .querySelectorAll("[data-dashboard]")
@@ -5553,6 +5595,8 @@ if(!stage || !overlay) return;
           .toUpperCase()
       };
 
+      syncNotificationAccess();
+
       updateDashboardAccessButtons(true);
       memberAccess=true;
       dailyExhausted=false;
@@ -5589,6 +5633,7 @@ if(!stage || !overlay) return;
     }
     function showGuest(){
       currentMember=null;
+      syncNotificationAccess();
       updateDashboardAccessButtons(false);
       memberAccess=false;
       accessCopy.innerHTML='<strong>Unlimited AI Access</strong>Already have an account? <span class="ai-access-action">LOG IN</span>. New user? <span class="ai-access-action">CREATE ACCOUNT</span> and <span class="ai-access-action">COMPLETE ID VERIFICATION</span>.<span class="ai-no-deposit">🔥 NO DEPOSIT REQUIRED 🔥</span>';
