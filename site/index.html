@@ -5250,6 +5250,18 @@ if(!stage || !overlay) return;
     }
 
     function showMember(member){
+      currentMember={
+        username:String(member?.username||"").trim(),
+        fullName:String(
+          member?.fullName||
+          member?.username||
+          "Member"
+        ).trim(),
+        role:String(member?.role||"MEMBER")
+          .trim()
+          .toUpperCase()
+      };
+
       updateDashboardAccessButtons(true);
       memberAccess=true;
       dailyExhausted=false;
