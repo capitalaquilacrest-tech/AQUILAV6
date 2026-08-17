@@ -1206,6 +1206,28 @@
       cursor:wait;
     }
 
+    .notification-ticket-item.unread{border-color:#0f5bd8;background:#eef5ff;box-shadow:inset 4px 0 #0f5bd8}
+    .nav-notification.has-unread{animation:notificationBellPulse 1.8s ease-in-out infinite}
+    @keyframes notificationBellPulse{50%{box-shadow:0 0 0 6px rgba(255,193,7,.2),0 16px 34px rgba(5,24,61,.38)}}
+    .notification-ticket-controls{display:grid;gap:10px;padding-top:12px;border-top:1px solid #e1e9f4}
+    .notification-ticket-controls>button{justify-self:end;padding:9px 13px;border:0;border-radius:10px;background:#123f86;color:#fff;font-size:11px;font-weight:900;cursor:pointer}
+    .notification-ticket-controls .notification-danger-action{background:#fff1f2;color:#aa2434;border:1px solid #ffd0d6}
+    .notification-admin-close{justify-self:end;padding:9px 13px;border:1px solid #ffd0d6;border-radius:10px;background:#fff1f2;color:#aa2434;font-size:11px;font-weight:900;cursor:pointer}
+    .notification-closed-note{padding:10px;border-radius:11px;background:#f3f6fa;color:#66758d;font-size:11px;line-height:1.45}
+    .notification-detail-body{display:grid;gap:12px;color:#172b4d;font-size:13px;line-height:1.6}
+    .notification-detail-body p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+    .notification-detail-body img{display:block;width:100%;max-height:420px;object-fit:contain;border:1px solid #dce6f3;border-radius:14px;background:#f5f8fc}
+    .notification-compose-overlay{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;padding:18px;background:rgba(2,8,23,.72);backdrop-filter:blur(8px)}
+    .notification-compose-modal{width:min(560px,100%);max-height:92vh;overflow:auto;border-radius:22px;background:#fff;box-shadow:0 30px 100px rgba(0,0,0,.42)}
+    .notification-compose-head{display:flex;align-items:center;justify-content:space-between;padding:17px 19px;background:linear-gradient(135deg,#071d49,#0f5bd8);color:#fff}
+    .notification-compose-head strong{font-size:17px}.notification-compose-head button{width:34px;height:34px;border:0;border-radius:10px;background:rgba(255,255,255,.14);color:#fff;font-size:22px;cursor:pointer}
+    .notification-compose-form{display:grid;gap:11px;padding:18px}
+    .notification-compose-form input,.notification-compose-form textarea,.notification-compose-form select{width:100%;padding:11px 12px;border:1px solid #cbd8e9;border-radius:11px;background:#fff;color:#172b4d;font:inherit;font-size:13px;outline:none}
+    .notification-compose-form textarea{resize:vertical}.notification-compose-form input:focus,.notification-compose-form textarea:focus,.notification-compose-form select:focus{border-color:#0f5bd8;box-shadow:0 0 0 3px rgba(15,91,216,.1)}
+    .notification-compose-dates{display:grid;grid-template-columns:1fr 1fr;gap:9px}.notification-compose-form small{color:#728198;font-size:10px}
+    .notification-compose-form>button{justify-self:end;padding:11px 16px;border:0;border-radius:11px;background:linear-gradient(135deg,#123f86,#0f5bd8);color:#fff;font-weight:900;cursor:pointer}.notification-compose-form>button:disabled{opacity:.6;cursor:wait}
+    .notification-compose-status{min-height:18px;color:#a32635;font-size:11px}.notification-compose-status.success{color:#087443}
+
     .notification-admin-actions button:disabled{
       opacity:.58;
       cursor:wait;
@@ -1216,6 +1238,7 @@
         top:74px;
         right:16px;
       }
+      .notification-compose-dates{grid-template-columns:1fr}
     }
     
     .nav-download{color:#fff;background:linear-gradient(135deg,var(--red2),var(--red));box-shadow:0 12px 28px rgba(215,29,50,.28);animation:downloadPulse 2.4s ease-in-out infinite}
@@ -5737,6 +5760,41 @@ if(!stage || !overlay) return;
 
     const adminSupportButton=
       document.querySelector("[data-admin-support]");
+    const adminAnnouncementButton=document.querySelector("[data-admin-announcement]");
+    const adminMessageButton=document.querySelector("[data-admin-message]");
+
+    async function adminNotificationPost(url,body){
+      const token=window.getAquilaChatAccessToken?.()||"";
+      if(!token)throw new Error("Admin session is unavailable.");
+      const response=await fetch(url,{method:"POST",headers:{"content-type":"application/json",authorization:`Bearer ${token}`,accept:"application/json"},body:JSON.stringify(body)});
+      const result=await response.json().catch(()=>({}));if(!response.ok||!result.success)throw new Error(result.error||"The admin request could not be completed.");return result;
+    }
+
+    function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result||"").split(",").pop()||"");reader.onerror=()=>reject(new Error("A selected image could not be read."));reader.readAsDataURL(file);});}
+
+    function openAdminComposer(kind){
+      if(currentMember?.role!=="ACC ADMIN")return;
+      const overlay=document.createElement("div");overlay.className="notification-compose-overlay";
+      const modal=document.createElement("div");modal.className="notification-compose-modal";
+      const head=document.createElement("div");head.className="notification-compose-head";const heading=document.createElement("strong");heading.textContent=kind==="announcement"?"Create Announcement":"Message a Member";const close=document.createElement("button");close.type="button";close.textContent="×";close.addEventListener("click",()=>overlay.remove());head.append(heading,close);
+      const form=document.createElement("form");form.className="notification-compose-form";
+      const makeInput=(name,placeholder,type="text")=>{const input=document.createElement("input");input.name=name;input.type=type;input.placeholder=placeholder;input.required=true;return input;};
+      if(kind==="message")form.append(makeInput("username","Exact member username"));
+      form.append(makeInput("title",kind==="announcement"?"Announcement title":"Message title"));
+      const message=document.createElement("textarea");message.name="message";message.placeholder=kind==="announcement"?"Write the announcement…":"Write your message…";message.maxLength=5000;message.required=true;message.rows=7;form.append(message);
+      const priority=document.createElement("select");priority.name="priority";["NORMAL","HIGH","URGENT"].forEach(value=>{const option=document.createElement("option");option.value=option.textContent=value;priority.append(option);});form.append(priority);
+      let files=null;
+      if(kind==="announcement"){
+        const dates=document.createElement("div");dates.className="notification-compose-dates";const start=makeInput("startDate","Start date","datetime-local");start.required=false;const expiry=makeInput("expiryDate","Expiry date","datetime-local");expiry.required=false;dates.append(start,expiry);form.append(dates);
+        files=document.createElement("input");files.type="file";files.accept="image/*";files.multiple=true;files.name="photos";files.required=false;form.append(files);
+        const hint=document.createElement("small");hint.textContent="Optional: up to 5 photos, maximum 5 MB each.";form.append(hint);
+      }
+      const status=document.createElement("div");status.className="notification-compose-status";const submit=document.createElement("button");submit.type="submit";submit.textContent=kind==="announcement"?"Publish Announcement":"Send Message";form.append(status,submit);
+      form.addEventListener("submit",async event=>{event.preventDefault();status.textContent="";submit.disabled=true;submit.textContent="Processing…";try{const data=new FormData(form);const body={title:String(data.get("title")||"").trim(),message:String(data.get("message")||"").trim(),priority:String(data.get("priority")||"NORMAL")};if(kind==="message")body.username=String(data.get("username")||"").trim();else{body.startDate=String(data.get("startDate")||"");body.expiryDate=String(data.get("expiryDate")||"");const selected=[...(files?.files||[])];if(selected.length>5)throw new Error("Select up to 5 photos only.");if(selected.some(file=>file.size>5*1024*1024))throw new Error("Each photo must be 5 MB or smaller.");body.files=await Promise.all(selected.map(async file=>({name:file.name,mimeType:file.type,base64:await fileToBase64(file),altText:body.title})));}await adminNotificationPost(kind==="announcement"?"/api/admin/announcement":"/api/admin/member-message",body);status.classList.add("success");status.textContent=kind==="announcement"?"Announcement published successfully.":"Message sent successfully.";form.reset();submit.textContent=kind==="announcement"?"Publish Announcement":"Send Message";setTimeout(()=>overlay.remove(),1100);}catch(error){status.textContent=error.message;submit.disabled=false;submit.textContent=kind==="announcement"?"Publish Announcement":"Send Message";}});
+      modal.append(head,form);overlay.append(modal);overlay.addEventListener("click",event=>{if(event.target===overlay)overlay.remove();});document.body.append(overlay);
+    }
+    adminAnnouncementButton?.addEventListener("click",()=>openAdminComposer("announcement"));
+    adminMessageButton?.addEventListener("click",()=>openAdminComposer("message"));
 
     async function sendAdminSupportReply(
       event,
@@ -6024,6 +6082,11 @@ if(!stage || !overlay) return;
 
           notificationList.append(replyForm);
         }
+        if(ticket.status!=="CLOSED"){
+          const closeTicket=document.createElement("button");closeTicket.type="button";closeTicket.className="notification-danger-action notification-admin-close";closeTicket.textContent="Close Ticket";
+          closeTicket.addEventListener("click",async()=>{const reason=prompt("Close reason (optional):","Resolved by ACC Admin");if(reason===null)return;closeTicket.disabled=true;try{await adminNotificationPost("/api/admin/ticket-action",{ticketId:ticket.ticketId,ticketAction:"CLOSE",reason});await loadAdminSupportThread(ticket.ticketId);}catch(error){alert(error.message);closeTicket.disabled=false;}});
+          notificationList.append(closeTicket);
+        }
       }catch(error){
         notificationList.textContent=
           error.message||
@@ -6139,6 +6202,29 @@ if(!stage || !overlay) return;
       "click",
       loadAdminSupportInbox
     );
+
+    function memberNotificationHeaders(){
+      const token=window.getAquilaChatAccessToken?.()||"";
+      return {"content-type":"application/json",accept:"application/json",...(token?{authorization:`Bearer ${token}`}:{})};
+    }
+
+    async function memberNotificationPost(url,body){
+      const response=await fetch(url,{method:"POST",headers:memberNotificationHeaders(),body:JSON.stringify(body)});
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result.success)throw new Error(result.error||"The request could not be completed.");
+      return result;
+    }
+
+    function updateNotificationBadge(count){
+      const badge=document.getElementById("notificationBadge");const value=Math.max(0,Number(count)||0);
+      if(!badge)return;badge.hidden=!value;badge.textContent=value>99?"99+":String(value);
+      notificationButton?.classList.toggle("has-unread",Boolean(value));
+    }
+
+    async function markNotificationRead(notification){
+      if(!notification?.sourceId||!notification.unread)return;
+      try{await memberNotificationPost("/api/member/notification-read",{sourceType:notification.sourceType,sourceId:notification.sourceId,sourceVersion:notification.sourceVersion||"1"});notification.unread=false;const badge=document.getElementById("notificationBadge");updateNotificationBadge(Math.max(0,(Number(badge?.textContent)||1)-1));}catch(_){}
+    }
 
     async function loadMemberSupportThread(
       ticketId
@@ -6288,11 +6374,38 @@ if(!stage || !overlay) return;
 
           notificationList.append(bubble);
         });
+
+        const controls=document.createElement("div");
+        controls.className="notification-ticket-controls";
+        if(ticket.status!=="CLOSED"){
+          const form=document.createElement("form");form.className="notification-reply-form";
+          const textarea=document.createElement("textarea");textarea.className="notification-reply-input";textarea.placeholder="Reply to ACC Admin…";textarea.maxLength=2000;textarea.required=true;textarea.rows=3;
+          const send=document.createElement("button");send.type="submit";send.textContent="Send Reply";form.append(textarea,send);
+          form.addEventListener("submit",async event=>{event.preventDefault();const message=textarea.value.trim();if(!message)return;textarea.disabled=send.disabled=true;send.textContent="Sending…";try{await memberNotificationPost("/api/member/support-reply",{ticketId:ticket.ticketId,message});await loadMemberSupportThread(ticket.ticketId);}catch(error){textarea.disabled=send.disabled=false;send.textContent="Send Reply";textarea.setCustomValidity(error.message);textarea.reportValidity();}});
+          controls.append(form);
+          const closeTicket=document.createElement("button");closeTicket.type="button";closeTicket.className="notification-danger-action";closeTicket.textContent="Close Ticket";closeTicket.addEventListener("click",async()=>{if(!confirm("Close this support ticket?"))return;closeTicket.disabled=true;try{await memberNotificationPost("/api/member/ticket-action",{ticketId:ticket.ticketId,ticketAction:"CLOSE",reason:"Resolved by member"});await loadMemberSupportThread(ticket.ticketId);}catch(error){alert(error.message);closeTicket.disabled=false;}});controls.append(closeTicket);
+        }else{
+          const closedAt=ticket.dateClosed?new Date(ticket.dateClosed).getTime():0;const canReopen=closedAt&&Date.now()-closedAt<=7*86400000;
+          const status=document.createElement("div");status.className="notification-closed-note";status.textContent=canReopen?"Ticket closed. You may reopen it within 7 days.":"Ticket closed. The reopen period has expired.";controls.append(status);
+          if(canReopen){const reopen=document.createElement("button");reopen.type="button";reopen.textContent="Reopen Ticket";reopen.addEventListener("click",async()=>{reopen.disabled=true;try{await memberNotificationPost("/api/member/ticket-action",{ticketId:ticket.ticketId,ticketAction:"REOPEN"});await loadMemberSupportThread(ticket.ticketId);}catch(error){alert(error.message);reopen.disabled=false;}});controls.append(reopen);}
+        }
+        notificationList.append(controls);
       }catch(error){
         notificationList.textContent=
           error.message||
           "Conversation is temporarily unavailable.";
       }
+    }
+
+    async function openMemberNotification(notification){
+      await markNotificationRead(notification);
+      notificationList.textContent="";
+      const header=document.createElement("div");header.className="notification-thread-header";
+      const back=document.createElement("button");back.type="button";back.className="notification-thread-back";back.textContent="← Notifications";back.addEventListener("click",loadMemberNotifications);
+      const title=document.createElement("strong");title.textContent=notification.title||"Notification";
+      const meta=document.createElement("span");meta.textContent=notification.sourceType==="ANNOUNCEMENT"?"ACC ANNOUNCEMENT":"MESSAGE FROM ACC ADMIN";header.append(back,title,meta);notificationList.append(header);
+      const body=document.createElement("div");body.className="notification-detail-body";const text=document.createElement("p");text.textContent=notification.message||"";body.append(text);
+      (notification.media||[]).forEach(media=>{if(!media.url)return;const img=document.createElement("img");img.src=media.url;img.alt=media.altText||notification.title||"Announcement image";img.loading="lazy";img.referrerPolicy="no-referrer";body.append(img);});notificationList.append(body);
     }
 
     async function loadMemberNotifications(){
@@ -6337,6 +6450,8 @@ if(!stage || !overlay) return;
           );
         }
 
+        updateNotificationBadge(result.unreadCount);
+
         notificationList.textContent="";
 
         if(!result.notifications.length){
@@ -6361,6 +6476,7 @@ if(!stage || !overlay) return;
             item.type="button";
             item.className=
               "notification-ticket-item";
+            item.classList.toggle("unread",Boolean(notification.unread));
 
             item.dataset.sourceType=
               notification.sourceType;
@@ -6371,19 +6487,11 @@ if(!stage || !overlay) return;
             item.dataset.ticketId=
               notification.ticketId||"";
 
-            if(
-              notification.sourceType==="SUPPORT"&&
-              notification.ticketId
-            ){
-              item.addEventListener(
-                "click",
-                ()=>{
-                  loadMemberSupportThread(
-                    notification.ticketId
-                  );
-                }
-              );
-            }
+            item.addEventListener("click",async()=>{
+              await markNotificationRead(notification);
+              if(notification.sourceType==="SUPPORT"&&notification.ticketId)await loadMemberSupportThread(notification.ticketId);
+              else await openMemberNotification(notification);
+            });
 
             const title=
               document.createElement("strong");
@@ -6398,7 +6506,9 @@ if(!stage || !overlay) return;
             type.textContent=
               notification.sourceType==="SUPPORT"
                 ?"SUPPORT REPLY"
-                :"NOTIFICATION";
+                :notification.sourceType==="ANNOUNCEMENT"
+                  ?"ANNOUNCEMENT"
+                  :"MESSAGE FROM ACC ADMIN";
 
             const message=
               document.createElement("small");
@@ -6463,6 +6573,7 @@ if(!stage || !overlay) return;
       };
 
       syncNotificationAccess();
+      if(currentMember.role!=="ACC ADMIN")loadMemberNotifications();
 
       updateDashboardAccessButtons(true);
       memberAccess=true;
@@ -6501,6 +6612,7 @@ if(!stage || !overlay) return;
     function showGuest(){
       currentMember=null;
       syncNotificationAccess();
+      updateNotificationBadge(0);
       updateDashboardAccessButtons(false);
       memberAccess=false;
       accessCopy.innerHTML='<strong>Unlimited AI Access</strong>Already have an account? <span class="ai-access-action">LOG IN</span>. New user? <span class="ai-access-action">CREATE ACCOUNT</span> and <span class="ai-access-action">COMPLETE ID VERIFICATION</span>.<span class="ai-no-deposit">🔥 NO DEPOSIT REQUIRED 🔥</span>';
