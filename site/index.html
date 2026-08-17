@@ -1157,6 +1157,55 @@
       overflow-wrap:anywhere;
     }
 
+    .notification-reply-form{
+      display:grid;
+      gap:8px;
+      padding-top:12px;
+      border-top:1px solid #e1e9f4;
+    }
+
+    .notification-reply-input{
+      width:100%;
+      min-height:84px;
+      resize:vertical;
+      padding:11px 12px;
+      border:1px solid #c8d6e8;
+      border-radius:12px;
+      color:#172b4d;
+      background:#fff;
+      font:inherit;
+      font-size:13px;
+      line-height:1.45;
+      outline:none;
+    }
+
+    .notification-reply-input:focus{
+      border-color:#0f5bd8;
+      box-shadow:0 0 0 3px rgba(15,91,216,.1);
+    }
+
+    .notification-reply-form button{
+      justify-self:end;
+      padding:10px 15px;
+      border:0;
+      border-radius:11px;
+      color:#fff;
+      background:linear-gradient(135deg,#123f86,#0f5bd8);
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .notification-reply-form button:disabled{
+      opacity:.58;
+      cursor:wait;
+    }
+
+    .notification-reply-input:disabled{
+      opacity:.7;
+      cursor:wait;
+    }
+
     .notification-admin-actions button:disabled{
       opacity:.58;
       cursor:wait;
