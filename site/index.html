@@ -5696,6 +5696,7 @@ if(!stage || !overlay) return;
       }
 
       if(notificationList){
+        notificationList.textContent="";
         notificationList.hidden=!isLoggedIn;
       }
 
@@ -5728,6 +5729,9 @@ if(!stage || !overlay) return;
         };
 
         syncNotificationAccess();
+        if(currentMember.role!=="ACC ADMIN"){
+          loadMemberNotifications();
+        }
       }
     );
 
