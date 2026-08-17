@@ -5475,6 +5475,44 @@ if(!stage || !overlay) return;
       setNotificationPanel(false);
     });
 
+    const notificationLoginNote=
+      document.getElementById("notificationLoginNote");
+
+    const notificationAdminActions=
+      document.getElementById("notificationAdminActions");
+
+    const notificationList=
+      document.getElementById("notificationList");
+
+    const notificationPanelSubtitle=
+      document.getElementById("notificationPanelSubtitle");
+
+    function syncNotificationAccess(){
+      const isLoggedIn=Boolean(currentMember?.username);
+
+      const isAdmin=
+        isLoggedIn&&
+        currentMember.role==="ACC ADMIN";
+
+      if(notificationLoginNote){
+        notificationLoginNote.hidden=isLoggedIn;
+      }
+
+      if(notificationList){
+        notificationList.hidden=!isLoggedIn;
+      }
+
+      if(notificationAdminActions){
+        notificationAdminActions.hidden=!isAdmin;
+      }
+
+      if(notificationPanelSubtitle){
+        notificationPanelSubtitle.textContent=isAdmin
+          ?"Admin support and communication center"
+          :"Announcements, messages, and support updates";
+      }
+    }
+
     function updateDashboardAccessButtons(isLoggedIn) {
       document
         .querySelectorAll("[data-dashboard]")
