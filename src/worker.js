@@ -144,6 +144,9 @@ async function createMemberToken(member, env) {
   const payload = base64UrlEncode(JSON.stringify({
     username: member.username,
     fullName: member.fullName,
+    role: String(member.role || "MEMBER")
+      .trim()
+      .toUpperCase(),
     exp: Math.floor(Date.now() / 1000) + MEMBER_SESSION_SECONDS
   }));
   return `${payload}.${await hmacHex(env.AI_AUTH_SECRET, payload)}`;
@@ -158,7 +161,16 @@ async function getMemberSession(request, env) {
     const [payload, signature] = decodeURIComponent(match[1]).split(".");
     if (!payload || !signature || await hmacHex(env.AI_AUTH_SECRET, payload) !== signature) return null;
     const member = JSON.parse(base64UrlDecode(payload));
-    if (!member?.username || !member?.fullName || Number(member.exp) <= Date.now() / 1000) return null;
+    if (
+      !member?.username ||
+      !member?.fullName ||
+      Number(member.exp) <= Date.now() / 1000
+    ) return null;
+
+    member.role = String(member.role || "MEMBER")
+      .trim()
+      .toUpperCase();
+
     return member;
   } catch {
     return null;
