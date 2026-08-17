@@ -1959,7 +1959,16 @@
         <a href="#faq">FAQ</a>
       </div>
       <div class="nav-actions">
-        <button class="btn nav-download" type="button" data-open-download>DOWNLOAD</button>
+        <button
+          class="btn nav-notification"
+          id="notificationButton"
+          type="button"
+          aria-label="Open notifications"
+          aria-expanded="false"
+        >
+          <span class="notification-bell" aria-hidden="true">🔔</span>
+          <span class="notification-badge" id="notificationBadge" hidden>0</span>
+        </button>
         <button class="btn btn-primary" data-dashboard>LOGIN DASHBOARD</button>
       </div>
     </div>
