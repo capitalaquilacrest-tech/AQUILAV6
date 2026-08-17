@@ -1490,6 +1490,32 @@ export default {
         );
       }
     }
+
+    if(
+      url.pathname===
+      "/api/admin/support-reply"
+    ){
+      try{
+        return await handleAdminSupportReply(
+          request,
+          env
+        );
+      }catch(error){
+        console.error(
+          "Admin support reply error",
+          error
+        );
+
+        return json(
+          {
+            success:false,
+            error:
+              "Support reply could not be processed."
+          },
+          500
+        );
+      }
+    }
     
     if (url.pathname === "/api/chat-member/login") {
       try { return await handleChatMemberLogin(request, env); }
