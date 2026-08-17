@@ -950,6 +950,147 @@ async function handleAdminSupportThread(
   );
 }
 
+async function handleAdminSupportReply(
+  request,
+  env
+) {
+  if(request.method!=="POST"){
+    return json(
+      {error:"Method not allowed."},
+      405,
+      {allow:"POST"}
+    );
+  }
+
+  const authorization=
+    request.headers.get("authorization")||"";
+
+  const accessToken=authorization
+    .replace(/^Bearer\s+/i,"")
+    .trim();
+
+  const admin=await getVerifiedAdmin(
+    accessToken,
+    env
+  );
+
+  if(!admin){
+    return json(
+      {
+        success:false,
+        error:"Verified ACC Admin access required."
+      },
+      403
+    );
+  }
+
+  let body;
+
+  try{
+    body=await request.json();
+  }catch(_){
+    return json(
+      {
+        success:false,
+        error:"Invalid request."
+      },
+      400
+    );
+  }
+
+  const ticketId=String(
+    body?.ticketId||""
+  ).trim();
+
+  const message=String(
+    body?.message||""
+  ).trim();
+
+  if(!ticketId){
+    return json(
+      {
+        success:false,
+        error:"Ticket ID is required."
+      },
+      400
+    );
+  }
+
+  if(!message||message.length>2000){
+    return json(
+      {
+        success:false,
+        error:
+          "Reply must contain 1 to 2,000 characters."
+      },
+      400
+    );
+  }
+
+  const response=await fetch(
+    MEMBER_PORTAL_API_URL,
+    {
+      method:"POST",
+      headers:{
+        "content-type":"application/json"
+      },
+      body:JSON.stringify({
+        action:"ADMIN_SUPPORT_REPLY",
+        apiSecret:env.AI_AUTH_SECRET,
+        adminUsername:admin.username,
+        ticketId,
+        message
+      })
+    }
+  );
+
+  if(!response.ok){
+    return json(
+      {
+        success:false,
+        error:
+          "Support reply service is temporarily unavailable."
+      },
+      502
+    );
+  }
+
+  const result=
+    await response.json().catch(()=>null);
+
+  if(!result?.success){
+    const status=
+      result?.code==="TICKET_NOT_FOUND"
+        ?404
+        :result?.code==="TICKET_CLOSED"
+          ?409
+          :502;
+
+    return json(
+      {
+        success:false,
+        error:
+          result?.message||
+          "Support reply could not be saved."
+      },
+      status
+    );
+  }
+
+  return json(
+    {
+      success:true,
+      ticketId:result.ticketId,
+      status:result.status,
+      message:result.message
+    },
+    200,
+    {
+      "cache-control":"no-store"
+    }
+  );
+}
+
 async function saveChatIdentity(userId, identity, env) {
   const profile = {
     display_name: identity.fullName.slice(0, 30),
