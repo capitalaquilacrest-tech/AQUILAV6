@@ -602,7 +602,10 @@ async function handleMemberLogin(request, env) {
 
   const member = {
     username: String(result.username),
-    fullName: String(result.fullName || result.username)
+    fullName: String(result.fullName || result.username),
+    role: String(result.role || "MEMBER")
+      .trim()
+      .toUpperCase()
   };
 
   let chatLinked = false;
