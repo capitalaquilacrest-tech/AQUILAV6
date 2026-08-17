@@ -841,6 +841,115 @@ async function handleAdminSupportInbox(
   );
 }
 
+async function handleAdminSupportThread(
+  request,
+  env
+) {
+  if(request.method!=="GET"){
+    return json(
+      {error:"Method not allowed."},
+      405,
+      {allow:"GET"}
+    );
+  }
+
+  const authorization=
+    request.headers.get("authorization")||"";
+
+  const accessToken=authorization
+    .replace(/^Bearer\s+/i,"")
+    .trim();
+
+  const admin=await getVerifiedAdmin(
+    accessToken,
+    env
+  );
+
+  if(!admin){
+    return json(
+      {
+        success:false,
+        error:"Verified ACC Admin access required."
+      },
+      403
+    );
+  }
+
+  const url=new URL(request.url);
+
+  const ticketId=String(
+    url.searchParams.get("ticketId")||""
+  ).trim();
+
+  if(!ticketId){
+    return json(
+      {
+        success:false,
+        error:"Ticket ID is required."
+      },
+      400
+    );
+  }
+
+  const response=await fetch(
+    MEMBER_PORTAL_API_URL,
+    {
+      method:"POST",
+      headers:{
+        "content-type":"application/json"
+      },
+      body:JSON.stringify({
+        action:"ADMIN_SUPPORT_THREAD",
+        apiSecret:env.AI_AUTH_SECRET,
+        adminUsername:admin.username,
+        ticketId
+      })
+    }
+  );
+
+  if(!response.ok){
+    return json(
+      {
+        success:false,
+        error:
+          "Support conversation is temporarily unavailable."
+      },
+      502
+    );
+  }
+
+  const result=
+    await response.json().catch(()=>null);
+
+  if(!result?.success){
+    return json(
+      {
+        success:false,
+        error:
+          result?.message||
+          "Support conversation could not be loaded."
+      },
+      result?.code==="TICKET_NOT_FOUND"
+        ?404
+        :502
+    );
+  }
+
+  return json(
+    {
+      success:true,
+      ticket:result.ticket,
+      messages:Array.isArray(result.messages)
+        ?result.messages
+        :[]
+    },
+    200,
+    {
+      "cache-control":"no-store"
+    }
+  );
+}
+
 async function saveChatIdentity(userId, identity, env) {
   const profile = {
     display_name: identity.fullName.slice(0, 30),
@@ -1209,6 +1318,32 @@ export default {
             success:false,
             error:
               "Support inbox is temporarily unavailable."
+          },
+          500
+        );
+      }
+    }
+
+    if(
+      url.pathname===
+      "/api/admin/support-thread"
+    ){
+      try{
+        return await handleAdminSupportThread(
+          request,
+          env
+        );
+      }catch(error){
+        console.error(
+          "Admin support thread error",
+          error
+        );
+
+        return json(
+          {
+            success:false,
+            error:
+              "Support conversation is temporarily unavailable."
           },
           500
         );
