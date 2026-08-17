@@ -748,6 +748,99 @@ async function getVerifiedAdmin(
   };
 }
 
+async function handleAdminSupportInbox(
+  request,
+  env
+) {
+  if(request.method!=="GET"){
+    return json(
+      {error:"Method not allowed."},
+      405,
+      {allow:"GET"}
+    );
+  }
+
+  const authorization=
+    request.headers.get("authorization")||"";
+
+  const accessToken=authorization
+    .replace(/^Bearer\s+/i,"")
+    .trim();
+
+  const admin=await getVerifiedAdmin(
+    accessToken,
+    env
+  );
+
+  if(!admin){
+    return json(
+      {
+        success:false,
+        error:"Verified ACC Admin access required."
+      },
+      403
+    );
+  }
+
+  const response=await fetch(
+    MEMBER_PORTAL_API_URL,
+    {
+      method:"POST",
+      headers:{
+        "content-type":"application/json"
+      },
+      body:JSON.stringify({
+        action:"ADMIN_SUPPORT_INBOX",
+        apiSecret:env.AI_AUTH_SECRET,
+        adminUsername:admin.username
+      })
+    }
+  );
+
+  if(!response.ok){
+    return json(
+      {
+        success:false,
+        error:
+          "Support inbox is temporarily unavailable."
+      },
+      502
+    );
+  }
+
+  const result=
+    await response.json().catch(()=>null);
+
+  if(!result?.success){
+    return json(
+      {
+        success:false,
+        error:
+          result?.message||
+          "Support inbox could not be loaded."
+      },
+      502
+    );
+  }
+
+  return json(
+    {
+      success:true,
+      admin:{
+        username:admin.username,
+        fullName:admin.fullName
+      },
+      tickets:Array.isArray(result.tickets)
+        ?result.tickets
+        :[]
+    },
+    200,
+    {
+      "cache-control":"no-store"
+    }
+  );
+}
+
 async function saveChatIdentity(userId, identity, env) {
   const profile = {
     display_name: identity.fullName.slice(0, 30),
