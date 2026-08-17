@@ -1188,6 +1188,33 @@ export default {
         }, 500);
       }
     }
+
+    if(
+      url.pathname===
+      "/api/admin/support-inbox"
+    ){
+      try{
+        return await handleAdminSupportInbox(
+          request,
+          env
+        );
+      }catch(error){
+        console.error(
+          "Admin support inbox error",
+          error
+        );
+
+        return json(
+          {
+            success:false,
+            error:
+              "Support inbox is temporarily unavailable."
+          },
+          500
+        );
+      }
+    }
+    
     if (url.pathname === "/api/chat-member/login") {
       try { return await handleChatMemberLogin(request, env); }
       catch (error) { console.error("Community member login error", error); return json({ error: "Community member login is temporarily unavailable." }, 500); }
