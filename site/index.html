@@ -5658,6 +5658,14 @@ if(!stage || !overlay) return;
         notificationPanel?.classList.contains("show");
 
       setNotificationPanel(!isOpen);
+
+      if(
+        !isOpen&&
+        currentMember?.username&&
+        currentMember.role!=="ACC ADMIN"
+      ){
+        loadMemberNotifications();
+      }
     });
 
     notificationClose?.addEventListener("click",()=>{
