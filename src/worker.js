@@ -872,7 +872,19 @@ async function reserveMemberQuota(member, env) {
 async function handleAssistant(request, env) {
   const member = await getMemberSession(request, env);
   if (request.method === "GET") {
-    if (member) return json({ access: "member", unlimited: true, member: { username: member.username, fullName: member.fullName } });
+    if (member) {
+      return json({
+        access: "member",
+        unlimited: true,
+        member: {
+          username: member.username,
+          fullName: member.fullName,
+          role: String(member.role || "MEMBER")
+            .trim()
+            .toUpperCase()
+        }
+      });
+    }
     const status = await getPublicQuotaStatus(request, env);
     if (status.error) return json({ error: status.error }, status.status);
     return json(status);
