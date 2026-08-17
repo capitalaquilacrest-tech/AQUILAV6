@@ -4560,11 +4560,13 @@
       if(chatPhotoButton) chatPhotoButton.disabled=false;
       if(chatVoiceButton) chatVoiceButton.disabled=false;
       setInlineAdminMode(chatProfile?.role==="admin");
+      
       window.getAquilaChatAccessToken=()=>{
         return String(
           chatSession?.access_token||""
         );
       };
+      
       window.dispatchEvent(
         new CustomEvent(
           "aquila:chat-identity-changed",
