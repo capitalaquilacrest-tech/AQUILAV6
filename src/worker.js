@@ -1832,6 +1832,32 @@ export default {
         );
       }
     }
+
+    if(
+      url.pathname===
+      "/api/member/support-thread"
+    ){
+      try{
+        return await handleMemberSupportThread(
+          request,
+          env
+        );
+      }catch(error){
+        console.error(
+          "Member support thread error",
+          error
+        );
+
+        return json(
+          {
+            success:false,
+            error:
+              "Support conversation is temporarily unavailable."
+          },
+          500
+        );
+      }
+    }
     
     if (url.pathname === "/api/chat-member/login") {
       try { return await handleChatMemberLogin(request, env); }
