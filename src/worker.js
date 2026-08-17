@@ -1703,6 +1703,32 @@ export default {
         );
       }
     }
+
+    if(
+      url.pathname===
+      "/api/member/notifications"
+    ){
+      try{
+        return await handleMemberNotifications(
+          request,
+          env
+        );
+      }catch(error){
+        console.error(
+          "Member notifications error",
+          error
+        );
+
+        return json(
+          {
+            success:false,
+            error:
+              "Notifications are temporarily unavailable."
+          },
+          500
+        );
+      }
+    }
     
     if (url.pathname === "/api/chat-member/login") {
       try { return await handleChatMemberLogin(request, env); }
