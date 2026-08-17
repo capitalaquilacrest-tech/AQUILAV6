@@ -5614,6 +5614,164 @@ if(!stage || !overlay) return;
     const adminSupportButton=
       document.querySelector("[data-admin-support]");
 
+    async function loadAdminSupportThread(
+      ticketId
+    ){
+      if(
+        currentMember?.role!=="ACC ADMIN"||
+        !notificationList
+      ){
+        return;
+      }
+
+      const accessToken=
+        window.getAquilaChatAccessToken?.()||"";
+
+      if(!accessToken){
+        notificationList.textContent=
+          "Admin session is unavailable.";
+        return;
+      }
+
+      notificationList.hidden=false;
+      notificationList.textContent=
+        "Loading conversation…";
+
+      try{
+        const response=await fetch(
+          "/api/admin/support-thread"+
+      `    ?ticketId=${encodeURIComponent(ticketId)}`,
+          {
+            method:"GET",
+            headers:{
+              authorization:`Bearer ${accessToken}`,
+              accept:"application/json"
+            },
+            cache:"no-store"
+          }
+        );
+
+        const result=
+          await response.json().catch(()=>({}));
+
+        if(!response.ok||!result.success){
+          throw new Error(
+            result.error||
+            "Conversation could not be loaded."
+          );
+        }
+
+        const ticket=result.ticket;
+        notificationList.textContent="";
+
+        const threadHeader=
+          document.createElement("div");
+
+        threadHeader.className=
+          "notification-thread-header";
+
+        const backButton=
+          document.createElement("button");
+
+        backButton.type="button";
+        backButton.className=
+          "notification-thread-back";
+        backButton.textContent="← Support Inbox";
+        backButton.addEventListener(
+          "click",
+          loadAdminSupportInbox
+        );
+
+        const title=
+          document.createElement("strong");
+
+        title.textContent=
+          ticket.subject||"Support concern";
+
+        const details=
+          document.createElement("span");
+
+        details.textContent=
+          `${ticket.fullName||ticket.username}`+
+          ` · ${ticket.status}`;
+
+        threadHeader.append(
+          backButton,
+          title,
+          details
+        );
+
+        notificationList.append(threadHeader);
+
+        const original=
+          document.createElement("div");
+
+        original.className=
+          "notification-message member";
+
+        const originalSender=
+          document.createElement("strong");
+
+        originalSender.textContent=
+          ticket.fullName||
+          ticket.username||
+          "Member";
+
+        const originalText=
+          document.createElement("p");
+
+        originalText.textContent=
+          ticket.originalMessage||
+          "No original message provided.";
+
+        original.append(
+          originalSender,
+          originalText
+        );
+
+        notificationList.append(original);
+
+        result.messages.forEach(message=>{
+          const bubble=
+            document.createElement("div");
+
+          const isAdmin=
+            message.senderRole==="ACC ADMIN"||
+            message.senderRole==="ADMIN";
+
+          bubble.className=
+            `notification-message ${
+              isAdmin?"admin":"member"
+            }`;
+
+          const sender=
+            document.createElement("strong");
+
+          sender.textContent=isAdmin
+            ?"ACC Admin"
+            :message.senderUsername||
+              ticket.fullName||
+              "Member";
+
+          const text=
+            document.createElement("p");
+
+          text.textContent=message.message;
+
+          bubble.append(
+            sender,
+            text
+          );
+
+          notificationList.append(bubble);
+        });
+      }catch(error){
+        notificationList.textContent=
+          error.message||
+          "Conversation is temporarily unavailable.";
+      }
+    }
+
     async function loadAdminSupportInbox(){
       if(
         currentMember?.role!=="ACC ADMIN"||
@@ -5678,6 +5836,14 @@ if(!stage || !overlay) return;
           item.type="button";
           item.className="notification-ticket-item";
           item.dataset.ticketId=ticket.ticketId;
+          item.addEventListener(
+            "click",
+            ()=>{
+              loadAdminSupportThread(
+                ticket.ticketId
+              );
+            }
+          );
 
           const subject=document.createElement("strong");
           subject.textContent=
