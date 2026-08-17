@@ -1190,6 +1190,94 @@ async function handleAdminSupportReply(
   );
 }
 
+async function handleMemberNotifications(
+  request,
+  env
+) {
+  if(request.method!=="GET"){
+    return json(
+      {error:"Method not allowed."},
+      405,
+      {allow:"GET"}
+    );
+  }
+
+  const member=await getVerifiedMember(
+    request,
+    env
+  );
+
+  if(!member){
+    return json(
+      {
+        success:false,
+        error:
+          "Verified member access required."
+      },
+      401
+    );
+  }
+
+  const response=await fetch(
+    MEMBER_PORTAL_API_URL,
+    {
+      method:"POST",
+      headers:{
+        "content-type":"application/json"
+      },
+      body:JSON.stringify({
+        action:"MEMBER_NOTIFICATIONS",
+        apiSecret:env.AI_AUTH_SECRET,
+        username:member.username
+      })
+    }
+  );
+
+  if(!response.ok){
+    return json(
+      {
+        success:false,
+        error:
+          "Notifications are temporarily unavailable."
+      },
+      502
+    );
+  }
+
+  const result=
+    await response.json().catch(()=>null);
+
+  if(!result?.success){
+    return json(
+      {
+        success:false,
+        error:
+          result?.message||
+          "Notifications could not be loaded."
+      },
+      502
+    );
+  }
+
+  return json(
+    {
+      success:true,
+      member:{
+        username:member.username,
+        fullName:member.fullName
+      },
+      notifications:
+        Array.isArray(result.notifications)
+          ?result.notifications
+          :[]
+    },
+    200,
+    {
+      "cache-control":"no-store"
+    }
+  );
+}
+
 async function saveChatIdentity(userId, identity, env) {
   const profile = {
     display_name: identity.fullName.slice(0, 30),
