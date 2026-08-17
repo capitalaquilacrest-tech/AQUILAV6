@@ -5297,6 +5297,7 @@ if(!stage || !overlay) return;
         ?.addEventListener("click",logoutMember);
     }
     function showGuest(){
+      currentMember=null;
       updateDashboardAccessButtons(false);
       memberAccess=false;
       accessCopy.innerHTML='<strong>Unlimited AI Access</strong>Already have an account? <span class="ai-access-action">LOG IN</span>. New user? <span class="ai-access-action">CREATE ACCOUNT</span> and <span class="ai-access-action">COMPLETE ID VERIFICATION</span>.<span class="ai-no-deposit">🔥 NO DEPOSIT REQUIRED 🔥</span>';
