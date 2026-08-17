@@ -1418,6 +1418,16 @@ async function handleSupportMedia(request,env){
   return new Response(binary,{status:200,headers:{"content-type":result.mimeType||"application/octet-stream","content-disposition":`inline; filename="${String(result.fileName||"support-photo").replace(/[\"\\]/g,"-")}"`,"cache-control":"private, no-store","x-content-type-options":"nosniff"}});
 }
 
+async function handleAnnouncementMedia(request,env){
+  if(request.method!=="GET")return json({success:false,error:"Method not allowed."},405,{allow:"GET"});
+  const url=new URL(request.url),mediaId=String(url.searchParams.get("mediaId")||"").trim();if(!mediaId)return json({success:false,error:"Media ID is required."},400);
+  const token=(request.headers.get("authorization")||"").replace(/^Bearer\s+/i,"").trim();const admin=await getVerifiedAdmin(token,env);let member=null;if(!admin)member=await getVerifiedMember(request,env);if(!admin&&!member)return json({success:false,error:"Authorized member access required."},401);
+  const response=await fetch(MEMBER_PORTAL_API_URL,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:"ANNOUNCEMENT_MEDIA_FETCH",apiSecret:env.AI_AUTH_SECRET,mediaId})});
+  const result=response.ok?await response.json().catch(()=>null):null;if(!response.ok||!result?.success)return json({success:false,error:result?.message||"Announcement image is unavailable."},404);
+  const binary=Uint8Array.from(atob(result.base64),character=>character.charCodeAt(0));
+  return new Response(binary,{status:200,headers:{"content-type":result.mimeType||"application/octet-stream","content-disposition":`inline; filename="${String(result.fileName||"announcement-image").replace(/[\"\\]/g,"-")}"`,"cache-control":"private, max-age=300","x-content-type-options":"nosniff"}});
+}
+
 async function saveChatIdentity(userId, identity, env) {
   const profile = {
     display_name: identity.fullName.slice(0, 30),
@@ -1907,6 +1917,10 @@ export default {
     if(url.pathname==="/api/support/media"){
       try{return await handleSupportMedia(request,env);}
       catch(error){console.error("Support media error",error);return json({success:false,error:"Photo is temporarily unavailable."},500);}
+    }
+    if(url.pathname==="/api/announcement/media"){
+      try{return await handleAnnouncementMedia(request,env);}
+      catch(error){console.error("Announcement media error",error);return json({success:false,error:"Announcement image is temporarily unavailable."},500);}
     }
     if(url.pathname==="/api/member/ticket-action"){
       try{return await handleMemberNotificationAction(request,env,"MEMBER_TICKET_ACTION");}
