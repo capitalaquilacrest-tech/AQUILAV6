@@ -943,6 +943,120 @@
       line-height:17px;
       text-align:center;
     }
+
+    .notification-panel{
+      position:fixed;
+      z-index:1200;
+      top:82px;
+      right:24px;
+      width:min(390px,calc(100vw - 32px));
+      max-height:calc(100vh - 106px);
+      overflow:auto;
+      padding:18px;
+      border:1px solid rgba(13,54,112,.14);
+      border-radius:20px;
+      background:#fff;
+      box-shadow:0 24px 70px rgba(3,20,50,.28);
+      opacity:0;
+      visibility:hidden;
+      transform:translateY(-10px);
+      transition:
+        opacity .2s ease,
+        transform .2s ease,
+        visibility .2s ease;
+    }
+
+    .notification-panel.show{
+      opacity:1;
+      visibility:visible;
+      transform:translateY(0);
+    }
+
+    .notification-panel-header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      padding-bottom:14px;
+      border-bottom:1px solid #e6edf7;
+    }
+
+    .notification-panel-header strong{
+      display:block;
+      color:#09275d;
+      font-size:18px;
+    }
+
+    .notification-panel-header span{
+      display:block;
+      margin-top:4px;
+      color:#67748a;
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .notification-close{
+      width:34px;
+      height:34px;
+      flex:0 0 34px;
+      border:0;
+      border-radius:10px;
+      color:#09275d;
+      background:#edf3fb;
+      font-size:23px;
+      line-height:1;
+      cursor:pointer;
+    }
+
+    .notification-login-note{
+      margin-top:16px;
+      padding:15px;
+      border-radius:14px;
+      color:#536178;
+      background:#f3f6fa;
+      font-size:13px;
+      text-align:center;
+    }
+
+    .notification-admin-actions{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .notification-admin-actions[hidden]{
+      display:none;
+    }
+
+    .notification-admin-actions button{
+      padding:11px 13px;
+      border:0;
+      border-radius:12px;
+      color:#fff;
+      background:#123f86;
+      font-weight:800;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    .notification-list{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .notification-list[hidden]{
+      display:none;
+    }
+
+    @media(max-width:700px){
+      .notification-panel{
+        top:74px;
+        right:16px;
+      }
+    }
+    
     .nav-download{color:#fff;background:linear-gradient(135deg,var(--red2),var(--red));box-shadow:0 12px 28px rgba(215,29,50,.28);animation:downloadPulse 2.4s ease-in-out infinite}
     @keyframes downloadPulse{0%,100%{box-shadow:0 12px 28px rgba(215,29,50,.28)}50%{box-shadow:0 12px 28px rgba(215,29,50,.28),0 0 0 6px rgba(255,255,255,.12)}}
 
