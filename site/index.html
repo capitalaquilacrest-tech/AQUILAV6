@@ -904,6 +904,45 @@
     .brand span{display:block;color:#d9e7ff;font-size:12px;margin-top:2px}
     .nav-links{display:flex;gap:22px;color:#eaf2ff;font-size:14px}
     .nav-actions{display:flex;gap:10px;align-items:center}
+    .nav-notification{
+      position:relative;
+      width:46px;
+      height:46px;
+      padding:0;
+      border:1px solid rgba(255,255,255,.28);
+      border-radius:14px;
+      color:#fff;
+      background:linear-gradient(135deg,#123f86,#071c46);
+      box-shadow:0 12px 28px rgba(5,24,61,.28);
+    }
+
+    .nav-notification:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 34px rgba(5,24,61,.38);
+    }
+
+    .notification-bell{
+      display:block;
+      font-size:21px;
+      line-height:1;
+    }
+
+    .notification-badge{
+      position:absolute;
+      top:-6px;
+      right:-6px;
+      min-width:21px;
+      height:21px;
+      padding:0 5px;
+      border:2px solid #fff;
+      border-radius:999px;
+      color:#fff;
+      background:#d71932;
+      font-size:11px;
+      font-weight:900;
+      line-height:17px;
+      text-align:center;
+    }
     .nav-download{color:#fff;background:linear-gradient(135deg,var(--red2),var(--red));box-shadow:0 12px 28px rgba(215,29,50,.28);animation:downloadPulse 2.4s ease-in-out infinite}
     @keyframes downloadPulse{0%,100%{box-shadow:0 12px 28px rgba(215,29,50,.28)}50%{box-shadow:0 12px 28px rgba(215,29,50,.28),0 0 0 6px rgba(255,255,255,.12)}}
 
