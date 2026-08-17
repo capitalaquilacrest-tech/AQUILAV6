@@ -748,6 +748,105 @@ async function getVerifiedAdmin(
   };
 }
 
+async function getVerifiedMember(
+  request,
+  env
+) {
+  const cookieMember=
+    await getMemberSession(
+      request,
+      env
+    );
+
+  if(
+    cookieMember?.username &&
+    String(cookieMember.role||"MEMBER")
+      .trim()
+      .toUpperCase()!=="ACC ADMIN"
+  ){
+    return {
+      username:String(
+        cookieMember.username
+      ).trim(),
+      fullName:String(
+        cookieMember.fullName||
+        cookieMember.username
+      ).trim(),
+      source:"MEMBER_SESSION"
+    };
+  }
+
+  const authorization=
+    request.headers.get("authorization")||"";
+
+  const accessToken=authorization
+    .replace(/^Bearer\s+/i,"")
+    .trim();
+
+  const user=await getSupabaseUser(
+    accessToken,
+    env
+  );
+
+  if(!user?.id){
+    return null;
+  }
+
+  const profileUrl=
+    `${SUPABASE_URL}/rest/v1/chat_profiles`+
+    `?user_id=eq.${encodeURIComponent(user.id)}`+
+    `&select=user_id,public_name,role,identity_status,member_username`+
+    `&limit=1`;
+
+  const response=await fetch(profileUrl,{
+    headers:{
+      apikey:env.SUPABASE_SECRET_KEY,
+      authorization:
+        `Bearer ${env.SUPABASE_SECRET_KEY}`
+    }
+  });
+
+  if(!response.ok){
+    return null;
+  }
+
+  const profiles=
+    await response.json().catch(()=>[]);
+
+  const profile=Array.isArray(profiles)
+    ?profiles[0]
+    :null;
+
+  const identityStatus=String(
+    profile?.identity_status||""
+  )
+    .trim()
+    .toLowerCase();
+
+  const memberUsername=String(
+    profile?.member_username||""
+  ).trim();
+
+  if(
+    !profile||
+    profile.user_id!==user.id||
+    !memberUsername||
+    !["verified","unverified"]
+      .includes(identityStatus)
+  ){
+    return null;
+  }
+
+  return {
+    username:memberUsername,
+    fullName:String(
+      profile.public_name||
+      memberUsername
+    ).trim(),
+    source:"CHAT_MEMBER_SESSION"
+  };
+}
+
 async function handleAdminSupportInbox(
   request,
   env
