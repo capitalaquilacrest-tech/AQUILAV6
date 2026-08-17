@@ -1029,6 +1029,9 @@
       display:none;
     }
 
+    .notification-member-actions{display:grid;gap:8px;margin-top:14px}.notification-member-actions[hidden]{display:none}.notification-member-actions button{padding:11px 13px;border:0;border-radius:12px;color:#fff;background:#123f86;font-weight:800;text-align:left;cursor:pointer}
+    .support-media-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.support-media-grid img{width:100%;height:86px;object-fit:cover;border-radius:10px;border:1px solid #d7e2f1;cursor:zoom-in}.support-photo-input{width:100%;padding:9px;border:1px dashed #9bb2d1;border-radius:10px;background:#f7faff}.support-photo-hint{display:block;color:#687991;font-size:11px}.support-media-viewer{position:fixed;z-index:2500;inset:0;display:grid;place-items:center;padding:20px;background:rgba(2,11,29,.88)}.support-media-viewer img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:12px}.support-media-viewer button{position:absolute;top:18px;right:18px;width:40px;height:40px;border:0;border-radius:50%;font-size:25px;cursor:pointer}
+
     .notification-admin-actions button{
       padding:11px 13px;
       border:0;
@@ -2359,6 +2362,10 @@
       <button type="button" data-admin-message>
         Message Member
       </button>
+    </div>
+
+    <div class="notification-member-actions" id="notificationMemberActions" hidden>
+      <button type="button" id="memberCreateTicketButton">Create Support Ticket</button>
     </div>
 
     <div
@@ -5701,6 +5708,9 @@ if(!stage || !overlay) return;
     const notificationAdminActions=
       document.getElementById("notificationAdminActions");
 
+    const notificationMemberActions=document.getElementById("notificationMemberActions");
+    const memberCreateTicketButton=document.getElementById("memberCreateTicketButton");
+
     const notificationList=
       document.getElementById("notificationList");
 
@@ -5726,6 +5736,8 @@ if(!stage || !overlay) return;
       if(notificationAdminActions){
         notificationAdminActions.hidden=!isAdmin;
       }
+
+      if(notificationMemberActions){notificationMemberActions.hidden=!isLoggedIn||isAdmin;}
 
       if(notificationPanelSubtitle){
         notificationPanelSubtitle.textContent=isAdmin
@@ -5771,6 +5783,12 @@ if(!stage || !overlay) return;
     }
 
     function fileToBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result||"").split(",").pop()||"");reader.onerror=()=>reject(new Error("A selected image could not be read."));reader.readAsDataURL(file);});}
+    async function supportFilesPayload(input){const selected=[...(input?.files||[])];if(selected.length>5)throw new Error("Select up to 5 photos only.");const allowed=["image/jpeg","image/png","image/webp"];if(selected.some(file=>!allowed.includes(file.type)))throw new Error("Only JPG, PNG, and WEBP photos are allowed.");if(selected.some(file=>file.size>5*1024*1024))throw new Error("Each photo must be 5 MB or smaller.");return Promise.all(selected.map(async file=>({name:file.name,mimeType:file.type,base64:await fileToBase64(file)})));}
+    function makeSupportPhotoInput(){const wrap=document.createElement("div");const input=document.createElement("input");input.type="file";input.accept="image/jpeg,image/png,image/webp";input.multiple=true;input.className="support-photo-input";const hint=document.createElement("small");hint.className="support-photo-hint";hint.textContent="Optional: up to 5 private photos, maximum 5 MB each.";wrap.append(input,hint);return{wrap,input};}
+    function openMemberTicketComposer(){if(!currentMember?.username||currentMember.role==="ACC ADMIN")return;const overlay=document.createElement("div");overlay.className="notification-compose-overlay";const modal=document.createElement("div");modal.className="notification-compose-modal";const head=document.createElement("div");head.className="notification-compose-head";const heading=document.createElement("strong");heading.textContent="Create Support Ticket";const close=document.createElement("button");close.type="button";close.textContent="×";close.onclick=()=>overlay.remove();head.append(heading,close);const form=document.createElement("form");form.className="notification-compose-form";const subject=document.createElement("input");subject.placeholder="Subject";subject.maxLength=160;subject.required=true;const message=document.createElement("textarea");message.placeholder="Describe your private concern…";message.maxLength=5000;message.rows=7;message.required=true;const photos=makeSupportPhotoInput();const status=document.createElement("div");status.className="notification-compose-status";const submit=document.createElement("button");submit.type="submit";submit.textContent="Submit Ticket";form.append(subject,message,photos.wrap,status,submit);form.onsubmit=async event=>{event.preventDefault();submit.disabled=true;submit.textContent="Submitting…";status.textContent="";try{const files=await supportFilesPayload(photos.input);await memberNotificationPost("/api/member/support-ticket",{subject:subject.value.trim(),message:message.value.trim(),fullName:currentMember.fullName||currentMember.username,files});status.classList.add("success");status.textContent="Ticket submitted. ACC Admin has been notified.";await loadMemberNotifications();setTimeout(()=>overlay.remove(),1000);}catch(error){status.textContent=error.message;submit.disabled=false;submit.textContent="Submit Ticket";}};modal.append(head,form);overlay.append(modal);overlay.onclick=event=>{if(event.target===overlay)overlay.remove();};document.body.append(overlay);}
+    memberCreateTicketButton?.addEventListener("click",openMemberTicketComposer);
+
+    async function renderSupportMedia(container,media){if(!container||!Array.isArray(media)||!media.length)return;const grid=document.createElement("div");grid.className="support-media-grid";const token=window.getAquilaChatAccessToken?.()||"";for(const item of media){try{const response=await fetch(`/api/support/media?mediaId=${encodeURIComponent(item.mediaId)}`,{headers:{authorization:token?`Bearer ${token}`:""},cache:"no-store"});if(!response.ok)continue;const blob=await response.blob(),url=URL.createObjectURL(blob),img=document.createElement("img");img.src=url;img.alt=item.fileName||"Private support photo";img.loading="lazy";img.onclick=()=>{const viewer=document.createElement("div");viewer.className="support-media-viewer";const full=document.createElement("img");full.src=url;const close=document.createElement("button");close.textContent="×";close.onclick=()=>viewer.remove();viewer.append(full,close);viewer.onclick=e=>{if(e.target===viewer)viewer.remove();};document.body.append(viewer);};grid.append(img);}catch(_){}}if(grid.childElementCount)container.append(grid);}
 
     function openAdminComposer(kind){
       if(currentMember?.role!=="ACC ADMIN")return;
@@ -5800,7 +5818,8 @@ if(!stage || !overlay) return;
       event,
       ticketId,
       textarea,
-      sendButton
+      sendButton,
+      photoInput
     ){
       event.preventDefault();
 
@@ -5833,6 +5852,7 @@ if(!stage || !overlay) return;
       sendButton.textContent="Sending…";
 
       try{
+        const files=await supportFilesPayload(photoInput);
         const response=await fetch(
           "/api/admin/support-reply",
           {
@@ -5844,7 +5864,8 @@ if(!stage || !overlay) return;
             },
             body:JSON.stringify({
               ticketId,
-              message
+              message,
+              files
             })
           }
         );
@@ -6004,6 +6025,7 @@ if(!stage || !overlay) return;
         );
 
         notificationList.append(original);
+        renderSupportMedia(original,ticket.originalMedia);
 
         result.messages.forEach(message=>{
           const bubble=
@@ -6038,6 +6060,7 @@ if(!stage || !overlay) return;
           );
 
           notificationList.append(bubble);
+          renderSupportMedia(bubble,message.media);
         });
         if(ticket.status!=="CLOSED"){
           const replyForm=
@@ -6063,8 +6086,11 @@ if(!stage || !overlay) return;
           sendButton.type="submit";
           sendButton.textContent="Send Reply";
 
+          const photos=makeSupportPhotoInput();
+
           replyForm.append(
             textarea,
+            photos.wrap,
             sendButton
           );
 
@@ -6075,7 +6101,8 @@ if(!stage || !overlay) return;
                 event,
                 ticket.ticketId,
                 textarea,
-                sendButton
+                sendButton,
+                photos.input
               );
             }
           );
@@ -6341,6 +6368,7 @@ if(!stage || !overlay) return;
         );
 
         notificationList.append(original);
+        renderSupportMedia(original,ticket.originalMedia);
 
         result.messages.forEach(message=>{
           const bubble=
@@ -6373,6 +6401,7 @@ if(!stage || !overlay) return;
           );
 
           notificationList.append(bubble);
+          renderSupportMedia(bubble,message.media);
         });
 
         const controls=document.createElement("div");
@@ -6380,8 +6409,8 @@ if(!stage || !overlay) return;
         if(ticket.status!=="CLOSED"){
           const form=document.createElement("form");form.className="notification-reply-form";
           const textarea=document.createElement("textarea");textarea.className="notification-reply-input";textarea.placeholder="Reply to ACC Admin…";textarea.maxLength=2000;textarea.required=true;textarea.rows=3;
-          const send=document.createElement("button");send.type="submit";send.textContent="Send Reply";form.append(textarea,send);
-          form.addEventListener("submit",async event=>{event.preventDefault();const message=textarea.value.trim();if(!message)return;textarea.disabled=send.disabled=true;send.textContent="Sending…";try{await memberNotificationPost("/api/member/support-reply",{ticketId:ticket.ticketId,message});await loadMemberSupportThread(ticket.ticketId);}catch(error){textarea.disabled=send.disabled=false;send.textContent="Send Reply";textarea.setCustomValidity(error.message);textarea.reportValidity();}});
+          const send=document.createElement("button");send.type="submit";send.textContent="Send Reply";const photos=makeSupportPhotoInput();form.append(textarea,photos.wrap,send);
+          form.addEventListener("submit",async event=>{event.preventDefault();const message=textarea.value.trim();if(!message)return;textarea.disabled=send.disabled=true;send.textContent="Sending…";try{const files=await supportFilesPayload(photos.input);await memberNotificationPost("/api/member/support-reply",{ticketId:ticket.ticketId,message,files});await loadMemberSupportThread(ticket.ticketId);}catch(error){textarea.disabled=send.disabled=false;send.textContent="Send Reply";textarea.setCustomValidity(error.message);textarea.reportValidity();}});
           controls.append(form);
           const closeTicket=document.createElement("button");closeTicket.type="button";closeTicket.className="notification-danger-action";closeTicket.textContent="Close Ticket";closeTicket.addEventListener("click",async()=>{if(!confirm("Close this support ticket?"))return;closeTicket.disabled=true;try{await memberNotificationPost("/api/member/ticket-action",{ticketId:ticket.ticketId,ticketAction:"CLOSE",reason:"Resolved by member"});await loadMemberSupportThread(ticket.ticketId);}catch(error){alert(error.message);closeTicket.disabled=false;}});controls.append(closeTicket);
         }else{
