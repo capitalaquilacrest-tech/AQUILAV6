@@ -5440,6 +5440,40 @@ if(!stage || !overlay) return;
     let dailyExhausted=false;
     let memberAccess=false;
     let currentMember=null;
+    const notificationButton=
+      document.getElementById("notificationButton");
+
+    const notificationPanel=
+      document.getElementById("notificationPanel");
+
+    const notificationClose=
+      document.getElementById("notificationClose");
+
+    function setNotificationPanel(open){
+      if(!notificationButton||!notificationPanel)return;
+
+      notificationPanel.classList.toggle("show",open);
+      notificationPanel.setAttribute(
+        "aria-hidden",
+        String(!open)
+      );
+
+      notificationButton.setAttribute(
+        "aria-expanded",
+        String(open)
+      );
+    }
+
+    notificationButton?.addEventListener("click",()=>{
+      const isOpen=
+        notificationPanel?.classList.contains("show");
+
+      setNotificationPanel(!isOpen);
+    });
+
+    notificationClose?.addEventListener("click",()=>{
+      setNotificationPanel(false);
+    });
 
     function updateDashboardAccessButtons(isLoggedIn) {
       document
