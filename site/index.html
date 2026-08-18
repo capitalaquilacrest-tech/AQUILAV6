@@ -5121,7 +5121,25 @@
         await initLiveChat();
         const {data,error}=await chatDb.auth.signInWithPassword({email:AQUILA_CHAT_CONFIG.adminEmail,password});
         if(error) throw error;
-        const {data:profile,error:profileError}=await chatDb.from("chat_profiles").select("user_id,public_name,role,identity_status,member_username,identity_verified_at,strikes,mute_until,banned_at").eq("user_id",data.user.id).maybeSingle();
+        let {data:profile,error:profileError}=await chatDb.from("chat_profiles").select("user_id,public_name,role,identity_status,member_username,identity_verified_at,strikes,mute_until,banned_at").eq("user_id",data.user.id).maybeSingle();
+
+        if(!profileError&&profile?.role!=="admin"){
+          const restoreResponse=await fetch("/api/ai-auth/login",{
+            method:"POST",
+            headers:{"content-type":"application/json"},
+            body:JSON.stringify({
+              username:"ACC ADMIN",
+              password,
+              accessToken:data.session.access_token
+            })
+          });
+          const restoreResult=await restoreResponse.json().catch(()=>({}));
+          if(!restoreResponse.ok)throw new Error(restoreResult.error||"ACC Admin role recovery failed.");
+          const refreshed=await chatDb.from("chat_profiles").select("user_id,public_name,role,identity_status,member_username,identity_verified_at,strikes,mute_until,banned_at").eq("user_id",data.user.id).maybeSingle();
+          profile=refreshed.data;
+          profileError=refreshed.error;
+        }
+
         if(profileError||profile?.role!=="admin"){
           await chatDb.auth.signOut();
           const restored=await chatDb.auth.signInAnonymously();
@@ -5130,7 +5148,7 @@
         }
         chatSession=data.session;chatProfile=profile;chatAdminPassword.value="";chatNameNotice.textContent="";
         await resetChatSubscription(data.user.id);unlockComposer();await reloadChatMessages();chatInput?.focus();
-      }catch(error){chatNameNotice.textContent="Maling password o hindi verified ang admin account.";console.error("ACC admin login:",error)}
+      }catch(error){chatNameNotice.textContent=error?.message||"Maling password o hindi verified ang admin account.";console.error("ACC admin login:",error)}
       finally{chatJoin.disabled=false;}
     }
     async function resetChatSubscription(userId){
