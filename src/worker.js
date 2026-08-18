@@ -622,51 +622,7 @@ async function handleMemberLogin(request, env) {
 
   let chatLinked = false;
 
-  if (member.role === "ACC ADMIN" && (!accessToken || !env.SUPABASE_SECRET_KEY)) {
-    return json({
-      error: "ACC Admin secure session is unavailable. Refresh the page, allow Live Chat to connect, then try again."
-    }, 403);
-  }
-
   if (accessToken && env.SUPABASE_SECRET_KEY) {
-    if (member.role === "ACC ADMIN") {
-      const adminUser = await getSupabaseUser(accessToken, env);
-
-      if (!adminUser?.id) {
-        return json({
-          error: "ACC Admin secure session expired. Refresh the page and try again."
-        }, 403);
-      }
-
-      const adminProfileResponse = await fetch(
-        `${SUPABASE_URL}/rest/v1/chat_profiles?user_id=eq.${encodeURIComponent(adminUser.id)}`,
-        {
-          method: "PATCH",
-          headers: {
-            apikey: env.SUPABASE_SECRET_KEY,
-            authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`,
-            "content-type": "application/json",
-            prefer: "return=minimal"
-          },
-          body: JSON.stringify({
-            role: "admin",
-            identity_status: "verified",
-            member_username: member.username,
-            public_name: member.fullName,
-            display_name: member.fullName,
-            identity_verified_at: new Date().toISOString()
-          })
-        }
-      );
-
-      if (!adminProfileResponse.ok) {
-        return json({
-          error: "ACC Admin profile could not be restored. Please try again."
-        }, 502);
-      }
-
-      chatLinked = true;
-    } else {
     const supabaseUser = await getSupabaseUser(accessToken, env);
 
     if (!supabaseUser) {
@@ -688,7 +644,6 @@ async function handleMemberLogin(request, env) {
     }
 
     chatLinked = true;
-    }
   }
 
   const token = await createMemberToken(member, env);
