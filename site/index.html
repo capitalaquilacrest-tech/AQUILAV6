@@ -7703,6 +7703,103 @@ if(!stage || !overlay) return;
             🌐 BROWSE OPEN ROOMS
           </button>
 
+          <button
+            id="aquilaEmpireJoinButton"
+            class="aquila-empire-join-action"
+            type="button"
+            disabled
+          >
+            🔑 JOIN WITH ROOM CODE
+          </button>
+
+        </div>
+
+        <div
+          id="aquilaEmpireJoinPanel"
+          class="aquila-empire-join-panel"
+          hidden
+        >
+          <div class="aquila-empire-panel-heading">
+            <div>
+              <span>PRIVATE ROOM ACCESS</span>
+              <strong>Join an Empire Room</strong>
+            </div>
+        
+            <button
+              id="aquilaEmpireCancelJoin"
+              type="button"
+              aria-label="Cancel joining room"
+            >
+              ×
+            </button>
+          </div>
+        
+          <label class="aquila-empire-field">
+            <span>Six-Character Room Code</span>
+        
+            <input
+              id="aquilaEmpireJoinCode"
+              type="text"
+              maxlength="6"
+              placeholder="EXAMPLE: D0A8D5"
+              autocomplete="off"
+              autocapitalize="characters"
+              spellcheck="false"
+            >
+          </label>
+        
+          <fieldset class="aquila-empire-token-picker">
+            <legend>Choose Your Character</legend>
+        
+            <div class="aquila-empire-token-grid">
+        
+              <label>
+                <input
+                  type="radio"
+                  name="aquilaEmpireJoinToken"
+                  value="eagle"
+                  checked
+                >
+                <span><b>🦅</b>Eagle</span>
+              </label>
+        
+              <label>
+                <input
+                  type="radio"
+                  name="aquilaEmpireJoinToken"
+                  value="crown"
+                >
+                <span><b>👑</b>Crown</span>
+              </label>
+        
+              <label>
+                <input
+                  type="radio"
+                  name="aquilaEmpireJoinToken"
+                  value="rocket"
+                >
+                <span><b>🚀</b>Rocket</span>
+              </label>
+        
+              <label>
+                <input
+                  type="radio"
+                  name="aquilaEmpireJoinToken"
+                  value="shield"
+                >
+                <span><b>🛡️</b>Shield</span>
+              </label>
+        
+            </div>
+          </fieldset>
+        
+          <button
+            id="aquilaEmpireConfirmJoin"
+            class="aquila-empire-confirm-join"
+            type="button"
+          >
+            🔑 JOIN EMPIRE ROOM
+          </button>
         </div>
 
         <div
