@@ -3282,6 +3282,511 @@
         padding: 14px;
       }
     }
+
+    /* ========================================
+       AQUILA EMPIRE — PLAYABLE BOARD
+    ======================================== */
+    
+    .aquila-empire-game-area[hidden] {
+      display: none !important;
+    }
+    
+    .aquila-empire-game-area {
+      width: 100%;
+      min-height: 100%;
+      color: #ffffff;
+    }
+    
+    .aquila-empire-game-hud {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .aquila-empire-game-hud > div {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 3px;
+      padding: 8px 12px;
+      border: 1px solid rgba(250, 204, 21, 0.48);
+      border-radius: 13px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(2, 18, 53, 0.94),
+          rgba(15, 50, 112, 0.9)
+        );
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+    }
+    
+    .aquila-empire-game-hud span {
+      color: #93c5fd;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+    
+    .aquila-empire-game-hud strong {
+      color: #ffffff;
+      font-size: 14px;
+    }
+    
+    .aquila-empire-hud-timer strong {
+      color: #fde68a;
+      font-size: 19px;
+    }
+    
+    .aquila-empire-game-layout {
+      display: grid;
+      grid-template-columns:
+        minmax(155px, 0.7fr)
+        minmax(470px, 3fr)
+        minmax(180px, 0.85fr);
+      gap: 12px;
+      align-items: start;
+    }
+    
+    .aquila-empire-game-sidebar,
+    .aquila-empire-action-sidebar {
+      padding: 13px;
+      border: 1px solid rgba(147, 197, 253, 0.34);
+      border-radius: 15px;
+      background: rgba(2, 15, 47, 0.92);
+      box-shadow:
+        0 15px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    
+    .aquila-empire-sidebar-title {
+      margin-bottom: 11px;
+      color: #fde68a;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-align: center;
+    }
+    
+    .aquila-empire-game-players {
+      display: grid;
+      gap: 8px;
+    }
+    
+    .aquila-empire-game-player {
+      display: grid;
+      grid-template-columns: 35px 1fr;
+      gap: 8px;
+      align-items: center;
+      padding: 9px;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    
+    .aquila-empire-game-player.is-current {
+      border-color: #facc15;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(250, 204, 21, 0.18),
+          rgba(220, 38, 38, 0.12)
+        );
+      box-shadow: 0 0 14px rgba(250, 204, 21, 0.15);
+    }
+    
+    .aquila-empire-game-player-token {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(250, 204, 21, 0.5);
+      border-radius: 10px;
+      background: rgba(250, 204, 21, 0.1);
+      font-size: 20px;
+    }
+    
+    .aquila-empire-game-player-info {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+    
+    .aquila-empire-game-player-info strong {
+      overflow: hidden;
+      color: #ffffff;
+      font-size: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .aquila-empire-game-player-info span {
+      color: #93c5fd;
+      font-size: 8px;
+    }
+    
+    .aquila-empire-board-zone {
+      min-width: 0;
+    }
+    
+    .aquila-empire-board-frame {
+      position: relative;
+      width: min(100%, 720px);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 3px solid #d6a82f;
+      border-radius: 22px;
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(30, 64, 175, 0.3),
+          rgba(2, 12, 38, 0.96)
+        );
+      box-shadow:
+        0 28px 65px rgba(0, 0, 0, 0.52),
+        0 0 28px rgba(250, 204, 21, 0.2),
+        inset 0 0 35px rgba(37, 99, 235, 0.2);
+    }
+    
+    .aquila-empire-board {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(7, 1fr);
+      gap: 2px;
+      padding: 4px;
+      background: rgba(1, 8, 27, 0.7);
+    }
+    
+    .aquila-empire-space {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.96),
+          rgba(219, 234, 254, 0.92)
+        );
+      color: #0b2454;
+      text-align: center;
+    }
+    
+    .aquila-empire-space.is-corner {
+      background:
+        linear-gradient(
+          145deg,
+          #facc15,
+          #d6a82f
+        );
+      color: #172554;
+    }
+    
+    .aquila-empire-space.is-property {
+      border-top: 5px solid var(--space-color, #2563eb);
+    }
+    
+    .aquila-empire-space.is-station {
+      background:
+        linear-gradient(
+          145deg,
+          #e0e7ff,
+          #bfdbfe
+        );
+    }
+    
+    .aquila-empire-space.is-card {
+      background:
+        linear-gradient(
+          145deg,
+          #ede9fe,
+          #ddd6fe
+        );
+    }
+    
+    .aquila-empire-space-name {
+      display: -webkit-box;
+      overflow: hidden;
+      font-size: clamp(6px, 0.72vw, 10px);
+      font-weight: 900;
+      line-height: 1.05;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+    
+    .aquila-empire-space-price {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      left: 2px;
+      color: #1e3a8a;
+      font-size: clamp(5px, 0.58vw, 8px);
+      font-weight: 800;
+    }
+    
+    .aquila-empire-space-owner {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border: 3px solid var(--owner-color, transparent);
+    }
+    
+    .aquila-empire-space-tokens {
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 1px;
+      max-width: 90%;
+    }
+    
+    .aquila-empire-board-token {
+      width: clamp(14px, 1.7vw, 23px);
+      height: clamp(14px, 1.7vw, 23px);
+      display: grid;
+      place-items: center;
+      border: 1px solid #ffffff;
+      border-radius: 50%;
+      background: #092860;
+      font-size: clamp(8px, 1vw, 14px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.42);
+    }
+    
+    .aquila-empire-board-center {
+      position: absolute;
+      inset: 14.65%;
+      z-index: 4;
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 5px;
+      border: 2px solid rgba(250, 204, 21, 0.7);
+      border-radius: 15px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(3, 22, 66, 0.97),
+          rgba(17, 69, 151, 0.91) 56%,
+          rgba(124, 18, 49, 0.92)
+        );
+      text-align: center;
+      box-shadow:
+        inset 0 0 45px rgba(255, 255, 255, 0.06),
+        0 0 24px rgba(0, 0, 0, 0.4);
+    }
+    
+    .aquila-empire-board-center img {
+      width: clamp(50px, 8vw, 100px);
+      aspect-ratio: 1;
+      object-fit: cover;
+      border: 2px solid #facc15;
+      border-radius: 20%;
+      background: #ffffff;
+    }
+    
+    .aquila-empire-board-center > span {
+      color: #ffffff;
+      font-size: clamp(13px, 2vw, 27px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
+    
+    .aquila-empire-board-center > strong {
+      color: #fde047;
+      font-size: clamp(20px, 3.6vw, 50px);
+      line-height: 0.8;
+      letter-spacing: 0.08em;
+    }
+    
+    .aquila-empire-board-center > small {
+      color: #bfdbfe;
+      font-size: clamp(6px, 0.75vw, 10px);
+      font-weight: 900;
+      letter-spacing: 0.15em;
+    }
+    
+    .aquila-empire-dice-display {
+      display: flex;
+      gap: 8px;
+      margin-top: 7px;
+    }
+    
+    .aquila-empire-dice-display > div {
+      width: clamp(30px, 4vw, 49px);
+      height: clamp(30px, 4vw, 49px);
+      display: grid;
+      place-items: center;
+      border: 1px solid #facc15;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #b91c1c;
+      font-size: clamp(24px, 3.5vw, 44px);
+      line-height: 1;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.32);
+    }
+    
+    .aquila-empire-current-player-card {
+      display: grid;
+      gap: 5px;
+      padding: 13px;
+      border: 1px solid rgba(250, 204, 21, 0.45);
+      border-radius: 12px;
+      background: rgba(250, 204, 21, 0.09);
+      text-align: center;
+    }
+    
+    .aquila-empire-current-player-card span {
+      color: #fde68a;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+    
+    .aquila-empire-current-player-card strong {
+      color: #ffffff;
+      font-size: 24px;
+    }
+    
+    .aquila-empire-action-notice {
+      min-height: 57px;
+      display: grid;
+      place-items: center;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #bfdbfe;
+      font-size: 10px;
+      line-height: 1.4;
+      text-align: center;
+    }
+    
+    .aquila-empire-roll-button,
+    .aquila-empire-buy-button,
+    .aquila-empire-decline-button,
+    .aquila-empire-end-turn-button {
+      width: 100%;
+      min-height: 43px;
+      margin-top: 7px;
+      border-radius: 11px;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    
+    .aquila-empire-roll-button {
+      border: 1px solid #fde047;
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+    }
+    
+    .aquila-empire-buy-button {
+      border: 1px solid #86efac;
+      background: linear-gradient(135deg, #16a34a, #08752f);
+    }
+    
+    .aquila-empire-decline-button {
+      border: 1px solid #c4b5fd;
+      background: linear-gradient(135deg, #6d28d9, #4338ca);
+    }
+    
+    .aquila-empire-end-turn-button {
+      border: 1px solid #60a5fa;
+      background: linear-gradient(135deg, #2563eb, #123f96);
+    }
+    
+    .aquila-empire-roll-button:disabled {
+      cursor: not-allowed;
+      filter: grayscale(0.55);
+      opacity: 0.5;
+    }
+    
+    .aquila-empire-action-log {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(147, 197, 253, 0.2);
+    }
+    
+    .aquila-empire-action-log > span {
+      color: #93c5fd;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+    }
+    
+    #aquilaEmpireActionLog {
+      max-height: 170px;
+      overflow: auto;
+      margin-top: 7px;
+      color: #dbeafe;
+      font-size: 9px;
+      line-height: 1.5;
+    }
+    
+    @media (max-width: 980px) {
+      .aquila-empire-game-layout {
+        grid-template-columns: 1fr;
+      }
+    
+      .aquila-empire-board-zone {
+        order: 1;
+      }
+    
+      .aquila-empire-game-sidebar {
+        order: 2;
+      }
+    
+      .aquila-empire-action-sidebar {
+        order: 3;
+      }
+    
+      .aquila-empire-game-players {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    @media (max-width: 560px) {
+      .aquila-empire-game-hud {
+        grid-template-columns: 1fr 1fr;
+      }
+    
+      .aquila-empire-hud-turn {
+        grid-column: 1 / -1;
+        grid-row: 1;
+      }
+    
+      .aquila-empire-board-frame {
+        border-width: 2px;
+        border-radius: 14px;
+      }
+    
+      .aquila-empire-board {
+        gap: 1px;
+        padding: 2px;
+      }
+    
+      .aquila-empire-space {
+        padding: 2px;
+      }
+    
+      .aquila-empire-game-players {
+        grid-template-columns: 1fr;
+      }
+    }
     
 </style>
 </head>
