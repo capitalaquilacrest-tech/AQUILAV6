@@ -10179,6 +10179,9 @@ if(!stage || !overlay) return;
   
       cell.className =
         "aquila-empire-space";
+
+      cell.dataset.boardPosition =
+        String(space.board_position);
   
       cell.style.gridRow =
         String(grid.row);
@@ -10293,6 +10296,9 @@ if(!stage || !overlay) return;
   
             token.className =
               "aquila-empire-board-token";
+
+            token.dataset.playerId =
+              String(player.player_id);
   
             token.title =
               player.public_name ||
@@ -10817,7 +10823,160 @@ if(!stage || !overlay) return;
       startAquilaEmpireGame
     );
 
+  /* AQUILA EMPIRE COMPLETE GAMEPLAY CONTROLS */
   let aquilaEmpireRollRequestRunning = false;
+  let aquilaEmpireEndTurnRequestRunning = false;
+  let aquilaEmpirePropertyRequestRunning = false;
+  let aquilaEmpireCardRequestRunning = false;
+  let aquilaEmpireAudioMuted =
+    localStorage.getItem("aquilaEmpireMuted") === "1";
+  let aquilaEmpireAudioContext = null;
+  let aquilaEmpireMusicTimer = null;
+  let aquilaEmpireClockTimer = null;
+
+  function aquilaEmpireWait(ms) {
+    return new Promise(function (resolve) {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  function getAquilaEmpireAudioContext() {
+    if (aquilaEmpireAudioMuted) return null;
+    if (!aquilaEmpireAudioContext) {
+      const AudioContextClass =
+        window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return null;
+      aquilaEmpireAudioContext = new AudioContextClass();
+    }
+    if (aquilaEmpireAudioContext.state === "suspended") {
+      aquilaEmpireAudioContext.resume().catch(function () {});
+    }
+    return aquilaEmpireAudioContext;
+  }
+
+  function playAquilaEmpireTone(
+    frequency,
+    duration,
+    volume,
+    type,
+    delay
+  ) {
+    const context = getAquilaEmpireAudioContext();
+    if (!context) return;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    const start = context.currentTime + Number(delay || 0);
+    oscillator.type = type || "sine";
+    oscillator.frequency.setValueAtTime(frequency, start);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(
+      Math.max(0.0001, volume || 0.04),
+      start + 0.02
+    );
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      start + duration
+    );
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start(start);
+    oscillator.stop(start + duration + 0.04);
+  }
+
+  function playAquilaEmpireSound(name) {
+    if (aquilaEmpireAudioMuted) return;
+    const notes = {
+      dice: [[180,.08,.055,"square",0],[260,.08,.05,"square",.09],[210,.1,.05,"square",.18]],
+      step: [[420,.08,.035,"sine",0],[560,.08,.025,"sine",.04]],
+      purchase: [[523,.12,.05,"triangle",0],[659,.14,.05,"triangle",.12],[784,.22,.06,"triangle",.26]],
+      card: [[440,.1,.045,"triangle",0],[660,.1,.045,"triangle",.1],[880,.18,.05,"triangle",.2]],
+      turn: [[392,.12,.045,"sine",0],[523,.2,.05,"sine",.12]],
+      warning: [[220,.16,.05,"sawtooth",0],[185,.24,.045,"sawtooth",.17]]
+    };
+    (notes[name] || notes.step).forEach(function (note) {
+      playAquilaEmpireTone.apply(null, note);
+    });
+  }
+
+  function startAquilaEmpireMusic() {
+    if (aquilaEmpireAudioMuted || aquilaEmpireMusicTimer) return;
+    const melody = [130.81, 164.81, 196, 246.94, 196, 164.81];
+    let noteIndex = 0;
+    playAquilaEmpireTone(melody[0], 1.6, .012, "sine", 0);
+    aquilaEmpireMusicTimer = setInterval(function () {
+      if (
+        aquilaEmpireAudioMuted ||
+        !document.getElementById("aquilaEmpireModal")
+          ?.classList.contains("is-open")
+      ) return;
+      noteIndex = (noteIndex + 1) % melody.length;
+      playAquilaEmpireTone(
+        melody[noteIndex], 1.8, .012, "sine", 0
+      );
+      playAquilaEmpireTone(
+        melody[(noteIndex + 2) % melody.length] / 2,
+        1.9,
+        .007,
+        "triangle",
+        0
+      );
+    }, 1900);
+  }
+
+  function stopAquilaEmpireMusic() {
+    if (aquilaEmpireMusicTimer) {
+      clearInterval(aquilaEmpireMusicTimer);
+      aquilaEmpireMusicTimer = null;
+    }
+  }
+
+  function ensureAquilaEmpireExperience() {
+    if (!document.getElementById("aquilaEmpireExperienceStyles")) {
+      const style = document.createElement("style");
+      style.id = "aquilaEmpireExperienceStyles";
+      style.textContent = `
+        .aquila-empire-sound-button{margin-left:auto;margin-right:8px;width:42px;height:42px;border:1px solid rgba(255,255,255,.35);border-radius:12px;background:rgba(255,255,255,.12);color:#fff;font-size:19px;cursor:pointer}
+        .aquila-empire-board-token.is-hopping{animation:aquilaEmpireTokenHop .25s cubic-bezier(.2,.8,.3,1);filter:drop-shadow(0 0 8px #facc15)}
+        .aquila-empire-die.is-rolling{animation:aquilaEmpireDiceShake .16s linear infinite}
+        @keyframes aquilaEmpireTokenHop{0%{transform:translateY(0) scale(1)}45%{transform:translateY(-13px) scale(1.18)}100%{transform:translateY(0) scale(1)}}
+        @keyframes aquilaEmpireDiceShake{0%,100%{transform:rotate(-7deg) scale(1)}50%{transform:rotate(7deg) scale(1.08)}}
+      `;
+      document.head.appendChild(style);
+    }
+    if (!document.getElementById("aquilaEmpireSoundButton")) {
+      const button = document.createElement("button");
+      button.id = "aquilaEmpireSoundButton";
+      button.type = "button";
+      button.className = "aquila-empire-sound-button";
+      button.setAttribute("aria-label", "Toggle Aquila Empire sound");
+      button.title = "Sound on/off";
+      button.textContent = aquilaEmpireAudioMuted ? "🔇" : "🔊";
+      button.addEventListener("click", function () {
+        aquilaEmpireAudioMuted = !aquilaEmpireAudioMuted;
+        localStorage.setItem(
+          "aquilaEmpireMuted",
+          aquilaEmpireAudioMuted ? "1" : "0"
+        );
+        button.textContent = aquilaEmpireAudioMuted ? "🔇" : "🔊";
+        if (aquilaEmpireAudioMuted) stopAquilaEmpireMusic();
+        else {
+          getAquilaEmpireAudioContext();
+          startAquilaEmpireMusic();
+          playAquilaEmpireSound("turn");
+        }
+      });
+      const closeButton = document.querySelector(
+        "#aquilaEmpireModal .aquila-empire-close"
+      );
+      closeButton?.parentElement?.insertBefore(button, closeButton);
+    }
+    if (!aquilaEmpireClockTimer) {
+      aquilaEmpireClockTimer = setInterval(
+        updateAquilaEmpireClock,
+        1000
+      );
+    }
+  }
 
   function getAquilaEmpireViewerPlayer(state) {
     const viewerUserId =
@@ -10843,6 +11002,13 @@ if(!stage || !overlay) return;
       document.getElementById(
         "aquilaEmpireEndTurnButton"
       );
+
+    const buyButton = document.getElementById(
+      "aquilaEmpireBuyButton"
+    );
+    const declineButton = document.getElementById(
+      "aquilaEmpireDeclineButton"
+    );
   
     const notice =
       document.getElementById(
@@ -10881,6 +11047,12 @@ if(!stage || !overlay) return;
       isMyTurn &&
       phase === "turn_complete" &&
       !aquilaEmpireEndTurnRequestRunning;
+
+    const canChooseProperty =
+      state?.room?.status === "active" &&
+      isMyTurn &&
+      phase === "purchase_decision" &&
+      !aquilaEmpirePropertyRequestRunning;
   
     rollButton.disabled = !canRoll;
     rollButton.hidden = phase !== "roll_required";
@@ -10888,6 +11060,15 @@ if(!stage || !overlay) return;
     if (endTurnButton) {
       endTurnButton.hidden = !canEndTurn;
       endTurnButton.disabled = !canEndTurn;
+    }
+
+    if (buyButton) {
+      buyButton.hidden = !canChooseProperty;
+      buyButton.disabled = !canChooseProperty;
+    }
+    if (declineButton) {
+      declineButton.hidden = !canChooseProperty;
+      declineButton.disabled = !canChooseProperty;
     }
   
     if (!notice) return;
@@ -10904,6 +11085,16 @@ if(!stage || !overlay) return;
     } else if (phase === "roll_required") {
       notice.textContent =
         "Your turn—roll the dice!";
+    } else if (phase === "purchase_decision") {
+      const pending = state?.turn?.pending_action || {};
+      notice.textContent =
+        `Acquire ${pending.space_name || "this property"} ` +
+        `for ${Number(pending.purchase_price || 0).toLocaleString()} GC or pass.`;
+    } else if (phase === "card_action") {
+      notice.textContent = "Drawing your Empire card…";
+    } else if (phase === "asset_management") {
+      notice.textContent =
+        "Insufficient credits. Asset management is required.";
     } else if (phase === "turn_complete") {
       notice.textContent =
         "Move complete—end your turn.";
@@ -10911,6 +11102,128 @@ if(!stage || !overlay) return;
       notice.textContent =
         "Complete the current action.";
     }
+    updateAquilaEmpireClock();
+    ensureAquilaEmpireExperience();
+  }
+
+  function updateAquilaEmpireClock() {
+    const timer = document.getElementById(
+      "aquilaEmpireTurnTimer"
+    );
+    if (!timer) return;
+    const state = aquilaEmpireLatestState;
+    const deadlines = [
+      state?.turn?.turn_deadline_at,
+      state?.room?.game_ends_at
+    ].filter(Boolean).map(function (value) {
+      return new Date(value).getTime();
+    });
+    if (!deadlines.length) {
+      timer.textContent = "--:--";
+      return;
+    }
+    const remaining = Math.max(
+      0,
+      Math.min.apply(null, deadlines) - Date.now()
+    );
+    const totalSeconds = Math.ceil(remaining / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    timer.textContent =
+      `${String(minutes).padStart(2,"0")}:` +
+      String(seconds).padStart(2,"0");
+  }
+
+  async function animateAquilaEmpireDice(finalOne, finalTwo) {
+    const dieOne = document.getElementById("aquilaEmpireDieOne");
+    const dieTwo = document.getElementById("aquilaEmpireDieTwo");
+    const faces = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+    dieOne?.classList.add("is-rolling");
+    dieTwo?.classList.add("is-rolling");
+    playAquilaEmpireSound("dice");
+    for (let index = 0; index < 10; index += 1) {
+      if (dieOne) dieOne.textContent = faces[Math.floor(Math.random()*6)];
+      if (dieTwo) dieTwo.textContent = faces[Math.floor(Math.random()*6)];
+      await aquilaEmpireWait(90);
+    }
+    dieOne?.classList.remove("is-rolling");
+    dieTwo?.classList.remove("is-rolling");
+    if (dieOne) dieOne.textContent = faces[Number(finalOne)-1] || "⚀";
+    if (dieTwo) dieTwo.textContent = faces[Number(finalTwo)-1] || "⚀";
+  }
+
+  async function animateAquilaEmpireToken(
+    playerId,
+    oldPosition,
+    totalSteps
+  ) {
+    const token = document.querySelector(
+      `.aquila-empire-board-token[data-player-id="${CSS.escape(String(playerId))}"]`
+    );
+    if (!token) return;
+    let position = Number(oldPosition || 1);
+    for (let step = 0; step < Number(totalSteps || 0); step += 1) {
+      position = position >= 24 ? 1 : position + 1;
+      const cell = document.querySelector(
+        `.aquila-empire-space[data-board-position="${position}"]`
+      );
+      if (!cell) continue;
+      let holder = cell.querySelector(".aquila-empire-space-tokens");
+      if (!holder) {
+        holder = document.createElement("div");
+        holder.className = "aquila-empire-space-tokens";
+        cell.appendChild(holder);
+      }
+      holder.appendChild(token);
+      token.classList.remove("is-hopping");
+      void token.offsetWidth;
+      token.classList.add("is-hopping");
+      playAquilaEmpireSound("step");
+      await aquilaEmpireWait(270);
+    }
+    token.classList.remove("is-hopping");
+  }
+
+  async function continueAquilaEmpireAction(phase, depth) {
+    if (Number(depth || 0) > 6) return;
+    if (phase === "space_action") {
+      const { data, error } = await chatDb.rpc(
+        "game_resolve_space",
+        {
+          p_room_id: aquilaEmpireCurrentRoomId,
+          p_action_request_id: crypto.randomUUID()
+        }
+      );
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.notice || "Space resolution failed.");
+      if (data.next_phase === "card_action") {
+        return continueAquilaEmpireAction("card_action", Number(depth||0)+1);
+      }
+      return data;
+    }
+    if (phase === "card_action") {
+      aquilaEmpireCardRequestRunning = true;
+      playAquilaEmpireSound("card");
+      const { data, error } = await chatDb.rpc(
+        "game_draw_card",
+        {
+          p_room_id: aquilaEmpireCurrentRoomId,
+          p_action_request_id: crypto.randomUUID()
+        }
+      );
+      aquilaEmpireCardRequestRunning = false;
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.notice || "Card draw failed.");
+      showAquilaEmpireMessage(
+        `${data.card_title}: ${data.card_description}`,
+        "info"
+      );
+      if (data.next_phase === "space_action") {
+        return continueAquilaEmpireAction("space_action", Number(depth||0)+1);
+      }
+      return data;
+    }
+    return null;
   }
   
   async function rollAquilaEmpireDice() {
@@ -10979,63 +11292,33 @@ if(!stage || !overlay) return;
         );
       }
   
-      const dieOne =
-        document.getElementById(
-          "aquilaEmpireDieOne"
-        );
-  
-      const dieTwo =
-        document.getElementById(
-          "aquilaEmpireDieTwo"
-        );
-  
-      const dieFaces = [
-        "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"
-      ];
-  
-      if (dieOne) {
-        dieOne.textContent =
-          dieFaces[rollData.dice_one - 1];
+      if (aquilaEmpireRoomRefreshTimer) {
+        clearInterval(aquilaEmpireRoomRefreshTimer);
+        aquilaEmpireRoomRefreshTimer = null;
       }
-  
-      if (dieTwo) {
-        dieTwo.textContent =
-          dieFaces[rollData.dice_two - 1];
-      }
+
+      await animateAquilaEmpireDice(
+        rollData.dice_one,
+        rollData.dice_two
+      );
+
+      await animateAquilaEmpireToken(
+        myPlayer.player_id,
+        rollData.old_position,
+        rollData.total
+      );
   
       showAquilaEmpireMessage(
         `You rolled ${rollData.total} and landed on ${rollData.space_name}.`,
         "success"
       );
   
-      const resolveRequestId =
-        crypto.randomUUID();
-  
-      const {
-        data: resolveData,
-        error: resolveError
-      } = await chatDb.rpc(
-        "game_resolve_space",
-        {
-          p_room_id:
-            aquilaEmpireCurrentRoomId,
-          p_action_request_id:
-            resolveRequestId
-        }
-      );
-  
-      if (resolveError) throw resolveError;
-  
-      if (!resolveData?.ok) {
-        throw new Error(
-          resolveData?.notice ||
-          "The board space could not be resolved."
-        );
-      }
+      await continueAquilaEmpireAction("space_action", 0);
   
       await loadAquilaEmpireRoomState(
         aquilaEmpireCurrentRoomId
       );
+      startAquilaEmpireRoomRefresh();
     } catch (error) {
       console.error(
         "Aquila Empire roll dice:",
@@ -11059,8 +11342,6 @@ if(!stage || !overlay) return;
       );
     }
   }
-
-  let aquilaEmpireEndTurnRequestRunning = false;
 
   async function endAquilaEmpireTurn() {
     if (
@@ -11109,6 +11390,7 @@ if(!stage || !overlay) return;
         "The next player’s turn has started.",
         "success"
       );
+      playAquilaEmpireSound("turn");
   
       await loadAquilaEmpireRoomState(
         aquilaEmpireCurrentRoomId
@@ -11136,6 +11418,45 @@ if(!stage || !overlay) return;
       );
     }
   }
+
+  async function decideAquilaEmpireProperty(shouldBuy) {
+    if (
+      !chatDb ||
+      !aquilaEmpireCurrentRoomId ||
+      aquilaEmpirePropertyRequestRunning
+    ) return;
+    aquilaEmpirePropertyRequestRunning = true;
+    syncAquilaEmpireRollButton(aquilaEmpireLatestState);
+    try {
+      const { data, error } = await chatDb.rpc(
+        "game_property_decision",
+        {
+          p_room_id: aquilaEmpireCurrentRoomId,
+          p_buy: Boolean(shouldBuy),
+          p_action_request_id: crypto.randomUUID()
+        }
+      );
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.notice || "Property decision failed.");
+      if (shouldBuy) playAquilaEmpireSound("purchase");
+      showAquilaEmpireMessage(
+        shouldBuy
+          ? `${data.property_name} acquired successfully!`
+          : `You passed on ${data.property_name}.`,
+        "success"
+      );
+      await loadAquilaEmpireRoomState(aquilaEmpireCurrentRoomId);
+    } catch (error) {
+      playAquilaEmpireSound("warning");
+      showAquilaEmpireMessage(
+        error?.message || "Property decision failed.",
+        "warning"
+      );
+    } finally {
+      aquilaEmpirePropertyRequestRunning = false;
+      syncAquilaEmpireRollButton(aquilaEmpireLatestState);
+    }
+  }
   
   document
     .getElementById(
@@ -11145,6 +11466,18 @@ if(!stage || !overlay) return;
       "click",
       endAquilaEmpireTurn
     );
+
+  document
+    .getElementById("aquilaEmpireBuyButton")
+    ?.addEventListener("click", function () {
+      decideAquilaEmpireProperty(true);
+    });
+
+  document
+    .getElementById("aquilaEmpireDeclineButton")
+    ?.addEventListener("click", function () {
+      decideAquilaEmpireProperty(false);
+    });
   
   document
     .getElementById("aquilaEmpireRollButton")
@@ -11152,6 +11485,13 @@ if(!stage || !overlay) return;
       "click",
       rollAquilaEmpireDice
     );
+
+  document
+    .getElementById("aquilaEmpireModal")
+    ?.addEventListener("click", function () {
+      ensureAquilaEmpireExperience();
+      startAquilaEmpireMusic();
+    }, { once: true });
   
 </script>
 </body>
