@@ -10559,6 +10559,262 @@ if(!stage || !overlay) return;
     renderAquilaEmpireGamePlayers(state);
     renderAquilaEmpireActionLog(state);
   }
+
+  let aquilaEmpireReadyRequestRunning = false;
+  let aquilaEmpireStartRequestRunning = false;
+  
+  async function toggleAquilaEmpireReady() {
+    if (
+      !aquilaEmpireCurrentRoomId ||
+      aquilaEmpireReadyRequestRunning
+    ) {
+      return;
+    }
+  
+    const currentPlayer =
+      aquilaEmpireLatestState?.players?.find(
+        function (player) {
+          return player.is_current_user;
+        }
+      );
+  
+    if (!currentPlayer) {
+      showAquilaEmpireMessage(
+        "Your player record could not be found.",
+        "error"
+      );
+  
+      return;
+    }
+  
+    const readyButton =
+      document.getElementById(
+        "aquilaEmpireReadyButton"
+      );
+  
+    const newReadyStatus =
+      !Boolean(currentPlayer.ready);
+  
+    aquilaEmpireReadyRequestRunning = true;
+  
+    if (readyButton) {
+      readyButton.disabled = true;
+      readyButton.textContent =
+        newReadyStatus
+          ? "SETTING READY STATUS…"
+          : "CANCELLING READY STATUS…";
+    }
+  
+    try {
+      const { data, error } =
+        await chatDb.rpc(
+          "game_set_ready",
+          {
+            p_room_id:
+              aquilaEmpireCurrentRoomId,
+            p_ready: newReadyStatus
+          }
+        );
+  
+      if (error) {
+        throw error;
+      }
+  
+      if (!data?.ok) {
+        showAquilaEmpireMessage(
+          data?.notice ||
+            "Ready status could not be updated.",
+          "error"
+        );
+  
+        return;
+      }
+  
+      showAquilaEmpireMessage(
+        data.notice ||
+          (
+            newReadyStatus
+              ? "You are ready to play."
+              : "Your ready status was cancelled."
+          ),
+        "success"
+      );
+  
+      await loadAquilaEmpireRoomState(
+        aquilaEmpireCurrentRoomId
+      );
+    } catch (error) {
+      console.error(
+        "Aquila Empire ready status:",
+        error
+      );
+  
+      showAquilaEmpireMessage(
+        error?.message ||
+          "Ready status could not be updated.",
+        "error"
+      );
+    } finally {
+      aquilaEmpireReadyRequestRunning =
+        false;
+  
+      if (readyButton) {
+        readyButton.disabled = false;
+      }
+    }
+  }
+  
+  async function startAquilaEmpireGame() {
+    if (
+      !aquilaEmpireCurrentRoomId ||
+      aquilaEmpireStartRequestRunning
+    ) {
+      return;
+    }
+  
+    const state = aquilaEmpireLatestState;
+    const room = state?.room;
+  
+    if (
+      !room ||
+      room.host_user_id !==
+        state.viewer_user_id
+    ) {
+      showAquilaEmpireMessage(
+        "Only the room host can start the game.",
+        "error"
+      );
+  
+      return;
+    }
+  
+    const activePlayers =
+      Array.isArray(state.players)
+        ? state.players.filter(
+            function (player) {
+              return ![
+                "forfeited",
+                "bankrupt",
+                "finished"
+              ].includes(
+                player.player_status
+              );
+            }
+          )
+        : [];
+  
+    if (activePlayers.length < 2) {
+      showAquilaEmpireMessage(
+        "At least two players are required.",
+        "error"
+      );
+  
+      return;
+    }
+  
+    if (
+      !activePlayers.every(
+        function (player) {
+          return player.ready;
+        }
+      )
+    ) {
+      showAquilaEmpireMessage(
+        "All connected players must be ready.",
+        "error"
+      );
+  
+      return;
+    }
+  
+    const startButton =
+      document.getElementById(
+        "aquilaEmpireStartButton"
+      );
+  
+    aquilaEmpireStartRequestRunning = true;
+  
+    if (startButton) {
+      startButton.disabled = true;
+      startButton.textContent =
+        "STARTING AQUILA EMPIRE…";
+    }
+  
+    showAquilaEmpireMessage(
+      "Preparing the board and determining the first turn…"
+    );
+  
+    try {
+      const { data, error } =
+        await chatDb.rpc(
+          "game_start_room",
+          {
+            p_room_id:
+              aquilaEmpireCurrentRoomId
+          }
+        );
+  
+      if (error) {
+        throw error;
+      }
+  
+      if (!data?.ok) {
+        showAquilaEmpireMessage(
+          data?.notice ||
+            "The game could not be started.",
+          "error"
+        );
+  
+        return;
+      }
+  
+      showAquilaEmpireMessage(
+        data.notice ||
+          "Aquila Empire has started!",
+        "success"
+      );
+  
+      await loadAquilaEmpireRoomState(
+        aquilaEmpireCurrentRoomId
+      );
+    } catch (error) {
+      console.error(
+        "Aquila Empire game start:",
+        error
+      );
+  
+      showAquilaEmpireMessage(
+        error?.message ||
+          "The game could not be started.",
+        "error"
+      );
+    } finally {
+      aquilaEmpireStartRequestRunning =
+        false;
+  
+      if (startButton) {
+        startButton.disabled = false;
+      }
+    }
+  }
+  
+  document
+    .getElementById(
+      "aquilaEmpireReadyButton"
+    )
+    ?.addEventListener(
+      "click",
+      toggleAquilaEmpireReady
+    );
+  
+  document
+    .getElementById(
+      "aquilaEmpireStartButton"
+    )
+    ?.addEventListener(
+      "click",
+      startAquilaEmpireGame
+    );
   
 </script>
 </body>
