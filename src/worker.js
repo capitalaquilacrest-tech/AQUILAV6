@@ -1429,6 +1429,50 @@ async function handleAnnouncementMedia(request,env){
 }
 
 async function saveChatIdentity(userId, identity, env) {
+  const profileUrl =
+    `${SUPABASE_URL}/rest/v1/chat_profiles` +
+    `?user_id=eq.${encodeURIComponent(userId)}`;
+
+  const serviceHeaders = {
+    apikey: env.SUPABASE_SECRET_KEY,
+    authorization: `Bearer ${env.SUPABASE_SECRET_KEY}`
+  };
+
+  // PROTECT EXISTING ADMIN PROFILE
+  const existingResponse = await fetch(
+    `${profileUrl}&select=*`,
+    {
+      headers: serviceHeaders
+    }
+  );
+
+  if (existingResponse.ok) {
+    const existingRows =
+      await existingResponse.json().catch(() => []);
+
+    const existingProfile =
+      Array.isArray(existingRows)
+        ? existingRows[0]
+        : null;
+
+    if (
+      existingProfile &&
+      String(existingProfile.role || "")
+        .trim()
+        .toLowerCase() === "admin"
+    ) {
+      console.log(
+        "Protected ACC Admin profile from member identity overwrite:",
+        userId
+      );
+
+      return {
+        profile: existingProfile,
+        preservedAdmin: true
+      };
+    }
+  }
+
   const profile = {
     display_name: identity.fullName.slice(0, 30),
     public_name: identity.fullName.slice(0, 30),
@@ -1437,29 +1481,81 @@ async function saveChatIdentity(userId, identity, env) {
     member_username: identity.username,
     identity_verified_at: new Date().toISOString()
   };
-  const headers = { apikey: env.SUPABASE_SECRET_KEY, "content-type": "application/json", prefer: "return=representation" };
-  let response = await fetch(`${SUPABASE_URL}/rest/v1/chat_profiles?user_id=eq.${encodeURIComponent(userId)}`, {
-    method: "PATCH", headers, body: JSON.stringify(profile)
-  });
-  let rows = response.ok ? await response.json().catch(() => []) : [];
-  if (response.ok && Array.isArray(rows) && rows[0]) return { profile: rows[0] };
 
-  if (response.ok) {
-    response = await fetch(`${SUPABASE_URL}/rest/v1/chat_profiles`, {
-      method: "POST", headers, body: JSON.stringify({ user_id: userId, ...profile })
-    });
-    rows = response.ok ? await response.json().catch(() => []) : [];
-    if (response.ok && Array.isArray(rows) && rows[0]) return { profile: rows[0] };
+  const writeHeaders = {
+    ...serviceHeaders,
+    "content-type": "application/json",
+    prefer: "return=representation"
+  };
+
+  let response = await fetch(profileUrl, {
+    method: "PATCH",
+    headers: writeHeaders,
+    body: JSON.stringify(profile)
+  });
+
+  let rows = response.ok
+    ? await response.json().catch(() => [])
+    : [];
+
+  if (
+    response.ok &&
+    Array.isArray(rows) &&
+    rows[0]
+  ) {
+    return { profile: rows[0] };
   }
 
-  const errorText = await response.text().catch(() => "");
-  console.error("Chat identity profile activation failed", response.status, errorText);
+  if (response.ok) {
+    response = await fetch(
+      `${SUPABASE_URL}/rest/v1/chat_profiles`,
+      {
+        method: "POST",
+        headers: writeHeaders,
+        body: JSON.stringify({
+          user_id: userId,
+          ...profile
+        })
+      }
+    );
+
+    rows = response.ok
+      ? await response.json().catch(() => [])
+      : [];
+
+    if (
+      response.ok &&
+      Array.isArray(rows) &&
+      rows[0]
+    ) {
+      return { profile: rows[0] };
+    }
+  }
+
+  const errorText =
+    await response.text().catch(() => "");
+
+  console.error(
+    "Chat identity profile activation failed",
+    response.status,
+    errorText
+  );
+
   let detail = `Database ${response.status}`;
+
   try {
     const parsed = JSON.parse(errorText);
-    if (parsed?.code) detail += ` · ${parsed.code}`;
-    if (parsed?.message) detail += ` · ${String(parsed.message).slice(0, 120)}`;
+
+    if (parsed?.code) {
+      detail += ` · ${parsed.code}`;
+    }
+
+    if (parsed?.message) {
+      detail +=
+        ` · ${String(parsed.message).slice(0, 120)}`;
+    }
   } catch {}
+
   return { error: detail };
 }
 
