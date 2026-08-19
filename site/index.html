@@ -6777,5 +6777,125 @@ if(!stage || !overlay) return;
     refreshQuota();
   })();
 </script>
+<!-- AQUILA EMPIRE GAME -->
+<div
+  id="aquilaEmpireModal"
+  class="aquila-empire-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="aquilaEmpireTitle"
+  aria-hidden="true"
+>
+  <div class="aquila-empire-stage">
+
+    <div class="aquila-empire-topbar">
+      <div class="aquila-empire-brand">
+        <img
+          src="assets/logo.jpg"
+          alt="Aquila Crest Capital"
+        >
+
+        <div>
+          <strong id="aquilaEmpireTitle">
+            AQUILA EMPIRE
+          </strong>
+
+          <span>
+            Multiplayer Property Strategy Game
+          </span>
+        </div>
+      </div>
+
+      <button
+        class="aquila-empire-close"
+        type="button"
+        onclick="closeAquilaEmpire()"
+        aria-label="Close Aquila Empire"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="aquila-empire-content">
+
+      <section
+        id="aquilaEmpireLobby"
+        class="aquila-empire-lobby"
+      >
+        <div class="aquila-empire-welcome">
+          <span class="aquila-empire-kicker">
+            BUILD • TRADE • RULE
+          </span>
+
+          <h2>WELCOME TO AQUILA EMPIRE</h2>
+
+          <p>
+            Build your empire, acquire strategic properties,
+            and compete with verified Aquila members in an
+            original multiplayer board-game experience.
+          </p>
+
+          <div class="aquila-empire-notice">
+            🎮 Entertainment only. No entry fee, cash betting,
+            or real-money rewards.
+          </div>
+        </div>
+
+        <div
+          id="aquilaEmpireIdentity"
+          class="aquila-empire-identity"
+        >
+          <span>PLAYER ACCESS</span>
+
+          <strong id="aquilaEmpirePlayerName">
+            Checking member session…
+          </strong>
+
+          <small id="aquilaEmpirePlayerStatus">
+            Please wait while we verify your Aquila account.
+          </small>
+        </div>
+
+        <div class="aquila-empire-lobby-actions">
+
+          <button
+            id="aquilaEmpireCreateButton"
+            class="aquila-empire-primary-action"
+            type="button"
+            disabled
+          >
+            👑 CREATE PRIVATE ROOM
+          </button>
+
+          <button
+            id="aquilaEmpireBrowseButton"
+            class="aquila-empire-secondary-action"
+            type="button"
+            disabled
+          >
+            🌐 BROWSE OPEN ROOMS
+          </button>
+
+        </div>
+
+        <div
+          id="aquilaEmpireMessage"
+          class="aquila-empire-message"
+          aria-live="polite"
+        ></div>
+      </section>
+
+      <section
+        id="aquilaEmpireGameArea"
+        class="aquila-empire-game-area"
+        hidden
+      >
+        <div id="aquilaEmpireBoard"></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+<!-- END AQUILA EMPIRE GAME -->  
 </body>
 </html>
