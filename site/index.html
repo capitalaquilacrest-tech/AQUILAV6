@@ -790,6 +790,29 @@
       touch-action: manipulation;
     }
 
+    .aquila-empire-launcher {
+      color: #fff !important;
+      border: 1px solid #facc15 !important;
+      background: linear-gradient(135deg, #7f1d1d, #dc2626 48%, #b8860b) !important;
+      box-shadow:
+        0 6px 20px rgba(220, 38, 38, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .aquila-empire-launcher:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 9px 25px rgba(220, 38, 38, 0.42),
+        0 0 14px rgba(250, 204, 21, 0.3);
+    }
+
+    @media (max-width: 700px) {
+      .aquila-empire-launcher {
+        padding: 10px 9px !important;
+        font-size: 10px !important;
+      }
+    }
+
 </style>
 
   <title>Aquila Crest Capital | Official Website</title>
@@ -2319,6 +2342,13 @@
         >
           <span class="notification-bell" aria-hidden="true">🔔</span>
           <span class="notification-badge" id="notificationBadge" hidden>0</span>
+        </button>
+        <button
+          class="btn aquila-empire-launcher"
+          type="button"
+          onclick="openAquilaEmpire()"
+        >
+          🎲 PLAY
         </button>
         <button class="btn btn-primary" data-dashboard>LOGIN DASHBOARD</button>
       </div>
