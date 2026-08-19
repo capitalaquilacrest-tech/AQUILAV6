@@ -1642,7 +1642,21 @@
 
 </style>
 
-  <title>Aquila Crest Capital | Official Website</title>
+    <style id="aquilaEmpireFinalLifecycleStyles">
+      .aquila-empire-live-presence{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0;padding:9px 12px;border:1px solid rgba(96,165,250,.45);border-radius:12px;background:rgba(5,25,66,.76);color:#dbeafe;font-weight:900;font-size:12px;letter-spacing:.04em}
+      .aquila-empire-live-presence.is-spectator{border-color:#a78bfa;background:linear-gradient(135deg,rgba(76,29,149,.88),rgba(30,64,175,.78));color:#fff}
+      .aquila-empire-lifecycle-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+      .aquila-empire-lifecycle-actions button,.aquila-empire-final-exit-actions button{min-height:42px;border:1px solid rgba(255,255,255,.28);border-radius:11px;color:#fff;font-weight:900;cursor:pointer}
+      .aquila-empire-lifecycle-close{background:linear-gradient(135deg,#1d4ed8,#123d91)}
+      .aquila-empire-lifecycle-forfeit{background:linear-gradient(135deg,#be123c,#7f1d1d)}
+      .aquila-empire-final-exit-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:min(520px,100%);margin:16px auto 0}
+      #aquilaEmpireReturnLobbyButton{background:linear-gradient(135deg,#16a34a,#08752f)}
+      #aquilaEmpireCloseFinishedButton{background:linear-gradient(135deg,#1d4ed8,#123d91)}
+      .aquila-empire-winner-stage[hidden]{display:none!important}
+      @media(max-width:700px){.aquila-empire-lifecycle-actions,.aquila-empire-final-exit-actions{grid-template-columns:1fr}.aquila-empire-live-presence{position:sticky;top:0;z-index:12}}
+    </style>
+
+    <title>Aquila Crest Capital | Official Website</title>
 
   <meta name="description" content="The official corporate website of Aquila Crest Capital & Renewable Inc. Explore our platform, leadership, official channels, and member portal.">
 
@@ -8290,8 +8304,8 @@ if(!stage || !overlay) return;
       </div>
 
       <div class="aquila-empire-voice-controls" aria-label="In-game voice controls">
-        <button id="aquilaEmpireVoiceButton" type="button" title="Join or leave game voice chat">🎙️ VOICE OFF</button>
-        <button id="aquilaEmpireSpeakerButton" type="button" title="Mute or unmute other players" disabled>🔊 SPEAKER ON</button>
+        <button id="aquilaEmpireVoiceButton" type="button" title="Turn your microphone on or off">🎙️ MIC OFF</button>
+        <button id="aquilaEmpireSpeakerButton" type="button" title="Listen to or mute the other players">🔇 LISTEN OFF</button>
       </div>
 
       <button
@@ -8824,7 +8838,11 @@ if(!stage || !overlay) return;
                   <span>THE FINAL EMPIRE STANDINGS</span>
                   <strong id="aquilaEmpireWinnerName">EMPIRE CHAMPION</strong>
                   <div id="aquilaEmpireFinalPodium" class="aquila-empire-final-podium"></div>
-                  <small>The match has officially ended.</small>
+                  <small id="aquilaEmpireFinishReason">The match has officially ended.</small>
+                  <div class="aquila-empire-final-exit-actions">
+                    <button id="aquilaEmpireReturnLobbyButton" type="button">RETURN TO GAME LOBBY</button>
+                    <button id="aquilaEmpireCloseFinishedButton" type="button">CLOSE AQUILA EMPIRE</button>
+                  </div>
                 </div>
 
                 <div id="aquilaEmpireCenterActions" class="aquila-empire-center-actions" hidden>
@@ -9450,8 +9468,10 @@ if(!stage || !overlay) return;
   let aquilaEmpireRankingsLoaded = false;
   let aquilaEmpireVoiceChannel = null;
   let aquilaEmpireVoiceStream = null;
-  let aquilaEmpireVoiceEnabled = false;
-  let aquilaEmpireSpeakerMuted = false;
+  let aquilaEmpireVoiceConnected = false;
+  let aquilaEmpireMicEnabled = false;
+  let aquilaEmpireListenEnabled = false;
+  let aquilaEmpireVoiceAudioContext = null;
   const aquilaEmpireVoicePeers = new Map();
   const aquilaEmpireRemoteAudio = new Map();
   
@@ -9915,6 +9935,7 @@ if(!stage || !overlay) return;
           <span>👑 ${room.host_name || "Aquila Host"}</span>
           <span>⏱ ${room.game_duration_minutes || 30} min</span>
           <span>🎲 ${room.turn_seconds || 45}s turns</span>
+          <span>👁 ${Number(room.viewer_count || 0)} watching</span>
         </div>
         <button type="button" data-empire-room-id="${room.room_id}" data-empire-room-code="${room.join_code || room.room_code || ""}" data-empire-room-status="${room.status}" data-empire-room-member="${isConnected ? "1" : "0"}" ${!isConnected && !canJoin && room.status !== "active" ? "disabled" : ""}>${primaryLabel}</button>`;
       list.appendChild(card);
@@ -11777,7 +11798,7 @@ if(!stage || !overlay) return;
       );
   
       showAquilaEmpireMessage(
-        `You rolled ${rollData.total} and landed on ${rollData.space_name}.`,
+        `You rolled ${rollData.total} and landed on ${rollData.space_name}.${rollData.passed_launchpad ? " Launchpad reward: +500 GC." : ""}`,
         "success"
       );
   
@@ -12043,6 +12064,15 @@ if(!stage || !overlay) return;
     const finished = state?.room?.status === "finished";
     stage.hidden = !finished;
     if (!finished) return;
+    const finishAction = (state.recent_actions || []).find(function (action) {
+      return ["game_finished_by_time_limit", "player_auto_forfeited", "player_forfeited"].includes(String(action.action_type));
+    });
+    const finishReason = document.getElementById("aquilaEmpireFinishReason");
+    if (finishReason) {
+      finishReason.textContent = finishAction?.action_type === "game_finished_by_time_limit"
+        ? "MATCH COMPLETE · TIME LIMIT REACHED"
+        : "MATCH COMPLETE · LAST EMPIRE STANDING";
+    }
     document.getElementById("aquilaEmpireCenterBrand")?.setAttribute("hidden", "");
     document.getElementById("aquilaEmpireCenterEvent")?.setAttribute("hidden", "");
     document.getElementById("aquilaEmpireCenterActions")?.setAttribute("hidden", "");
@@ -12146,6 +12176,31 @@ if(!stage || !overlay) return;
     aquilaEmpireVoiceChannel.send({type:"broadcast", event:"voice-signal", payload:payload}).catch(function () {});
   }
 
+  function updateAquilaEmpireVoiceButtons() {
+    const micButton = document.getElementById("aquilaEmpireVoiceButton");
+    const listenButton = document.getElementById("aquilaEmpireSpeakerButton");
+    if (micButton) {
+      micButton.textContent = aquilaEmpireMicEnabled ? "🎙️ MIC ON" : "🎙️ MIC OFF";
+      micButton.classList.toggle("is-live", aquilaEmpireMicEnabled);
+      micButton.setAttribute("aria-pressed", String(aquilaEmpireMicEnabled));
+    }
+    if (listenButton) {
+      listenButton.disabled = false;
+      listenButton.textContent = aquilaEmpireListenEnabled ? "🔊 LISTEN ON" : "🔇 LISTEN OFF";
+      listenButton.classList.toggle("is-live", aquilaEmpireListenEnabled);
+      listenButton.setAttribute("aria-pressed", String(aquilaEmpireListenEnabled));
+    }
+  }
+
+  async function unlockAquilaEmpireVoiceAudio() {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    if (!aquilaEmpireVoiceAudioContext) aquilaEmpireVoiceAudioContext = new AudioContextClass();
+    if (aquilaEmpireVoiceAudioContext.state === "suspended") {
+      await aquilaEmpireVoiceAudioContext.resume().catch(function () {});
+    }
+  }
+
   function closeAquilaEmpireVoicePeer(peerId) {
     try { aquilaEmpireVoicePeers.get(peerId)?.close(); } catch (_) {}
     aquilaEmpireVoicePeers.delete(peerId);
@@ -12158,12 +12213,33 @@ if(!stage || !overlay) return;
     if (aquilaEmpireVoicePeers.has(peerId)) return aquilaEmpireVoicePeers.get(peerId);
     const me = getAquilaEmpireViewerPlayer(aquilaEmpireLatestState);
     const peer = new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]});
-    aquilaEmpireVoiceStream?.getTracks().forEach(function (track) { peer.addTrack(track, aquilaEmpireVoiceStream); });
+    const localTracks = aquilaEmpireVoiceStream?.getAudioTracks() || [];
+    if (localTracks.length) {
+      localTracks.forEach(function (track) { peer.addTrack(track, aquilaEmpireVoiceStream); });
+    } else {
+      peer.addTransceiver("audio", {direction:"recvonly"});
+    }
     peer.onicecandidate = function (event) { if (event.candidate) sendAquilaEmpireVoiceSignal({from:me?.player_id,to:peerId,kind:"ice",candidate:event.candidate}); };
     peer.ontrack = function (event) {
       let audio = aquilaEmpireRemoteAudio.get(peerId);
-      if (!audio) { audio = document.createElement("audio"); audio.autoplay = true; audio.playsInline = true; audio.hidden = true; document.body.appendChild(audio); aquilaEmpireRemoteAudio.set(peerId,audio); }
-      audio.srcObject = event.streams[0]; audio.muted = aquilaEmpireSpeakerMuted; audio.play().catch(function () {});
+      if (!audio) {
+        audio = document.createElement("audio");
+        audio.autoplay = true;
+        audio.playsInline = true;
+        audio.hidden = true;
+        document.body.appendChild(audio);
+        aquilaEmpireRemoteAudio.set(peerId,audio);
+      }
+      audio.srcObject = event.streams[0] || new MediaStream([event.track]);
+      audio.muted = !aquilaEmpireListenEnabled;
+      if (aquilaEmpireListenEnabled) {
+        audio.play().catch(function () {
+          showAquilaEmpireMessage("Tap LISTEN once more to allow game audio on this device.","warning");
+        });
+      }
+    };
+    peer.onconnectionstatechange = function () {
+      if (["failed","closed"].includes(peer.connectionState)) closeAquilaEmpireVoicePeer(peerId);
     };
     aquilaEmpireVoicePeers.set(peerId, peer);
     if (shouldOffer) peer.createOffer().then(function (offer) { return peer.setLocalDescription(offer).then(function () { sendAquilaEmpireVoiceSignal({from:me?.player_id,to:peerId,kind:"offer",description:offer}); }); }).catch(function () {});
@@ -12173,7 +12249,7 @@ if(!stage || !overlay) return;
   async function handleAquilaEmpireVoiceSignal(message) {
     const payload = message?.payload || {};
     const me = getAquilaEmpireViewerPlayer(aquilaEmpireLatestState);
-    if (!aquilaEmpireVoiceEnabled || !me || !payload.from || String(payload.from) === String(me.player_id)) return;
+    if (!aquilaEmpireVoiceConnected || !me || !payload.from || String(payload.from) === String(me.player_id)) return;
     if (payload.to && String(payload.to) !== String(me.player_id)) return;
     if (payload.kind === "leave") { closeAquilaEmpireVoicePeer(payload.from); return; }
     if (payload.kind === "announce") { createAquilaEmpireVoicePeer(payload.from, String(me.player_id) < String(payload.from)); return; }
@@ -12185,38 +12261,113 @@ if(!stage || !overlay) return;
     } catch (_) {}
   }
 
-  async function startAquilaEmpireVoice() {
+  async function connectAquilaEmpireVoice() {
     const me = getAquilaEmpireViewerPlayer(aquilaEmpireLatestState);
-    if (!me || !aquilaEmpireCurrentRoomId || aquilaEmpireLatestState?.room?.status !== "active") { showAquilaEmpireMessage("Voice chat is available to active players inside a match.","warning"); return; }
+    if (!me || !aquilaEmpireCurrentRoomId || aquilaEmpireLatestState?.room?.status !== "active") {
+      showAquilaEmpireMessage("Voice chat is available to active players inside a match.","warning");
+      return false;
+    }
+    if (aquilaEmpireVoiceConnected) return true;
     try {
-      aquilaEmpireVoiceStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-      aquilaEmpireVoiceEnabled = true;
+      await unlockAquilaEmpireVoiceAudio();
+      aquilaEmpireVoiceConnected = true;
       aquilaEmpireVoiceChannel = chatDb.channel(`aquila-empire-voice-${aquilaEmpireCurrentRoomId}`,{config:{broadcast:{self:false}}});
       aquilaEmpireVoiceChannel.on("broadcast",{event:"voice-signal"},handleAquilaEmpireVoiceSignal).subscribe(function (status) {
         if (status === "SUBSCRIBED") sendAquilaEmpireVoiceSignal({from:me.player_id,kind:"announce"});
       });
-      const button = document.getElementById("aquilaEmpireVoiceButton"); if (button) { button.textContent="🎙️ VOICE ON"; button.classList.add("is-live"); }
-      const speaker = document.getElementById("aquilaEmpireSpeakerButton"); if (speaker) speaker.disabled=false;
-      showAquilaEmpireMessage("Voice chat is live. Other players can hear you.","success");
-    } catch (_) { showAquilaEmpireMessage("Microphone access was not granted. Check your browser permission and try again.","warning"); }
+      updateAquilaEmpireVoiceButtons();
+      return true;
+    } catch (error) {
+      aquilaEmpireVoiceConnected = false;
+      console.error("Aquila Empire voice connection error", error);
+      showAquilaEmpireMessage("Game voice could not connect. Please check your internet connection.","warning");
+      return false;
+    }
+  }
+
+  async function restartAquilaEmpireVoicePeers() {
+    const me = getAquilaEmpireViewerPlayer(aquilaEmpireLatestState);
+    if (aquilaEmpireVoiceConnected && me) {
+      sendAquilaEmpireVoiceSignal({from:me.player_id,kind:"leave"});
+    }
+    aquilaEmpireVoicePeers.forEach(function (_, peerId) { closeAquilaEmpireVoicePeer(peerId); });
+    if (aquilaEmpireVoiceConnected && me) {
+      setTimeout(function () {
+        sendAquilaEmpireVoiceSignal({from:me.player_id,kind:"announce",mic:aquilaEmpireMicEnabled});
+      }, 180);
+    }
+  }
+
+  async function toggleAquilaEmpireMicrophone() {
+    if (aquilaEmpireMicEnabled) {
+      aquilaEmpireVoiceStream?.getTracks().forEach(function (track) { track.stop(); });
+      aquilaEmpireVoiceStream = null;
+      aquilaEmpireMicEnabled = false;
+      await restartAquilaEmpireVoicePeers();
+      updateAquilaEmpireVoiceButtons();
+      showAquilaEmpireMessage(aquilaEmpireListenEnabled ? "Microphone muted. You can still hear the other players." : "Microphone and listening are both off.","info");
+      return;
+    }
+    if (!navigator.mediaDevices?.getUserMedia) {
+      showAquilaEmpireMessage("This browser does not support live microphone access.","warning");
+      return;
+    }
+    try {
+      aquilaEmpireListenEnabled = true;
+      if (!await connectAquilaEmpireVoice()) return;
+      aquilaEmpireVoiceStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1}});
+      aquilaEmpireMicEnabled = true;
+      await restartAquilaEmpireVoicePeers();
+      aquilaEmpireRemoteAudio.forEach(function (audio) { audio.muted=false; audio.play().catch(function () {}); });
+      updateAquilaEmpireVoiceButtons();
+      showAquilaEmpireMessage("Microphone and listening are ON. Players can now hear one another.","success");
+    } catch (error) {
+      aquilaEmpireMicEnabled = false;
+      aquilaEmpireVoiceStream = null;
+      updateAquilaEmpireVoiceButtons();
+      console.error("Aquila Empire microphone error", error);
+      showAquilaEmpireMessage("Microphone permission was blocked. LISTEN ONLY is still available.","warning");
+    }
+  }
+
+  async function toggleAquilaEmpireListening() {
+    await unlockAquilaEmpireVoiceAudio();
+    if (!aquilaEmpireListenEnabled) {
+      aquilaEmpireListenEnabled = true;
+      if (!await connectAquilaEmpireVoice()) {
+        aquilaEmpireListenEnabled = false;
+        updateAquilaEmpireVoiceButtons();
+        return;
+      }
+      aquilaEmpireRemoteAudio.forEach(function (audio) { audio.muted=false; audio.play().catch(function () {}); });
+      updateAquilaEmpireVoiceButtons();
+      showAquilaEmpireMessage(aquilaEmpireMicEnabled ? "Listening and microphone are ON." : "LISTEN ONLY is ON. Your microphone remains muted.","success");
+      return;
+    }
+    aquilaEmpireListenEnabled = false;
+    aquilaEmpireRemoteAudio.forEach(function (audio) { audio.muted=true; });
+    updateAquilaEmpireVoiceButtons();
+    showAquilaEmpireMessage(aquilaEmpireMicEnabled ? "Listening muted. Your microphone is still ON." : "Microphone and listening are both off.","info");
   }
 
   function stopAquilaEmpireVoice() {
     const me = getAquilaEmpireViewerPlayer(aquilaEmpireLatestState);
     if (me) sendAquilaEmpireVoiceSignal({from:me.player_id,kind:"leave"});
     aquilaEmpireVoiceStream?.getTracks().forEach(function (track) { track.stop(); });
-    aquilaEmpireVoiceStream = null; aquilaEmpireVoiceEnabled = false;
+    aquilaEmpireVoiceStream = null;
+    aquilaEmpireVoiceConnected = false;
+    aquilaEmpireMicEnabled = false;
+    aquilaEmpireListenEnabled = false;
     aquilaEmpireVoicePeers.forEach(function (_, peerId) { closeAquilaEmpireVoicePeer(peerId); });
     if (aquilaEmpireVoiceChannel && chatDb) chatDb.removeChannel(aquilaEmpireVoiceChannel).catch(function () {});
     aquilaEmpireVoiceChannel = null;
-    const button = document.getElementById("aquilaEmpireVoiceButton"); if (button) { button.textContent="🎙️ VOICE OFF"; button.classList.remove("is-live"); }
-    const speaker = document.getElementById("aquilaEmpireSpeakerButton"); if (speaker) speaker.disabled=true;
+    updateAquilaEmpireVoiceButtons();
   }
 
   ensureAquilaEmpireV5Styles();
   document.getElementById("aquilaEmpireRefreshRankings")?.addEventListener("click", loadAquilaEmpireRankings);
-  document.getElementById("aquilaEmpireVoiceButton")?.addEventListener("click", function () { if (aquilaEmpireVoiceEnabled) stopAquilaEmpireVoice(); else startAquilaEmpireVoice(); });
-  document.getElementById("aquilaEmpireSpeakerButton")?.addEventListener("click", function () { aquilaEmpireSpeakerMuted = !aquilaEmpireSpeakerMuted; aquilaEmpireRemoteAudio.forEach(function (audio) { audio.muted = aquilaEmpireSpeakerMuted; }); this.textContent = aquilaEmpireSpeakerMuted ? "🔇 SPEAKER OFF" : "🔊 SPEAKER ON"; });
+  document.getElementById("aquilaEmpireVoiceButton")?.addEventListener("click", toggleAquilaEmpireMicrophone);
+  document.getElementById("aquilaEmpireSpeakerButton")?.addEventListener("click", toggleAquilaEmpireListening);
   document.getElementById("aquilaEmpireModal")?.addEventListener("transitionend", function () { if (this.classList.contains("is-open") && !aquilaEmpireRankingsLoaded) loadAquilaEmpireRankings(); });
   
   document
@@ -12278,6 +12429,198 @@ if(!stage || !overlay) return;
       startAquilaEmpireMusic();
     }, { once: true });
   
+</script>
+
+<script id="aquilaEmpireFinalLifecycle">
+  let aquilaEmpirePresenceTimer = null;
+  let aquilaEmpirePresenceRoomId = null;
+  let aquilaEmpirePresenceIsSpectator = false;
+
+  function ensureAquilaEmpireLifecycleUi() {
+    const sidebar = document.querySelector(".aquila-empire-action-sidebar");
+    if (sidebar && !document.getElementById("aquilaEmpireLivePresence")) {
+      const presence = document.createElement("div");
+      presence.id = "aquilaEmpireLivePresence";
+      presence.className = "aquila-empire-live-presence";
+      presence.textContent = "👁 0 WATCHING";
+      sidebar.insertBefore(presence, sidebar.firstChild?.nextSibling || null);
+
+      const actions = document.createElement("div");
+      actions.id = "aquilaEmpireLifecycleActions";
+      actions.className = "aquila-empire-lifecycle-actions";
+      actions.innerHTML = `
+        <button id="aquilaEmpireCloseWindowButton" class="aquila-empire-lifecycle-close" type="button">CLOSE WINDOW</button>
+        <button id="aquilaEmpireForfeitButton" class="aquila-empire-lifecycle-forfeit" type="button">LEAVE / FORFEIT</button>`;
+      sidebar.appendChild(actions);
+    }
+  }
+
+  async function touchAquilaEmpireSpectatorPresence(action = "touch") {
+    const roomId = aquilaEmpireCurrentRoomId;
+    if (!chatDb || !roomId) return 0;
+    try {
+      const {data, error} = await chatDb.rpc("game_spectator_presence", {
+        p_room_id: roomId,
+        p_action: action
+      });
+      if (error) throw error;
+      const count = Number(data?.viewer_count || 0);
+      const badge = document.getElementById("aquilaEmpireLivePresence");
+      if (badge) {
+        badge.textContent = aquilaEmpirePresenceIsSpectator
+          ? `👁 SPECTATOR MODE · ${count} WATCHING`
+          : `👁 ${count} WATCHING`;
+        badge.classList.toggle("is-spectator", aquilaEmpirePresenceIsSpectator);
+      }
+      return count;
+    } catch (error) {
+      console.warn("Aquila Empire spectator presence:", error);
+      return 0;
+    }
+  }
+
+  function startAquilaEmpireSpectatorPresence(state) {
+    ensureAquilaEmpireLifecycleUi();
+    const isPlayer = Boolean(getAquilaEmpireViewerPlayer(state));
+    aquilaEmpirePresenceIsSpectator = !isPlayer && ["active", "finished"].includes(String(state?.room?.status));
+    aquilaEmpirePresenceRoomId = state?.room?.id || null;
+    clearInterval(aquilaEmpirePresenceTimer);
+    touchAquilaEmpireSpectatorPresence("touch");
+    aquilaEmpirePresenceTimer = setInterval(function () {
+      if (document.getElementById("aquilaEmpireModal")?.classList.contains("is-open")) {
+        touchAquilaEmpireSpectatorPresence("touch");
+      }
+    }, 15000);
+    syncAquilaEmpireLifecycleUi(state);
+  }
+
+  function syncAquilaEmpireLifecycleUi(state) {
+    ensureAquilaEmpireLifecycleUi();
+    const me = getAquilaEmpireViewerPlayer(state);
+    const status = String(state?.room?.status || "");
+    const forfeit = document.getElementById("aquilaEmpireForfeitButton");
+    const closeButton = document.getElementById("aquilaEmpireCloseWindowButton");
+    if (forfeit) {
+      forfeit.hidden = !me || status !== "active";
+      forfeit.textContent = "LEAVE / FORFEIT MATCH";
+    }
+    if (closeButton) {
+      closeButton.textContent = !me && status === "active" ? "LEAVE SPECTATOR MODE" : "CLOSE GAME WINDOW";
+    }
+  }
+
+  async function leaveAquilaEmpireFinal(options = {}) {
+    const roomId = aquilaEmpireCurrentRoomId;
+    const state = aquilaEmpireLatestState;
+    const me = getAquilaEmpireViewerPlayer(state);
+    const roomStatus = String(state?.room?.status || "");
+    const forfeit = Boolean(options.forfeit);
+
+    if (forfeit && me && roomStatus === "active") {
+      const accepted = window.confirm(
+        "FORFEIT MATCH?\n\nYou will permanently leave this match, your properties will return to the bank, and you cannot rejoin as a player."
+      );
+      if (!accepted) return false;
+    }
+
+    if (roomId && chatDb) {
+      try {
+        const {data, error} = await chatDb.rpc("game_leave_room_final", {
+          p_room_id: roomId,
+          p_confirm_forfeit: forfeit
+        });
+        if (error) throw error;
+        if (!data?.ok) throw new Error(data?.notice || "The room could not be exited.");
+      } catch (error) {
+        showAquilaEmpireMessage(error?.message || "Unable to leave the room.", "error");
+        return false;
+      }
+    }
+
+    await touchAquilaEmpireSpectatorPresence("leave");
+    clearInterval(aquilaEmpirePresenceTimer);
+    clearInterval(aquilaEmpireRoomRefreshTimer);
+    aquilaEmpirePresenceTimer = null;
+    aquilaEmpireRoomRefreshTimer = null;
+    aquilaEmpireCurrentRoomId = null;
+    aquilaEmpireCurrentRoomCode = null;
+    aquilaEmpireLatestState = null;
+    aquilaEmpirePresenceRoomId = null;
+    aquilaEmpirePresenceIsSpectator = false;
+    if (typeof stopAquilaEmpireVoice === "function") stopAquilaEmpireVoice();
+    document.getElementById("aquilaEmpireGameArea")?.setAttribute("hidden", "");
+    document.getElementById("aquilaEmpireWinnerStage")?.setAttribute("hidden", "");
+    setAquilaEmpireLobbyVisibility(false);
+    showAquilaEmpireMessage("You returned to the Aquila Empire lobby.", "success");
+    return true;
+  }
+
+  const aquilaEmpireOriginalRenderWaitingRoom = renderAquilaEmpireWaitingRoom;
+  renderAquilaEmpireWaitingRoom = function (state) {
+    aquilaEmpireOriginalRenderWaitingRoom(state);
+    if (state?.ok && state?.room) startAquilaEmpireSpectatorPresence(state);
+  };
+
+  const aquilaEmpireOriginalHeartbeat = sendAquilaEmpireHeartbeat;
+  sendAquilaEmpireHeartbeat = async function () {
+    await aquilaEmpireOriginalHeartbeat();
+    if (!chatDb || !aquilaEmpireCurrentRoomId || aquilaEmpireLatestState?.room?.status !== "active") return;
+    try {
+      const {data} = await chatDb.rpc("game_maintain_room", {p_room_id:aquilaEmpireCurrentRoomId});
+      if (data?.changed) await loadAquilaEmpireRoomState(aquilaEmpireCurrentRoomId, true);
+    } catch (error) {
+      console.warn("Aquila Empire room maintenance:", error);
+    }
+  };
+
+  const aquilaEmpireOriginalClose = closeAquilaEmpire;
+  closeAquilaEmpire = function () {
+    const state = aquilaEmpireLatestState;
+    const me = getAquilaEmpireViewerPlayer(state);
+    const status = String(state?.room?.status || "");
+    if (aquilaEmpirePresenceIsSpectator) {
+      touchAquilaEmpireSpectatorPresence("leave");
+    } else if (me && status === "active") {
+      const closeOnly = window.confirm(
+        "Close the game window?\n\nYou will remain in the match and may reconnect later. Choose LEAVE / FORFEIT inside the game only if you want to permanently exit."
+      );
+      if (!closeOnly) return;
+    }
+    clearInterval(aquilaEmpirePresenceTimer);
+    aquilaEmpireOriginalClose();
+  };
+
+  document.getElementById("aquilaEmpireLeaveButton")?.addEventListener("click", async function () {
+    const isHost = aquilaEmpireLatestState?.room?.host_user_id === aquilaEmpireLatestState?.viewer_user_id;
+    const accepted = window.confirm(isHost
+      ? "Cancel this waiting room for everyone?"
+      : "Leave this waiting room?");
+    if (accepted) await leaveAquilaEmpireFinal({forfeit:false});
+  });
+
+  document.addEventListener("click", async function (event) {
+    if (event.target.closest("#aquilaEmpireCloseWindowButton")) {
+      if (aquilaEmpirePresenceIsSpectator) await leaveAquilaEmpireFinal({forfeit:false});
+      else closeAquilaEmpire();
+    }
+    if (event.target.closest("#aquilaEmpireForfeitButton")) {
+      await leaveAquilaEmpireFinal({forfeit:true});
+    }
+  });
+
+  document.getElementById("aquilaEmpireReturnLobbyButton")?.addEventListener("click", function () {
+    leaveAquilaEmpireFinal({forfeit:false});
+  });
+  document.getElementById("aquilaEmpireCloseFinishedButton")?.addEventListener("click", async function () {
+    await leaveAquilaEmpireFinal({forfeit:false});
+    aquilaEmpireOriginalClose();
+  });
+
+  window.addEventListener("pagehide", function () {
+    if (aquilaEmpirePresenceIsSpectator) touchAquilaEmpireSpectatorPresence("leave");
+  });
+
+  ensureAquilaEmpireLifecycleUi();
 </script>
 </body>
 </html>
