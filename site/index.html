@@ -7237,6 +7237,155 @@ if(!stage || !overlay) return;
         </div>
 
         <div
+          id="aquilaEmpireCreatePanel"
+          class="aquila-empire-create-panel"
+          hidden
+        >
+          <div class="aquila-empire-panel-heading">
+            <div>
+              <span>PRIVATE GAME SETUP</span>
+              <strong>Create Your Empire Room</strong>
+            </div>
+        
+            <button
+              id="aquilaEmpireCancelCreate"
+              type="button"
+              aria-label="Cancel room creation"
+            >
+              ×
+            </button>
+          </div>
+        
+          <label class="aquila-empire-field">
+            <span>Room Name</span>
+        
+            <input
+              id="aquilaEmpireRoomName"
+              type="text"
+              maxlength="40"
+              placeholder="Example: Bryan's Empire"
+              autocomplete="off"
+            >
+          </label>
+        
+          <div class="aquila-empire-settings-grid">
+        
+            <label class="aquila-empire-field">
+              <span>Maximum Players</span>
+        
+              <select id="aquilaEmpireMaxPlayers">
+                <option value="2">2 Players</option>
+                <option value="3">3 Players</option>
+                <option value="4" selected>4 Players</option>
+              </select>
+            </label>
+        
+            <label class="aquila-empire-field">
+              <span>Game Duration</span>
+        
+              <select id="aquilaEmpireDuration">
+                <option value="20">20 Minutes</option>
+                <option value="30" selected>
+                  30 Minutes
+                </option>
+                <option value="45">45 Minutes</option>
+              </select>
+            </label>
+        
+            <label class="aquila-empire-field">
+              <span>Turn Timer</span>
+        
+              <select id="aquilaEmpireTurnSeconds">
+                <option value="30">30 Seconds</option>
+                <option value="45" selected>
+                  45 Seconds
+                </option>
+                <option value="60">60 Seconds</option>
+              </select>
+            </label>
+        
+            <label class="aquila-empire-field">
+              <span>Room Access</span>
+        
+              <select id="aquilaEmpireVisibility">
+                <option value="private" selected>
+                  Private Room
+                </option>
+                <option value="public">
+                  Public Room
+                </option>
+              </select>
+            </label>
+        
+          </div>
+        
+          <fieldset class="aquila-empire-token-picker">
+            <legend>Choose Your Character</legend>
+        
+            <div class="aquila-empire-token-grid">
+        
+              <label>
+                <input
+                  type="radio"
+                  name="aquilaEmpireToken"
+                  value="eagle"
+                  checked
+                >
+                <span>
+                  <b>🦅</b>
+                  Eagle
+                </span>
+              </label>
+        
+              <label>
+                <input
+                  type="radio"
+                  name="aquilaEmpireToken"
+                  value="crown"
+                >
+                <span>
+                  <b>👑</b>
+                  Crown
+                </span>
+              </label>
+        
+              <label>
+                <input
+                  type="radio"
+                  name="aquilaEmpireToken"
+                  value="rocket"
+                >
+                <span>
+                  <b>🚀</b>
+                  Rocket
+                </span>
+              </label>
+        
+              <label>
+                <input
+                  type="radio"
+                  name="aquilaEmpireToken"
+                  value="shield"
+                >
+                <span>
+                  <b>🛡️</b>
+                  Shield
+                </span>
+              </label>
+        
+            </div>
+          </fieldset>
+        
+          <button
+            id="aquilaEmpireConfirmCreate"
+            class="aquila-empire-confirm-create"
+            type="button"
+          >
+            👑 CREATE EMPIRE ROOM
+          </button>
+        </div>
+
+        <div
           id="aquilaEmpireMessage"
           class="aquila-empire-message"
           aria-live="polite"
