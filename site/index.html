@@ -8229,6 +8229,11 @@ if(!stage || !overlay) return;
     const browseButton =
       document.getElementById("aquilaEmpireBrowseButton");
 
+    const joinButton =
+      document.getElementById(
+        "aquilaEmpireJoinButton"
+      );
+
     const message =
       document.getElementById("aquilaEmpireMessage");
 
@@ -8236,7 +8241,8 @@ if(!stage || !overlay) return;
       !playerName ||
       !playerStatus ||
       !createButton ||
-      !browseButton
+      !browseButton ||
+      !joinButton
     ) {
       return false;
     }
@@ -8265,6 +8271,7 @@ if(!stage || !overlay) return;
 
       createButton.disabled = false;
       browseButton.disabled = false;
+      joinButton.disabled = false;
 
       if (message) {
         message.textContent =
@@ -8276,6 +8283,7 @@ if(!stage || !overlay) return;
 
     createButton.disabled = true;
     browseButton.disabled = true;
+    joinButton.disabled = true;
 
     if (profile?.identity_status === "unverified") {
       playerName.textContent =
@@ -9147,6 +9155,234 @@ if(!stage || !overlay) return;
     ?.addEventListener(
       "click",
       copyAquilaEmpireRoomCode
+    );
+
+  function openAquilaEmpireJoinPanel() {
+    if (!refreshAquilaEmpireAccess()) {
+      return;
+    }
+  
+    const joinPanel =
+      document.getElementById(
+        "aquilaEmpireJoinPanel"
+      );
+  
+    const createPanel =
+      document.getElementById(
+        "aquilaEmpireCreatePanel"
+      );
+  
+    const codeInput =
+      document.getElementById(
+        "aquilaEmpireJoinCode"
+      );
+  
+    if (createPanel) {
+      createPanel.hidden = true;
+    }
+  
+    if (joinPanel) {
+      joinPanel.hidden = false;
+    }
+  
+    showAquilaEmpireMessage(
+      "Enter the six-character invitation code."
+    );
+  
+    setTimeout(function () {
+      codeInput?.focus();
+    }, 60);
+  }
+  
+  function closeAquilaEmpireJoinPanel() {
+    const joinPanel =
+      document.getElementById(
+        "aquilaEmpireJoinPanel"
+      );
+  
+    if (joinPanel) {
+      joinPanel.hidden = true;
+    }
+  
+    showAquilaEmpireMessage(
+      "Your verified Aquila game access is ready."
+    );
+  }
+  
+  async function joinAquilaEmpireRoom() {
+    if (!refreshAquilaEmpireAccess()) {
+      return;
+    }
+  
+    if (
+      typeof chatDb === "undefined" ||
+      !chatDb
+    ) {
+      showAquilaEmpireMessage(
+        "Game connection is still loading. Please try again.",
+        "error"
+      );
+  
+      return;
+    }
+  
+    const codeInput =
+      document.getElementById(
+        "aquilaEmpireJoinCode"
+      );
+  
+    const confirmButton =
+      document.getElementById(
+        "aquilaEmpireConfirmJoin"
+      );
+  
+    const selectedToken =
+      document.querySelector(
+        'input[name="aquilaEmpireJoinToken"]:checked'
+      );
+  
+    const roomCode =
+      String(codeInput?.value || "")
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "");
+  
+    if (roomCode.length !== 6) {
+      showAquilaEmpireMessage(
+        "Enter a valid six-character room code.",
+        "error"
+      );
+  
+      codeInput?.focus();
+      return;
+    }
+  
+    if (!selectedToken) {
+      showAquilaEmpireMessage(
+        "Please choose your game character.",
+        "error"
+      );
+  
+      return;
+    }
+  
+    if (confirmButton) {
+      confirmButton.disabled = true;
+      confirmButton.textContent =
+        "JOINING EMPIRE ROOM…";
+    }
+  
+    showAquilaEmpireMessage(
+      "Connecting you to the Empire Room…"
+    );
+  
+    try {
+      const { data, error } =
+        await chatDb.rpc(
+          "game_join_room",
+          {
+            p_room_code: roomCode,
+            p_token: selectedToken.value
+          }
+        );
+  
+      if (error) {
+        throw error;
+      }
+  
+      if (!data?.ok) {
+        showAquilaEmpireMessage(
+          data?.notice ||
+            "The game room could not be joined.",
+          "error"
+        );
+  
+        return;
+      }
+  
+      aquilaEmpireCurrentRoomId =
+        data.room_id;
+  
+      aquilaEmpireCurrentRoomCode =
+        data.room_code;
+  
+      const joinPanel =
+        document.getElementById(
+          "aquilaEmpireJoinPanel"
+        );
+  
+      if (joinPanel) {
+        joinPanel.hidden = true;
+      }
+  
+      showAquilaEmpireMessage(
+        data.notice ||
+          "You joined the room successfully.",
+        "success"
+      );
+  
+      await showAquilaEmpireWaitingRoom(
+        data.room_id
+      );
+    } catch (error) {
+      console.error(
+        "Aquila Empire room join:",
+        error
+      );
+  
+      showAquilaEmpireMessage(
+        error?.message ||
+          "Unable to join the room. Please try again.",
+        "error"
+      );
+    } finally {
+      if (confirmButton) {
+        confirmButton.disabled = false;
+        confirmButton.textContent =
+          "🔑 JOIN EMPIRE ROOM";
+      }
+    }
+  }
+  
+  document
+    .getElementById(
+      "aquilaEmpireJoinCode"
+    )
+    ?.addEventListener(
+      "input",
+      function () {
+        this.value = this.value
+          .toUpperCase()
+          .replace(/[^A-Z0-9]/g, "")
+          .slice(0, 6);
+      }
+    );
+  
+  document
+    .getElementById(
+      "aquilaEmpireJoinButton"
+    )
+    ?.addEventListener(
+      "click",
+      openAquilaEmpireJoinPanel
+    );
+  
+  document
+    .getElementById(
+      "aquilaEmpireCancelJoin"
+    )
+    ?.addEventListener(
+      "click",
+      closeAquilaEmpireJoinPanel
+    );
+  
+  document
+    .getElementById(
+      "aquilaEmpireConfirmJoin"
+    )
+    ?.addEventListener(
+      "click",
+      joinAquilaEmpireRoom
     );
   
 </script>
