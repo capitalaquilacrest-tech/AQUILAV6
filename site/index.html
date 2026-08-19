@@ -8837,6 +8837,7 @@ if(!stage || !overlay) return;
                   <div class="aquila-empire-winner-burst" aria-hidden="true">✨🏆✨</div>
                   <span>THE FINAL EMPIRE STANDINGS</span>
                   <strong id="aquilaEmpireWinnerName">EMPIRE CHAMPION</strong>
+                  <div id="aquilaEmpireWinnerBreakdown" class="aquila-empire-winner-breakdown" hidden></div>
                   <div id="aquilaEmpireFinalPodium" class="aquila-empire-final-podium"></div>
                   <small id="aquilaEmpireFinishReason">The match has officially ended.</small>
                   <div class="aquila-empire-final-exit-actions">
@@ -12033,7 +12034,7 @@ if(!stage || !overlay) return;
       @keyframes aquilaEmpireTokenHop3D{0%{transform:perspective(80px) rotateX(-12deg) translateY(0) scale(1)}48%{transform:perspective(80px) rotateX(-2deg) translateY(-20px) scale(1.22);filter:brightness(1.3) drop-shadow(0 13px 7px rgba(0,0,0,.48))}100%{transform:perspective(80px) rotateX(-12deg) translateY(0) scale(1)}}
       .aquila-empire-center-event{max-height:72%;padding-bottom:62px;overflow:hidden;scrollbar-width:none}.aquila-empire-center-event::-webkit-scrollbar{display:none}.aquila-empire-center-actions{right:6%;bottom:4%;left:6%;padding:5px;border:1px solid rgba(250,204,21,.5);border-radius:12px;background:rgba(2,18,55,.92);backdrop-filter:blur(6px)}
       #aquilaEmpireEndTurnButton,#aquilaEmpireBuyButton,#aquilaEmpireDeclineButton{display:none!important}
-      .aquila-empire-winner-stage{position:absolute;inset:3%;z-index:22;display:grid;place-items:center;align-content:center;gap:7px;padding:12px;overflow:visible;border:2px solid #fde047;border-radius:17px;background:radial-gradient(circle at 50% 12%,rgba(250,204,21,.38),transparent 32%),linear-gradient(145deg,#071f53,#4c1d5f 68%,#9f1239);box-shadow:0 0 45px rgba(250,204,21,.45);animation:aquilaEmpireWinnerIn .65s cubic-bezier(.2,.9,.25,1)}.aquila-empire-winner-stage[hidden]{display:none!important}.aquila-empire-winner-burst{font-size:clamp(28px,5vw,58px);line-height:1;animation:aquilaEmpireTrophyPulse 1.3s infinite}.aquila-empire-winner-stage>span{color:#fde68a;font-size:clamp(7px,.9vw,12px);font-weight:900;letter-spacing:.16em}.aquila-empire-winner-stage>strong{color:#fff;font-size:clamp(16px,2.5vw,34px);line-height:1.05;text-shadow:0 3px 12px #000}.aquila-empire-final-podium{width:min(96%,430px);display:grid;gap:5px}.aquila-empire-podium-row{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:7px;padding:7px 9px;border:1px solid rgba(255,255,255,.3);border-radius:9px;background:rgba(1,15,47,.64);color:#fff;font-size:10px}.aquila-empire-podium-row b{color:#86efac}.aquila-empire-board-center.is-finished{overflow:visible!important}.aquila-empire-board-center.is-finished .aquila-empire-center-brand,.aquila-empire-board-center.is-finished .aquila-empire-center-event,.aquila-empire-board-center.is-finished .aquila-empire-center-actions,.aquila-empire-board-center.is-finished .aquila-empire-dice-display{display:none!important}.aquila-empire-board-center.is-finished .aquila-empire-winner-stage{display:grid!important}.aquila-empire-winner-stage::before,.aquila-empire-winner-stage::after{content:"✦  ✨  ✦  ★  ✨  ★";position:absolute;top:5%;color:#fde047;font-size:18px;animation:aquilaEmpireConfetti 2.2s linear infinite}.aquila-empire-winner-stage::after{top:auto;bottom:5%;animation-delay:-1.1s}@keyframes aquilaEmpireWinnerIn{from{opacity:0;transform:scale(.6) rotate(-3deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes aquilaEmpireTrophyPulse{50%{transform:scale(1.14);filter:drop-shadow(0 0 18px #fde047)}}@keyframes aquilaEmpireConfetti{50%{transform:translateY(12px) rotate(8deg)}}
+      .aquila-empire-winner-stage{position:absolute;inset:3%;z-index:22;display:grid;place-items:center;align-content:center;gap:7px;padding:12px;overflow:visible;border:2px solid #fde047;border-radius:17px;background:radial-gradient(circle at 50% 12%,rgba(250,204,21,.38),transparent 32%),linear-gradient(145deg,#071f53,#4c1d5f 68%,#9f1239);box-shadow:0 0 45px rgba(250,204,21,.45);animation:aquilaEmpireWinnerIn .65s cubic-bezier(.2,.9,.25,1)}.aquila-empire-winner-stage[hidden]{display:none!important}.aquila-empire-winner-burst{font-size:clamp(28px,5vw,58px);line-height:1;animation:aquilaEmpireTrophyPulse 1.3s infinite}.aquila-empire-winner-stage>span{color:#fde68a;font-size:clamp(7px,.9vw,12px);font-weight:900;letter-spacing:.16em}.aquila-empire-winner-stage>strong{color:#fff;font-size:clamp(16px,2.5vw,34px);line-height:1.05;text-shadow:0 3px 12px #000}.aquila-empire-final-podium{width:min(98%,500px);display:grid;gap:5px}.aquila-empire-winner-breakdown{width:min(98%,500px);display:grid;gap:4px;padding:8px 10px;border:1px solid rgba(250,204,21,.5);border-radius:10px;background:rgba(2,18,55,.78);color:#fff}.aquila-empire-winner-breakdown-title{color:#fde68a;font-size:8px;font-weight:950;letter-spacing:.12em}.aquila-empire-winner-formula{font-size:10px;font-weight:850;line-height:1.35}.aquila-empire-winner-formula b{color:#86efac}.aquila-empire-winner-why{color:#bfdbfe;font-size:8px;line-height:1.35}.aquila-empire-podium-row{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:7px;padding:7px 9px;border:1px solid rgba(255,255,255,.3);border-radius:9px;background:rgba(1,15,47,.64);color:#fff;font-size:10px}.aquila-empire-podium-row b{color:#86efac}.aquila-empire-podium-details{grid-column:2/-1;color:#bfdbfe;font-size:7px;line-height:1.3}.aquila-empire-podium-details strong{color:#fff;font-size:7px}.aquila-empire-score-adjustment{color:#fde68a}@media(max-width:850px){.aquila-empire-winner-stage{inset:2%;gap:4px;padding:8px}.aquila-empire-winner-breakdown{padding:6px 7px}.aquila-empire-winner-formula{font-size:8px}.aquila-empire-winner-why{font-size:7px}.aquila-empire-podium-row{padding:5px 6px;font-size:8px}.aquila-empire-podium-details,.aquila-empire-podium-details strong{font-size:6px}}.aquila-empire-board-center.is-finished{overflow:visible!important}.aquila-empire-board-center.is-finished .aquila-empire-center-brand,.aquila-empire-board-center.is-finished .aquila-empire-center-event,.aquila-empire-board-center.is-finished .aquila-empire-center-actions,.aquila-empire-board-center.is-finished .aquila-empire-dice-display{display:none!important}.aquila-empire-board-center.is-finished .aquila-empire-winner-stage{display:grid!important}.aquila-empire-winner-stage::before,.aquila-empire-winner-stage::after{content:"✦  ✨  ✦  ★  ✨  ★";position:absolute;top:5%;color:#fde047;font-size:18px;animation:aquilaEmpireConfetti 2.2s linear infinite}.aquila-empire-winner-stage::after{top:auto;bottom:5%;animation-delay:-1.1s}@keyframes aquilaEmpireWinnerIn{from{opacity:0;transform:scale(.6) rotate(-3deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes aquilaEmpireTrophyPulse{50%{transform:scale(1.14);filter:drop-shadow(0 0 18px #fde047)}}@keyframes aquilaEmpireConfetti{50%{transform:translateY(12px) rotate(8deg)}}
       @media(max-width:850px){.aquila-empire-game-hud{grid-template-columns:1fr 1fr;gap:5px}.aquila-empire-game-hud>div{min-height:44px;padding:5px}.aquila-empire-hud-turn{grid-column:1/-1;grid-row:1}.aquila-empire-center-event{max-height:69%;padding:4px 3px 55px;overflow:hidden}.aquila-empire-center-event p{max-height:none;overflow:hidden}.aquila-empire-center-actions{right:3%;bottom:2%;left:3%}.aquila-empire-voice-controls button{padding:6px;font-size:0}.aquila-empire-voice-controls button::first-letter{font-size:17px}.aquila-empire-board-token{width:25px!important;height:25px!important;font-size:15px!important}.aquila-empire-space-tokens[data-count="3"] .aquila-empire-board-token,.aquila-empire-space-tokens[data-count="4"] .aquila-empire-board-token{width:18px!important;height:18px!important;font-size:10px!important}}
     `;
     document.head.appendChild(style);
@@ -12117,9 +12118,32 @@ if(!stage || !overlay) return;
 
     const roomId = state?.room?.id;
     const players = Array.isArray(state?.players) ? state.players : [];
+    const board = Array.isArray(state?.board) ? state.board : [];
     const stateResults = Array.isArray(state?.results) ? state.results : [];
     const cachedResults = roomId ? (aquilaEmpireFinalStandingsCache.get(roomId) || []) : [];
     const supplied = stateResults.length ? stateResults : cachedResults;
+
+    function localBreakdownFor(player, result) {
+      const owned = board.filter(function (space) {
+        return String(space.owner_player_id || "") === String(player?.player_id || result?.player_id || "");
+      });
+      const propertyValue = owned.reduce(function (total, space) {
+        return total + (Number(space.purchase_price) || 0);
+      }, 0);
+      const upgradeValue = owned.reduce(function (total, space) {
+        return total + ((Number(space.upgrade_cost) || 0) * (Number(space.upgrade_level) || 0));
+      }, 0);
+      const cashCredits = Number(result?.cash_credits ?? player?.game_credits ?? 0) || 0;
+      const finalNetWorth = Number(result?.final_net_worth ?? result?.net_worth ?? player?.final_net_worth ?? player?.net_worth ?? (cashCredits + propertyValue + upgradeValue)) || 0;
+      const suppliedProperty = Number(result?.property_value);
+      const suppliedUpgrade = Number(result?.upgrade_value);
+      const suppliedCash = Number(result?.cash_credits);
+      const finalProperty = Number.isFinite(suppliedProperty) ? suppliedProperty : propertyValue;
+      const finalUpgrade = Number.isFinite(suppliedUpgrade) ? suppliedUpgrade : upgradeValue;
+      const finalCash = Number.isFinite(suppliedCash) ? suppliedCash : cashCredits;
+      const adjustment = Number(result?.score_adjustment ?? (finalNetWorth - finalCash - finalProperty - finalUpgrade)) || 0;
+      return {cashCredits: finalCash, propertyValue: finalProperty, upgradeValue: finalUpgrade, adjustment, finalNetWorth};
+    }
 
     let ranked;
     if (supplied.length) {
@@ -12127,21 +12151,25 @@ if(!stage || !overlay) return;
         const player = players.find(function (item) {
           return String(item.player_id) === String(result.player_id);
         }) || {};
+        const breakdown = localBreakdownFor(player, result);
         return {
           ...player,
           ...result,
+          ...breakdown,
           public_name: result.public_name || player.public_name,
           member_username: result.member_username || player.member_username,
           final_rank: Number(result.final_rank || 0),
-          netWorth: Number(result.final_net_worth ?? result.net_worth ?? player.game_credits ?? 0) || 0
+          netWorth: breakdown.finalNetWorth
         };
       });
     } else {
       ranked = players.map(function (player) {
+        const breakdown = localBreakdownFor(player, {});
         return {
           ...player,
+          ...breakdown,
           final_rank: Number(player.final_rank || 0),
-          netWorth: Number(player.final_net_worth ?? player.net_worth ?? player.game_credits ?? 0) || 0
+          netWorth: breakdown.finalNetWorth
         };
       });
     }
@@ -12158,12 +12186,32 @@ if(!stage || !overlay) return;
 
     const winner = ranked[0];
     const winnerName = document.getElementById("aquilaEmpireWinnerName");
+    const winnerBreakdown = document.getElementById("aquilaEmpireWinnerBreakdown");
     const podium = document.getElementById("aquilaEmpireFinalPodium");
 
     if (winnerName) {
       winnerName.textContent = winner
         ? `🏆 ${winner.public_name || winner.member_username || "AQUILA PLAYER"}`
         : "🏆 FINALIZING OFFICIAL STANDINGS…";
+    }
+
+    if (winnerBreakdown) {
+      winnerBreakdown.textContent = "";
+      winnerBreakdown.hidden = !winner;
+      if (winner) {
+        const title = document.createElement("div");
+        title.className = "aquila-empire-winner-breakdown-title";
+        title.textContent = "WHY THIS PLAYER WON";
+        const formula = document.createElement("div");
+        formula.className = "aquila-empire-winner-formula";
+        const baseFormula = `${Number(winner.cashCredits).toLocaleString()} Cash + ${Number(winner.propertyValue).toLocaleString()} Property + ${Number(winner.upgradeValue).toLocaleString()} Upgrades`;
+        const adjustmentText = winner.adjustment ? ` ${winner.adjustment >= 0 ? "+" : "−"} ${Math.abs(Number(winner.adjustment)).toLocaleString()} Adjustment` : "";
+        formula.innerHTML = `${baseFormula}${adjustmentText} = <b>${Number(winner.netWorth).toLocaleString()} GC FINAL NET WORTH</b>`;
+        const why = document.createElement("div");
+        why.className = "aquila-empire-winner-why";
+        why.textContent = `Rank #1 · Highest official final standing${ranked[1] ? ` · ${Number(winner.netWorth - ranked[1].netWorth).toLocaleString()} GC ahead of #2` : ""}.`;
+        winnerBreakdown.append(title, formula, why);
+      }
     }
 
     if (podium) {
@@ -12179,7 +12227,10 @@ if(!stage || !overlay) return;
           name.textContent = player.public_name || player.member_username || "Player";
           const worth = document.createElement("b");
           worth.textContent = `${Number(player.netWorth || 0).toLocaleString()} GC`;
-          row.append(rank, name, worth);
+          const details = document.createElement("div");
+          details.className = "aquila-empire-podium-details";
+          details.innerHTML = `<strong>Cash</strong> ${Number(player.cashCredits).toLocaleString()} + <strong>Property</strong> ${Number(player.propertyValue).toLocaleString()} + <strong>Upgrades</strong> ${Number(player.upgradeValue).toLocaleString()}${player.adjustment ? ` + <span class="aquila-empire-score-adjustment">Adjustment ${Number(player.adjustment).toLocaleString()}</span>` : ""}`;
+          row.append(rank, name, worth, details);
           podium.appendChild(row);
         });
       } else {
@@ -12194,7 +12245,10 @@ if(!stage || !overlay) return;
     const hasNamedStandings = ranked.length > 0 && ranked.every(function (player) {
       return Boolean(player.public_name || player.member_username);
     });
-    if (roomId && (!supplied.length || !hasNamedStandings) && !cachedResults.length) {
+    const hasOfficialBreakdown = supplied.length > 0 && supplied.every(function (player) {
+      return player.cash_credits != null && player.property_value != null && player.upgrade_value != null;
+    });
+    if (roomId && (!supplied.length || !hasNamedStandings || !hasOfficialBreakdown) && !aquilaEmpireFinalStandingsLoading.has(roomId)) {
       loadAquilaEmpireFinalStandings(roomId, state);
     }
 
