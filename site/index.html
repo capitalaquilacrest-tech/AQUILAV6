@@ -12031,10 +12031,10 @@ if(!stage || !overlay) return;
       .aquila-empire-space-tokens[data-count="3"] .aquila-empire-board-token,.aquila-empire-space-tokens[data-count="4"] .aquila-empire-board-token{width:clamp(18px,2.05vw,29px)!important;height:clamp(18px,2.05vw,29px)!important;font-size:clamp(11px,1.25vw,17px)!important}
       .aquila-empire-board-token.is-hopping{animation:aquilaEmpireTokenHop3D .27s cubic-bezier(.2,.85,.25,1)!important}
       @keyframes aquilaEmpireTokenHop3D{0%{transform:perspective(80px) rotateX(-12deg) translateY(0) scale(1)}48%{transform:perspective(80px) rotateX(-2deg) translateY(-20px) scale(1.22);filter:brightness(1.3) drop-shadow(0 13px 7px rgba(0,0,0,.48))}100%{transform:perspective(80px) rotateX(-12deg) translateY(0) scale(1)}}
-      .aquila-empire-center-event{max-height:72%;padding-bottom:62px;overflow:auto;scrollbar-width:thin}.aquila-empire-center-actions{right:6%;bottom:4%;left:6%;padding:5px;border:1px solid rgba(250,204,21,.5);border-radius:12px;background:rgba(2,18,55,.92);backdrop-filter:blur(6px)}
+      .aquila-empire-center-event{max-height:72%;padding-bottom:62px;overflow:hidden;scrollbar-width:none}.aquila-empire-center-event::-webkit-scrollbar{display:none}.aquila-empire-center-actions{right:6%;bottom:4%;left:6%;padding:5px;border:1px solid rgba(250,204,21,.5);border-radius:12px;background:rgba(2,18,55,.92);backdrop-filter:blur(6px)}
       #aquilaEmpireEndTurnButton,#aquilaEmpireBuyButton,#aquilaEmpireDeclineButton{display:none!important}
       .aquila-empire-winner-stage{position:absolute;inset:3%;z-index:22;display:grid;place-items:center;align-content:center;gap:7px;padding:12px;overflow:visible;border:2px solid #fde047;border-radius:17px;background:radial-gradient(circle at 50% 12%,rgba(250,204,21,.38),transparent 32%),linear-gradient(145deg,#071f53,#4c1d5f 68%,#9f1239);box-shadow:0 0 45px rgba(250,204,21,.45);animation:aquilaEmpireWinnerIn .65s cubic-bezier(.2,.9,.25,1)}.aquila-empire-winner-stage[hidden]{display:none!important}.aquila-empire-winner-burst{font-size:clamp(28px,5vw,58px);line-height:1;animation:aquilaEmpireTrophyPulse 1.3s infinite}.aquila-empire-winner-stage>span{color:#fde68a;font-size:clamp(7px,.9vw,12px);font-weight:900;letter-spacing:.16em}.aquila-empire-winner-stage>strong{color:#fff;font-size:clamp(16px,2.5vw,34px);line-height:1.05;text-shadow:0 3px 12px #000}.aquila-empire-final-podium{width:min(96%,430px);display:grid;gap:5px}.aquila-empire-podium-row{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:7px;padding:7px 9px;border:1px solid rgba(255,255,255,.3);border-radius:9px;background:rgba(1,15,47,.64);color:#fff;font-size:10px}.aquila-empire-podium-row b{color:#86efac}.aquila-empire-board-center.is-finished{overflow:visible!important}.aquila-empire-board-center.is-finished .aquila-empire-center-brand,.aquila-empire-board-center.is-finished .aquila-empire-center-event,.aquila-empire-board-center.is-finished .aquila-empire-center-actions,.aquila-empire-board-center.is-finished .aquila-empire-dice-display{display:none!important}.aquila-empire-board-center.is-finished .aquila-empire-winner-stage{display:grid!important}.aquila-empire-winner-stage::before,.aquila-empire-winner-stage::after{content:"✦  ✨  ✦  ★  ✨  ★";position:absolute;top:5%;color:#fde047;font-size:18px;animation:aquilaEmpireConfetti 2.2s linear infinite}.aquila-empire-winner-stage::after{top:auto;bottom:5%;animation-delay:-1.1s}@keyframes aquilaEmpireWinnerIn{from{opacity:0;transform:scale(.6) rotate(-3deg)}to{opacity:1;transform:scale(1) rotate(0)}}@keyframes aquilaEmpireTrophyPulse{50%{transform:scale(1.14);filter:drop-shadow(0 0 18px #fde047)}}@keyframes aquilaEmpireConfetti{50%{transform:translateY(12px) rotate(8deg)}}
-      @media(max-width:850px){.aquila-empire-game-hud{grid-template-columns:1fr 1fr;gap:5px}.aquila-empire-game-hud>div{min-height:44px;padding:5px}.aquila-empire-hud-turn{grid-column:1/-1;grid-row:1}.aquila-empire-center-event{max-height:69%;padding:4px 3px 55px}.aquila-empire-center-event p{max-height:45px}.aquila-empire-center-actions{right:3%;bottom:2%;left:3%}.aquila-empire-voice-controls button{padding:6px;font-size:0}.aquila-empire-voice-controls button::first-letter{font-size:17px}.aquila-empire-board-token{width:25px!important;height:25px!important;font-size:15px!important}.aquila-empire-space-tokens[data-count="3"] .aquila-empire-board-token,.aquila-empire-space-tokens[data-count="4"] .aquila-empire-board-token{width:18px!important;height:18px!important;font-size:10px!important}}
+      @media(max-width:850px){.aquila-empire-game-hud{grid-template-columns:1fr 1fr;gap:5px}.aquila-empire-game-hud>div{min-height:44px;padding:5px}.aquila-empire-hud-turn{grid-column:1/-1;grid-row:1}.aquila-empire-center-event{max-height:69%;padding:4px 3px 55px;overflow:hidden}.aquila-empire-center-event p{max-height:none;overflow:hidden}.aquila-empire-center-actions{right:3%;bottom:2%;left:3%}.aquila-empire-voice-controls button{padding:6px;font-size:0}.aquila-empire-voice-controls button::first-letter{font-size:17px}.aquila-empire-board-token{width:25px!important;height:25px!important;font-size:15px!important}.aquila-empire-space-tokens[data-count="3"] .aquila-empire-board-token,.aquila-empire-space-tokens[data-count="4"] .aquila-empire-board-token{width:18px!important;height:18px!important;font-size:10px!important}}
     `;
     document.head.appendChild(style);
   }
@@ -12064,6 +12064,28 @@ if(!stage || !overlay) return;
     };
   }
 
+  const aquilaEmpireFinalStandingsCache = new Map();
+  const aquilaEmpireFinalStandingsLoading = new Set();
+
+  async function loadAquilaEmpireFinalStandings(roomId, state) {
+    if (!roomId || !chatDb || aquilaEmpireFinalStandingsLoading.has(roomId)) return;
+    aquilaEmpireFinalStandingsLoading.add(roomId);
+    try {
+      const {data, error} = await chatDb.rpc("game_get_final_standings", {p_room_id: roomId});
+      if (error) throw error;
+      if (!data?.ok || !Array.isArray(data.results) || !data.results.length) return;
+      aquilaEmpireFinalStandingsCache.set(roomId, data.results);
+      if (state?.room?.id === roomId && state?.room?.status === "finished") {
+        state.results = data.results;
+        renderAquilaEmpireWinner(state);
+      }
+    } catch (error) {
+      console.error("Aquila Empire final standings:", error);
+    } finally {
+      aquilaEmpireFinalStandingsLoading.delete(roomId);
+    }
+  }
+
   function renderAquilaEmpireWinner(state) {
     const stage = document.getElementById("aquilaEmpireWinnerStage");
     if (!stage) return;
@@ -12076,6 +12098,7 @@ if(!stage || !overlay) return;
       document.getElementById("aquilaEmpireDiceDisplay")?.removeAttribute("hidden");
       return;
     }
+
     stage.setAttribute("aria-live", "assertive");
     const finishAction = (state.recent_actions || []).find(function (action) {
       return ["game_finished_by_time_limit", "player_auto_forfeited", "player_forfeited"].includes(String(action.action_type));
@@ -12086,46 +12109,97 @@ if(!stage || !overlay) return;
         ? "MATCH COMPLETE · TIME LIMIT REACHED"
         : "MATCH COMPLETE · LAST EMPIRE STANDING";
     }
+
     document.getElementById("aquilaEmpireCenterBrand")?.setAttribute("hidden", "");
     document.getElementById("aquilaEmpireCenterEvent")?.setAttribute("hidden", "");
     document.getElementById("aquilaEmpireCenterActions")?.setAttribute("hidden", "");
     document.getElementById("aquilaEmpireDiceDisplay")?.setAttribute("hidden", "");
-    const players = state.players || [];
-    const supplied = Array.isArray(state.results) ? state.results : [];
-    const ranked = players.map(function (player) {
-      const result = supplied.find(function (item) {
-        return String(item.player_id) === String(player.player_id);
-      }) || {};
-      const propertyValue = Number(result.property_value || 0);
-      const upgradeValue = Number(result.upgrade_value || 0);
-      return {
-        ...player,
-        final_rank: Number(result.final_rank || 0),
-        netWorth: Number(result.final_net_worth ?? result.net_worth ?? player.game_credits ?? 0) || 0,
-        propertyValue,
-        upgradeValue
-      };
-    }).sort(function (a, b) {
-      if (a.final_rank && b.final_rank) return a.final_rank - b.final_rank;
-      return b.netWorth - a.netWorth;
-    });
-    ranked.forEach(function (item, index) { if (!item.final_rank) item.final_rank = index + 1; });
-    const winner = ranked[0];
-    const winnerName = document.getElementById("aquilaEmpireWinnerName");
-    if (winnerName) winnerName.textContent = `🏆 ${winner?.public_name || winner?.member_username || "EMPIRE CHAMPION"}`;
-    const podium = document.getElementById("aquilaEmpireFinalPodium");
-    if (podium) {
-      podium.textContent = "";
-      const medals = ["🥇","🥈","🥉"];
-      ranked.forEach(function (player, index) {
-        const row = document.createElement("div");
-        row.className = "aquila-empire-podium-row";
-        row.innerHTML = `<span>${medals[index] || `#${index + 1}`}</span><strong>${player.public_name || player.member_username || "Player"}</strong><b>${Number(player.netWorth).toLocaleString()} GC</b>`;
-        podium.appendChild(row);
+
+    const roomId = state?.room?.id;
+    const players = Array.isArray(state?.players) ? state.players : [];
+    const stateResults = Array.isArray(state?.results) ? state.results : [];
+    const cachedResults = roomId ? (aquilaEmpireFinalStandingsCache.get(roomId) || []) : [];
+    const supplied = stateResults.length ? stateResults : cachedResults;
+
+    let ranked;
+    if (supplied.length) {
+      ranked = supplied.map(function (result) {
+        const player = players.find(function (item) {
+          return String(item.player_id) === String(result.player_id);
+        }) || {};
+        return {
+          ...player,
+          ...result,
+          public_name: result.public_name || player.public_name,
+          member_username: result.member_username || player.member_username,
+          final_rank: Number(result.final_rank || 0),
+          netWorth: Number(result.final_net_worth ?? result.net_worth ?? player.game_credits ?? 0) || 0
+        };
+      });
+    } else {
+      ranked = players.map(function (player) {
+        return {
+          ...player,
+          final_rank: Number(player.final_rank || 0),
+          netWorth: Number(player.final_net_worth ?? player.net_worth ?? player.game_credits ?? 0) || 0
+        };
       });
     }
-    if (aquilaEmpireWinnerCelebratedRoomId !== state.room.id) {
-      aquilaEmpireWinnerCelebratedRoomId = state.room.id;
+
+    ranked.sort(function (a, b) {
+      if (a.final_rank && b.final_rank) return a.final_rank - b.final_rank;
+      if (a.final_rank) return -1;
+      if (b.final_rank) return 1;
+      return b.netWorth - a.netWorth;
+    });
+    ranked.forEach(function (item, index) {
+      if (!item.final_rank) item.final_rank = index + 1;
+    });
+
+    const winner = ranked[0];
+    const winnerName = document.getElementById("aquilaEmpireWinnerName");
+    const podium = document.getElementById("aquilaEmpireFinalPodium");
+
+    if (winnerName) {
+      winnerName.textContent = winner
+        ? `🏆 ${winner.public_name || winner.member_username || "AQUILA PLAYER"}`
+        : "🏆 FINALIZING OFFICIAL STANDINGS…";
+    }
+
+    if (podium) {
+      podium.textContent = "";
+      if (ranked.length) {
+        const medals = ["🥇","🥈","🥉"];
+        ranked.forEach(function (player, index) {
+          const row = document.createElement("div");
+          row.className = "aquila-empire-podium-row";
+          const rank = document.createElement("span");
+          rank.textContent = medals[index] || `#${index + 1}`;
+          const name = document.createElement("strong");
+          name.textContent = player.public_name || player.member_username || "Player";
+          const worth = document.createElement("b");
+          worth.textContent = `${Number(player.netWorth || 0).toLocaleString()} GC`;
+          row.append(rank, name, worth);
+          podium.appendChild(row);
+        });
+      } else {
+        const loading = document.createElement("div");
+        loading.className = "aquila-empire-podium-row";
+        loading.style.gridTemplateColumns = "1fr";
+        loading.textContent = "Loading official final standings…";
+        podium.appendChild(loading);
+      }
+    }
+
+    const hasNamedStandings = ranked.length > 0 && ranked.every(function (player) {
+      return Boolean(player.public_name || player.member_username);
+    });
+    if (roomId && (!supplied.length || !hasNamedStandings) && !cachedResults.length) {
+      loadAquilaEmpireFinalStandings(roomId, state);
+    }
+
+    if (ranked.length && aquilaEmpireWinnerCelebratedRoomId !== roomId) {
+      aquilaEmpireWinnerCelebratedRoomId = roomId;
       playAquilaEmpireSound("purchase");
       setTimeout(function () { playAquilaEmpireSound("card"); }, 350);
       setTimeout(function () { playAquilaEmpireSound("purchase"); }, 750);
