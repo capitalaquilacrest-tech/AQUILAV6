@@ -7819,6 +7819,282 @@ if(!stage || !overlay) return;
         }
       }
     );
+
+  let aquilaEmpireCurrentRoomId = null;
+  let aquilaEmpireCurrentRoomCode = null;
+  
+  function showAquilaEmpireMessage(
+    text,
+    type = "info"
+  ) {
+    const message =
+      document.getElementById(
+        "aquilaEmpireMessage"
+      );
+  
+    if (!message) {
+      return;
+    }
+  
+    message.textContent = text || "";
+  
+    message.style.color =
+      type === "error"
+        ? "#fca5a5"
+        : type === "success"
+          ? "#86efac"
+          : "#fde68a";
+  }
+  
+  function openAquilaEmpireCreatePanel() {
+    if (!refreshAquilaEmpireAccess()) {
+      return;
+    }
+  
+    const panel =
+      document.getElementById(
+        "aquilaEmpireCreatePanel"
+      );
+  
+    const roomName =
+      document.getElementById(
+        "aquilaEmpireRoomName"
+      );
+  
+    const profile = getAquilaEmpireProfile();
+  
+    if (!panel || !roomName) {
+      return;
+    }
+  
+    const playerName =
+      profile?.public_name ||
+      profile?.member_username ||
+      "Aquila";
+  
+    if (!roomName.value.trim()) {
+      roomName.value =
+        `${playerName}'s Empire`.slice(0, 40);
+    }
+  
+    panel.hidden = false;
+  
+    showAquilaEmpireMessage(
+      "Choose your game settings and character."
+    );
+  
+    setTimeout(function () {
+      roomName.focus();
+    }, 60);
+  }
+  
+  function closeAquilaEmpireCreatePanel() {
+    const panel =
+      document.getElementById(
+        "aquilaEmpireCreatePanel"
+      );
+  
+    if (panel) {
+      panel.hidden = true;
+    }
+  
+    showAquilaEmpireMessage(
+      "Your verified Aquila game access is ready."
+    );
+  }
+  
+  async function createAquilaEmpireRoom() {
+    if (!refreshAquilaEmpireAccess()) {
+      return;
+    }
+  
+    if (
+      typeof chatDb === "undefined" ||
+      !chatDb
+    ) {
+      showAquilaEmpireMessage(
+        "Game connection is still loading. Please try again.",
+        "error"
+      );
+  
+      return;
+    }
+  
+    const roomNameInput =
+      document.getElementById(
+        "aquilaEmpireRoomName"
+      );
+  
+    const maxPlayersInput =
+      document.getElementById(
+        "aquilaEmpireMaxPlayers"
+      );
+  
+    const durationInput =
+      document.getElementById(
+        "aquilaEmpireDuration"
+      );
+  
+    const turnSecondsInput =
+      document.getElementById(
+        "aquilaEmpireTurnSeconds"
+      );
+  
+    const visibilityInput =
+      document.getElementById(
+        "aquilaEmpireVisibility"
+      );
+  
+    const confirmButton =
+      document.getElementById(
+        "aquilaEmpireConfirmCreate"
+      );
+  
+    const selectedToken =
+      document.querySelector(
+        'input[name="aquilaEmpireToken"]:checked'
+      );
+  
+    const roomName =
+      roomNameInput?.value.trim() || "";
+  
+    if (
+      roomName.length < 3 ||
+      roomName.length > 40
+    ) {
+      showAquilaEmpireMessage(
+        "Room name must contain 3–40 characters.",
+        "error"
+      );
+  
+      roomNameInput?.focus();
+      return;
+    }
+  
+    if (!selectedToken) {
+      showAquilaEmpireMessage(
+        "Please choose your game character.",
+        "error"
+      );
+  
+      return;
+    }
+  
+    if (confirmButton) {
+      confirmButton.disabled = true;
+      confirmButton.textContent =
+        "CREATING EMPIRE ROOM…";
+    }
+  
+    showAquilaEmpireMessage(
+      "Preparing your private game room…"
+    );
+  
+    try {
+      const { data, error } =
+        await chatDb.rpc(
+          "game_create_room",
+          {
+            p_room_name: roomName,
+            p_visibility:
+              visibilityInput?.value ||
+              "private",
+            p_max_players:
+              Number(
+                maxPlayersInput?.value
+              ) || 4,
+            p_game_duration_minutes:
+              Number(
+                durationInput?.value
+              ) || 30,
+            p_turn_seconds:
+              Number(
+                turnSecondsInput?.value
+              ) || 45,
+            p_token: selectedToken.value
+          }
+        );
+  
+      if (error) {
+        throw error;
+      }
+  
+      if (!data?.ok) {
+        showAquilaEmpireMessage(
+          data?.notice ||
+            "The game room could not be created.",
+          "error"
+        );
+  
+        return;
+      }
+  
+      aquilaEmpireCurrentRoomId =
+        data.room_id;
+  
+      aquilaEmpireCurrentRoomCode =
+        data.room_code;
+  
+      const panel =
+        document.getElementById(
+          "aquilaEmpireCreatePanel"
+        );
+  
+      if (panel) {
+        panel.hidden = true;
+      }
+  
+      showAquilaEmpireMessage(
+        `Room created successfully. Room Code: ${data.room_code}`,
+        "success"
+      );
+    } catch (error) {
+      console.error(
+        "Aquila Empire room creation:",
+        error
+      );
+  
+      showAquilaEmpireMessage(
+        error?.message ||
+          "The room could not be created. Please try again.",
+        "error"
+      );
+    } finally {
+      if (confirmButton) {
+        confirmButton.disabled = false;
+        confirmButton.textContent =
+          "👑 CREATE EMPIRE ROOM";
+      }
+    }
+  }
+  
+  document
+    .getElementById(
+      "aquilaEmpireCreateButton"
+    )
+    ?.addEventListener(
+      "click",
+      openAquilaEmpireCreatePanel
+    );
+  
+  document
+    .getElementById(
+      "aquilaEmpireCancelCreate"
+    )
+    ?.addEventListener(
+      "click",
+      closeAquilaEmpireCreatePanel
+    );
+  
+  document
+    .getElementById(
+      "aquilaEmpireConfirmCreate"
+    )
+    ?.addEventListener(
+      "click",
+      createAquilaEmpireRoom
+    );
+  
 </script>
 </body>
 </html>
