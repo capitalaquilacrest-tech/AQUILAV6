@@ -8193,7 +8193,151 @@ if(!stage || !overlay) return;
         class="aquila-empire-game-area"
         hidden
       >
-        <div id="aquilaEmpireBoard"></div>
+        <div class="aquila-empire-game-hud">
+      
+          <div class="aquila-empire-hud-room">
+            <span>ROOM</span>
+            <strong id="aquilaEmpireGameRoomCode">
+              ——————
+            </strong>
+          </div>
+      
+          <div class="aquila-empire-hud-turn">
+            <span>CURRENT TURN</span>
+            <strong id="aquilaEmpireCurrentTurnName">
+              Preparing…
+            </strong>
+          </div>
+      
+          <div class="aquila-empire-hud-timer">
+            <span>TIME LEFT</span>
+            <strong id="aquilaEmpireTurnTimer">
+              --:--
+            </strong>
+          </div>
+      
+        </div>
+      
+        <div class="aquila-empire-game-layout">
+      
+          <aside class="aquila-empire-game-sidebar">
+      
+            <div class="aquila-empire-sidebar-title">
+              PLAYERS
+            </div>
+      
+            <div
+              id="aquilaEmpireGamePlayers"
+              class="aquila-empire-game-players"
+            ></div>
+      
+          </aside>
+      
+          <main class="aquila-empire-board-zone">
+      
+            <div class="aquila-empire-board-frame">
+      
+              <div
+                id="aquilaEmpireBoard"
+                class="aquila-empire-board"
+              ></div>
+      
+              <div class="aquila-empire-board-center">
+      
+                <img
+                  src="assets/logo.jpg"
+                  alt="Aquila Crest Capital"
+                >
+      
+                <span>AQUILA</span>
+                <strong>EMPIRE</strong>
+      
+                <small>
+                  BUILD • TRADE • RULE
+                </small>
+      
+                <div
+                  id="aquilaEmpireDiceDisplay"
+                  class="aquila-empire-dice-display"
+                >
+                  <div id="aquilaEmpireDieOne">⚀</div>
+                  <div id="aquilaEmpireDieTwo">⚀</div>
+                </div>
+      
+              </div>
+      
+            </div>
+      
+          </main>
+      
+          <aside class="aquila-empire-action-sidebar">
+      
+            <div class="aquila-empire-sidebar-title">
+              EMPIRE CONTROL
+            </div>
+      
+            <div class="aquila-empire-current-player-card">
+              <span>YOUR GAME CREDITS</span>
+      
+              <strong id="aquilaEmpireMyCredits">
+                10,000
+              </strong>
+            </div>
+      
+            <div
+              id="aquilaEmpireActionNotice"
+              class="aquila-empire-action-notice"
+            >
+              Wait for your turn.
+            </div>
+      
+            <button
+              id="aquilaEmpireRollButton"
+              class="aquila-empire-roll-button"
+              type="button"
+              disabled
+            >
+              🎲 ROLL DICE
+            </button>
+      
+            <button
+              id="aquilaEmpireBuyButton"
+              class="aquila-empire-buy-button"
+              type="button"
+              hidden
+            >
+              🏙️ ACQUIRE PROPERTY
+            </button>
+      
+            <button
+              id="aquilaEmpireDeclineButton"
+              class="aquila-empire-decline-button"
+              type="button"
+              hidden
+            >
+              PASS
+            </button>
+      
+            <button
+              id="aquilaEmpireEndTurnButton"
+              class="aquila-empire-end-turn-button"
+              type="button"
+              hidden
+            >
+              END TURN
+            </button>
+      
+            <div class="aquila-empire-action-log">
+              <span>RECENT ACTIVITY</span>
+      
+              <div id="aquilaEmpireActionLog">
+                Match activity will appear here.
+              </div>
+            </div>
+      
+          </aside>
+      
+        </div>
       </section>
 
     </div>
