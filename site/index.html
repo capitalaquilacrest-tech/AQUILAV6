@@ -7255,5 +7255,209 @@ if(!stage || !overlay) return;
   </div>
 </div>
 <!-- END AQUILA EMPIRE GAME -->  
+<script>
+  let aquilaEmpireLastFocusedElement = null;
+  let aquilaEmpireSessionTimer = null;
+
+  function getAquilaEmpireProfile() {
+    try {
+      return typeof chatProfile !== "undefined"
+        ? chatProfile
+        : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function refreshAquilaEmpireAccess() {
+    const profile = getAquilaEmpireProfile();
+
+    const playerName =
+      document.getElementById("aquilaEmpirePlayerName");
+
+    const playerStatus =
+      document.getElementById("aquilaEmpirePlayerStatus");
+
+    const createButton =
+      document.getElementById("aquilaEmpireCreateButton");
+
+    const browseButton =
+      document.getElementById("aquilaEmpireBrowseButton");
+
+    const message =
+      document.getElementById("aquilaEmpireMessage");
+
+    if (
+      !playerName ||
+      !playerStatus ||
+      !createButton ||
+      !browseButton
+    ) {
+      return false;
+    }
+
+    const isAdmin =
+      profile?.role === "admin";
+
+    const isVerifiedMember =
+      profile?.identity_status === "verified" &&
+      Boolean(profile?.member_username);
+
+    const hasGameAccess =
+      isAdmin || isVerifiedMember;
+
+    if (hasGameAccess) {
+      playerName.textContent =
+        profile.public_name ||
+        profile.member_username ||
+        "Verified Aquila Member";
+
+      playerStatus.textContent = isAdmin
+        ? "OFFICIAL ADMIN • Game access enabled"
+        : `VERIFIED MEMBER • ${
+            profile.member_username
+          }`;
+
+      createButton.disabled = false;
+      browseButton.disabled = false;
+
+      if (message) {
+        message.textContent =
+          "Your verified Aquila game access is ready.";
+      }
+
+      return true;
+    }
+
+    createButton.disabled = true;
+    browseButton.disabled = true;
+
+    if (profile?.identity_status === "unverified") {
+      playerName.textContent =
+        profile.public_name || "Aquila Member";
+
+      playerStatus.textContent =
+        "UNVERIFIED MEMBER • Verification is required";
+
+      if (message) {
+        message.textContent =
+          "Please complete account verification before joining multiplayer games.";
+      }
+
+      return false;
+    }
+
+    playerName.textContent =
+      "Login required";
+
+    playerStatus.textContent =
+      "Sign in as a verified Aquila member to play.";
+
+    if (message) {
+      message.textContent =
+        "You may log in through the Dashboard, AI Assistant, or Community Live Chat.";
+    }
+
+    return false;
+  }
+
+  function openAquilaEmpire() {
+    const modal =
+      document.getElementById("aquilaEmpireModal");
+
+    if (!modal) {
+      return;
+    }
+
+    aquilaEmpireLastFocusedElement =
+      document.activeElement;
+
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+
+    document.body.classList.add(
+      "aquila-empire-open"
+    );
+
+    refreshAquilaEmpireAccess();
+
+    clearInterval(aquilaEmpireSessionTimer);
+
+    let sessionChecks = 0;
+
+    aquilaEmpireSessionTimer = setInterval(
+      function () {
+        sessionChecks += 1;
+
+        const accessReady =
+          refreshAquilaEmpireAccess();
+
+        if (accessReady || sessionChecks >= 8) {
+          clearInterval(
+            aquilaEmpireSessionTimer
+          );
+        }
+      },
+      500
+    );
+
+    setTimeout(function () {
+      modal
+        .querySelector(".aquila-empire-close")
+        ?.focus();
+    }, 80);
+  }
+
+  function closeAquilaEmpire() {
+    const modal =
+      document.getElementById("aquilaEmpireModal");
+
+    if (!modal) {
+      return;
+    }
+
+    clearInterval(aquilaEmpireSessionTimer);
+
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+
+    document.body.classList.remove(
+      "aquila-empire-open"
+    );
+
+    if (
+      aquilaEmpireLastFocusedElement &&
+      typeof aquilaEmpireLastFocusedElement.focus ===
+        "function"
+    ) {
+      aquilaEmpireLastFocusedElement.focus();
+    }
+  }
+
+  document.addEventListener(
+    "keydown",
+    function (event) {
+      if (
+        event.key === "Escape" &&
+        document
+          .getElementById("aquilaEmpireModal")
+          ?.classList.contains("is-open")
+      ) {
+        closeAquilaEmpire();
+      }
+    }
+  );
+
+  document
+    .getElementById("aquilaEmpireModal")
+    ?.addEventListener(
+      "click",
+      function (event) {
+        if (event.target === this) {
+          closeAquilaEmpire();
+        }
+      }
+    );
+</script>
 </body>
 </html>
