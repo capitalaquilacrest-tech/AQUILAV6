@@ -10558,6 +10558,7 @@ if(!stage || !overlay) return;
     renderAquilaEmpireBoardSpaces(state);
     renderAquilaEmpireGamePlayers(state);
     renderAquilaEmpireActionLog(state);
+    renderAquilaEmpireActionLog(state);
   }
 
   let aquilaEmpireReadyRequestRunning = false;
@@ -10814,6 +10815,213 @@ if(!stage || !overlay) return;
     ?.addEventListener(
       "click",
       startAquilaEmpireGame
+    );
+
+  let aquilaEmpireRollRequestRunning = false;
+
+  function syncAquilaEmpireRollButton(state) {
+    const button =
+      document.getElementById(
+        "aquilaEmpireRollButton"
+      );
+  
+    const notice =
+      document.getElementById(
+        "aquilaEmpireActionNotice"
+      );
+  
+    if (!button) return;
+  
+    const myPlayer =
+      state?.players?.find(function (player) {
+        return player.is_current_user;
+      });
+  
+    const isMyTurn =
+      Boolean(myPlayer) &&
+      myPlayer.player_id ===
+        state?.turn?.current_player_id;
+  
+    const canRoll =
+      state?.room?.status === "active" &&
+      isMyTurn &&
+      state?.turn?.turn_phase ===
+        "roll_required" &&
+      !aquilaEmpireRollRequestRunning;
+  
+    button.disabled = !canRoll;
+  
+    if (notice) {
+      if (!isMyTurn) {
+        notice.textContent =
+          "Wait for your turn.";
+      } else if (
+        state?.turn?.turn_phase ===
+        "roll_required"
+      ) {
+        notice.textContent =
+          "Your turn—roll the dice!";
+      } else {
+        notice.textContent =
+          "Complete the current action.";
+      }
+    }
+  }
+  
+  async function rollAquilaEmpireDice() {
+    if (
+      !chatDb ||
+      !aquilaEmpireCurrentRoomId ||
+      aquilaEmpireRollRequestRunning
+    ) {
+      return;
+    }
+  
+    const state = aquilaEmpireLatestState;
+  
+    const myPlayer =
+      state?.players?.find(function (player) {
+        return player.is_current_user;
+      });
+  
+    const isMyTurn =
+      myPlayer?.player_id ===
+      state?.turn?.current_player_id;
+  
+    if (
+      !isMyTurn ||
+      state?.turn?.turn_phase !==
+        "roll_required"
+    ) {
+      showAquilaEmpireMessage(
+        "The dice cannot be rolled right now.",
+        "warning"
+      );
+      return;
+    }
+  
+    const button =
+      document.getElementById(
+        "aquilaEmpireRollButton"
+      );
+  
+    aquilaEmpireRollRequestRunning = true;
+  
+    if (button) {
+      button.disabled = true;
+      button.textContent = "🎲 ROLLING…";
+    }
+  
+    try {
+      const rollRequestId =
+        crypto.randomUUID();
+  
+      const { data: rollData, error: rollError } =
+        await chatDb.rpc(
+          "game_roll_dice",
+          {
+            p_room_id:
+              aquilaEmpireCurrentRoomId,
+            p_action_request_id:
+              rollRequestId
+          }
+        );
+  
+      if (rollError) throw rollError;
+  
+      if (!rollData?.ok) {
+        throw new Error(
+          rollData?.notice ||
+          "The dice could not be rolled."
+        );
+      }
+  
+      const dieOne =
+        document.getElementById(
+          "aquilaEmpireDieOne"
+        );
+  
+      const dieTwo =
+        document.getElementById(
+          "aquilaEmpireDieTwo"
+        );
+  
+      const dieFaces = [
+        "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"
+      ];
+  
+      if (dieOne) {
+        dieOne.textContent =
+          dieFaces[rollData.dice_one - 1];
+      }
+  
+      if (dieTwo) {
+        dieTwo.textContent =
+          dieFaces[rollData.dice_two - 1];
+      }
+  
+      showAquilaEmpireMessage(
+        `You rolled ${rollData.total} and landed on ${rollData.space_name}.`,
+        "success"
+      );
+  
+      const resolveRequestId =
+        crypto.randomUUID();
+  
+      const {
+        data: resolveData,
+        error: resolveError
+      } = await chatDb.rpc(
+        "game_resolve_space",
+        {
+          p_room_id:
+            aquilaEmpireCurrentRoomId,
+          p_action_request_id:
+            resolveRequestId
+        }
+      );
+  
+      if (resolveError) throw resolveError;
+  
+      if (!resolveData?.ok) {
+        throw new Error(
+          resolveData?.notice ||
+          "The board space could not be resolved."
+        );
+      }
+  
+      await loadAquilaEmpireRoomState(
+        aquilaEmpireCurrentRoomId
+      );
+    } catch (error) {
+      console.error(
+        "Aquila Empire roll dice:",
+        error
+      );
+  
+      showAquilaEmpireMessage(
+        error?.message ||
+        "The dice could not be rolled.",
+        "warning"
+      );
+    } finally {
+      aquilaEmpireRollRequestRunning = false;
+  
+      if (button) {
+        button.textContent = "🎲 ROLL DICE";
+      }
+  
+      syncAquilaEmpireRollButton(
+        aquilaEmpireLatestState
+      );
+    }
+  }
+  
+  document
+    .getElementById("aquilaEmpireRollButton")
+    ?.addEventListener(
+      "click",
+      rollAquilaEmpireDice
     );
   
 </script>
