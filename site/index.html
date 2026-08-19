@@ -10865,8 +10865,24 @@ if(!stage || !overlay) return;
   
     if (notice) {
       if (!isMyTurn) {
+        const currentPlayer =
+          state?.players?.find(function (player) {
+            return (
+              String(player.player_id) ===
+              String(state?.turn?.current_player_id)
+            );
+          });
+      
         notice.textContent =
-          "Wait for your turn.";
+          "SESSION CHECK — Viewer: " +
+          String(state?.viewer_user_id || "NONE")
+            .slice(0, 8) +
+          " | Player: " +
+          String(myPlayer?.user_id || "NONE")
+            .slice(0, 8) +
+          " | Current: " +
+          String(currentPlayer?.user_id || "NONE")
+            .slice(0, 8);
       } else if (
         state?.turn?.turn_phase ===
         "roll_required"
