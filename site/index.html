@@ -8384,6 +8384,11 @@ if(!stage || !overlay) return;
         `Room created successfully. Room Code: ${data.room_code}`,
         "success"
       );
+
+      await showAquilaEmpireWaitingRoom(
+        data.room_id
+      );
+      
     } catch (error) {
       console.error(
         "Aquila Empire room creation:",
