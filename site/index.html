@@ -10819,6 +10819,20 @@ if(!stage || !overlay) return;
 
   let aquilaEmpireRollRequestRunning = false;
 
+  function getAquilaEmpireViewerPlayer(state) {
+    const viewerUserId =
+      String(state?.viewer_user_id || "");
+  
+    return state?.players?.find(
+      function (player) {
+        return (
+          String(player.user_id || "") ===
+          viewerUserId
+        );
+      }
+    ) || null;
+  }
+
   function syncAquilaEmpireRollButton(state) {
     const button =
       document.getElementById(
@@ -10833,9 +10847,7 @@ if(!stage || !overlay) return;
     if (!button) return;
   
     const myPlayer =
-      state?.players?.find(function (player) {
-        return player.is_current_user;
-      });
+      getAquilaEmpireViewerPlayer(state);
   
     const isMyTurn =
       Boolean(myPlayer) &&
@@ -10880,9 +10892,7 @@ if(!stage || !overlay) return;
     const state = aquilaEmpireLatestState;
   
     const myPlayer =
-      state?.players?.find(function (player) {
-        return player.is_current_user;
-      });
+      getAquilaEmpireViewerPlayer(state);
   
     const isMyTurn =
       myPlayer?.player_id ===
