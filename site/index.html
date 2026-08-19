@@ -8738,6 +8738,7 @@ if(!stage || !overlay) return;
 
             <div class="aquila-empire-portfolio">
               <div class="aquila-empire-sidebar-title">MY EMPIRE ASSETS</div>
+              <div id="aquilaEmpireGroupLegend" class="aquila-empire-group-legend"></div>
               <div id="aquilaEmpirePortfolio" class="aquila-empire-portfolio-list">
                 No properties acquired yet.
               </div>
@@ -8757,10 +8758,12 @@ if(!stage || !overlay) return;
               <div class="aquila-empire-board-center" id="aquilaEmpireCenter">
 
                 <div class="aquila-empire-center-brand" id="aquilaEmpireCenterBrand">
-                  <img src="assets/logo.jpg" alt="Aquila Crest Capital">
-                  <span>AQUILA</span>
-                  <strong>EMPIRE</strong>
-                  <small>BUILD • TRADE • RULE</small>
+                  <small>YOUR EMPIRE AWAITS</small>
+                  <button id="aquilaEmpireCenterRollButton" class="aquila-empire-center-roll" type="button" disabled>
+                    <span>🎲</span>
+                    <strong>ROLL DICE</strong>
+                    <small>Tap to move your token</small>
+                  </button>
                 </div>
 
                 <div class="aquila-empire-center-event" id="aquilaEmpireCenterEvent" hidden>
@@ -8854,6 +8857,18 @@ if(!stage || !overlay) return;
             <button id="aquilaEmpireBankruptcyButton" class="aquila-empire-bankruptcy-button" type="button" hidden>
               ⚠️ DECLARE BANKRUPTCY
             </button>
+
+            <button id="aquilaEmpireTradeButton" class="aquila-empire-trade-button" type="button">
+              🤝 PROPERTY MARKET
+            </button>
+
+            <div id="aquilaEmpireTradePanel" class="aquila-empire-trade-panel" hidden>
+              <strong>PROPERTY MARKET</strong>
+              <select id="aquilaEmpireTradeProperty"></select>
+              <input id="aquilaEmpireTradeAmount" type="number" min="1" step="1" placeholder="Offer in Game Credits">
+              <button id="aquilaEmpireSendOfferButton" type="button">SEND OFFER</button>
+              <div id="aquilaEmpireTradeOffers"></div>
+            </div>
       
             <div class="aquila-empire-action-log">
               <span>RECENT ACTIVITY</span>
@@ -10147,10 +10162,12 @@ if(!stage || !overlay) return;
       aquilaEmpireSpaceColors
     );
   
-    return colors[
-      Number(position || 1) %
-      colors.length
-    ];
+    let hash = 0;
+    for (let index = 0; index < normalized.length; index += 1) {
+      hash = ((hash << 5) - hash) + normalized.charCodeAt(index);
+      hash |= 0;
+    }
+    return colors[Math.abs(hash || Number(position || 1)) % colors.length];
   }
   
   function renderAquilaEmpireBoardSpaces(
@@ -10234,6 +10251,11 @@ if(!stage || !overlay) return;
             space.board_position
           )
         );
+
+        const groupBadge = document.createElement("div");
+        groupBadge.className = "aquila-empire-group-badge";
+        groupBadge.textContent = `${String(space.color_group || "PROPERTY").toUpperCase()} GROUP`;
+        cell.appendChild(groupBadge);
       }
   
       if (type === "station") {
@@ -10297,11 +10319,11 @@ if(!stage || !overlay) return;
         cell.appendChild(ownerBorder);
 
         const development = document.createElement("div");
-        development.className = "aquila-empire-space-development";
         const level = Number(space.upgrade_level || 0);
-        development.textContent = level ? "🏢".repeat(Math.min(level, 3)) : "🏠";
+        development.className = `aquila-empire-owner-building level-${level}`;
+        development.style.setProperty("--owner-color", owner?.playerColor || "#facc15");
+        development.innerHTML = '<span class="roof"></span><span class="body"></span>';
         development.title = `${space.space_name}: ${level ? `upgrade level ${level}` : "owned property"}`;
-        development.style.cssText = "position:absolute;left:2px;top:2px;z-index:4;font-size:clamp(8px,1vw,14px);filter:drop-shadow(0 1px 2px #000)";
         cell.appendChild(development);
       }
   
@@ -10486,6 +10508,16 @@ if(!stage || !overlay) return;
   function renderAquilaEmpirePortfolio(state) {
     const container = document.getElementById("aquilaEmpirePortfolio");
     if (!container) return;
+    const legend = document.getElementById("aquilaEmpireGroupLegend");
+    if (legend) {
+      legend.textContent = "";
+      [...new Set((state.board || []).filter(space => space.space_type === "property" && space.color_group).map(space => String(space.color_group).toLowerCase()))].forEach(function (group) {
+        const item = document.createElement("span");
+        item.style.setProperty("--group-color", getAquilaEmpireSpaceColor(group, 1));
+        item.textContent = group.toUpperCase();
+        legend.appendChild(item);
+      });
+    }
     const me = getAquilaEmpireViewerPlayer(state);
     const assets = (state.board || []).filter(space => me && String(space.owner_player_id) === String(me.player_id));
     container.textContent = "";
@@ -10497,7 +10529,7 @@ if(!stage || !overlay) return;
       card.className = "aquila-empire-asset-card";
       card.innerHTML = `<strong>${level ? "🏢".repeat(Math.min(level,3)) : "🏠"} ${space.space_name}</strong>` +
         `<div class="aquila-empire-asset-meta"><span>Level ${level}/3</span><span>Rent ${getAquilaEmpireEstimatedRent(space,state).toLocaleString()} GC</span></div>` +
-        `<div class="aquila-empire-asset-meta"><span>Upgrade ${Number(space.upgrade_cost||0).toLocaleString()} GC</span><span>${space.color_group || space.space_type}</span></div>` +
+        `<div class="aquila-empire-asset-meta"><span>Upgrade ${Number(space.upgrade_cost||0).toLocaleString()} GC</span><span style="--group-color:${getAquilaEmpireSpaceColor(space.color_group,space.board_position)}"><i class="aquila-empire-group-dot"></i>${String(space.color_group || space.space_type).toUpperCase()} GROUP</span></div>` +
         `<div class="aquila-empire-asset-actions"><button data-empire-upgrade="${space.board_position}" ${!canManage || space.space_type !== "property" || level >= 3 ? "disabled" : ""}>⬆ UPGRADE</button>` +
         `<button data-empire-liquidate="${space.board_position}" data-liquidation-type="${level > 0 ? "sell_upgrade" : "release_property"}" ${!canManage ? "disabled" : ""}>${level > 0 ? "SELL LEVEL" : "RELEASE"}</button></div>`;
       container.appendChild(card);
@@ -10533,9 +10565,71 @@ if(!stage || !overlay) return;
     const isCredit = ["property_released","sell_upgrade","usage_fee_received","card_credit"].some(key => type.includes(key));
     const after = data.balance_after;
     const signed = amount ? (isCredit ? amount : -amount) : null;
-    const titles = {dice_rolled:"DICE ROLLED",property_purchased:"PROPERTY ACQUIRED",property_upgraded:"PROPERTY UPGRADED",usage_fee_paid:"RENT PAID",debt_settled:"OBLIGATION SETTLED",sell_upgrade:"UPGRADE SOLD",release_property:"PROPERTY RELEASED",card_drawn:"EMPIRE CARD",turn_ended:"NEXT PLAYER"};
-    const icons = {dice_rolled:"🎲",property_purchased:"🏙️",property_upgraded:"🏗️",usage_fee_paid:"🔑",debt_settled:"🏦",sell_upgrade:"💵",release_property:"🏠",card_drawn:"🃏",turn_ended:"⏭️"};
+    const titles = {dice_rolled:"DICE ROLLED",property_purchased:"PROPERTY ACQUIRED",property_upgraded:"PROPERTY UPGRADED",usage_fee_paid:"RENT PAID",debt_settled:"OBLIGATION SETTLED",sell_upgrade:"UPGRADE SOLD",release_property:"PROPERTY RELEASED",card_drawn:"EMPIRE CARD",turn_ended:"NEXT PLAYER",trade_completed:"PROPERTY TRADE COMPLETED"};
+    const icons = {dice_rolled:"🎲",property_purchased:"🏙️",property_upgraded:"🏗️",usage_fee_paid:"🔑",debt_settled:"🏦",sell_upgrade:"💵",release_property:"🏠",card_drawn:"🃏",turn_ended:"⏭️",trade_completed:"🤝"};
     showAquilaEmpireCenterEvent({icon:icons[type]||"📣",title:titles[type]||type.replaceAll("_"," ").toUpperCase(),reason:data.notice||data.property_name||data.space_name||data.card_title||"The Aquila Banker recorded this game action.",before:after!=null&&signed!=null?Number(after)-signed:null,change:signed,after:after,level:data.new_level??data.new_upgrade_level});
+  }
+
+  let aquilaEmpireTradeLoading = false;
+  function renderAquilaEmpireTradeMarket(state) {
+    const select = document.getElementById("aquilaEmpireTradeProperty");
+    const send = document.getElementById("aquilaEmpireSendOfferButton");
+    if (!select) return;
+    const me = getAquilaEmpireViewerPlayer(state);
+    const tradable = (state.board || []).filter(space => space.owner_player_id && String(space.owner_player_id)!==String(me?.player_id) && Number(space.upgrade_level||0)===0);
+    const selected = select.value;
+    select.innerHTML = '<option value="">Choose another player’s property</option>';
+    tradable.forEach(function (space) {
+      const owner = (state.players||[]).find(player => String(player.player_id)===String(space.owner_player_id));
+      const option = document.createElement("option"); option.value=space.board_position;
+      option.textContent=`${space.space_name} — ${owner?.public_name||owner?.member_username||"Owner"}`;
+      select.appendChild(option);
+    });
+    if ([...select.options].some(option=>option.value===selected)) select.value=selected;
+    const canOffer = state.room?.status==="active" && String(state.turn?.current_player_id)===String(me?.player_id) && state.turn?.turn_phase==="turn_complete";
+    select.disabled=!canOffer; if(send) send.disabled=!canOffer;
+    loadAquilaEmpireTradeOffers();
+  }
+
+  async function loadAquilaEmpireTradeOffers() {
+    if (aquilaEmpireTradeLoading || !chatDb || !aquilaEmpireCurrentRoomId) return;
+    aquilaEmpireTradeLoading=true;
+    try {
+      const {data,error}=await chatDb.rpc("game_get_trade_offers",{p_room_id:aquilaEmpireCurrentRoomId});
+      if(error) throw error;
+      const container=document.getElementById("aquilaEmpireTradeOffers"); if(!container) return;
+      container.textContent="";
+      (data?.offers||[]).filter(offer=>["pending","countered"].includes(offer.status)).forEach(function(offer){
+        const card=document.createElement("div"); card.className="aquila-empire-offer-card";
+        card.innerHTML=`<b>${offer.property_name}</b><span>${Number(offer.amount||0).toLocaleString()} GC • ${offer.buyer_name} → ${offer.seller_name}</span>`+
+          (offer.can_respond?`<div class="aquila-empire-offer-actions"><button data-trade-response="accept" data-offer-id="${offer.offer_id}">ACCEPT</button><button data-trade-response="counter" data-offer-id="${offer.offer_id}">COUNTER</button><button data-trade-response="decline" data-offer-id="${offer.offer_id}">DECLINE</button></div>`:`<small>Waiting for the other player…</small>`);
+        container.appendChild(card);
+      });
+      if(!container.children.length) container.textContent="No active offers.";
+    } catch(error) {
+      const container=document.getElementById("aquilaEmpireTradeOffers"); if(container) container.textContent="Run the included trade SQL upgrade to activate the marketplace.";
+    } finally { aquilaEmpireTradeLoading=false; }
+  }
+
+  async function sendAquilaEmpireTradeOffer() {
+    const position=Number(document.getElementById("aquilaEmpireTradeProperty")?.value||0);
+    const amount=Number(document.getElementById("aquilaEmpireTradeAmount")?.value||0);
+    if(!position||amount<=0){showAquilaEmpireMessage("Choose a property and enter a valid offer.","warning");return;}
+    try{
+      const {data,error}=await chatDb.rpc("game_create_trade_offer",{p_room_id:aquilaEmpireCurrentRoomId,p_board_position:position,p_offered_credits:amount});
+      if(error)throw error;if(!data?.ok)throw new Error(data?.notice||"Offer failed.");
+      showAquilaEmpireCenterEvent({icon:"🤝",title:"PROPERTY OFFER SENT",reason:data.notice,change:null});playAquilaEmpireSound("card");await loadAquilaEmpireTradeOffers();
+    }catch(error){showAquilaEmpireMessage(error?.message||"Offer could not be sent.","warning");}
+  }
+
+  async function respondAquilaEmpireTrade(offerId,decision) {
+    let counter=null;if(decision==="counter"){counter=Number(prompt("Enter your counteroffer in Game Credits:")||0);if(counter<=0)return;}
+    try{
+      const {data,error}=await chatDb.rpc("game_respond_trade_offer",{p_offer_id:offerId,p_decision:decision,p_counter_credits:counter});
+      if(error)throw error;if(!data?.ok)throw new Error(data?.notice||"Response failed.");
+      showAquilaEmpireCenterEvent({icon:decision==="accept"?"🤝":"📨",title:decision==="accept"?"TRADE COMPLETED":decision.toUpperCase(),reason:data.notice,change:null});
+      if(decision==="accept")playAquilaEmpireSound("purchase");await loadAquilaEmpireRoomState(aquilaEmpireCurrentRoomId);await loadAquilaEmpireTradeOffers();
+    }catch(error){showAquilaEmpireMessage(error?.message||"Trade response failed.","warning");}
   }
 
   function renderAquilaEmpireGame(state) {
@@ -10665,6 +10759,7 @@ if(!stage || !overlay) return;
     renderAquilaEmpireActionLog(state);
     renderAquilaEmpirePortfolio(state);
     renderAquilaEmpireCenter(state);
+    renderAquilaEmpireTradeMarket(state);
     syncAquilaEmpireRollButton(state);
   }
 
@@ -11097,9 +11192,14 @@ if(!stage || !overlay) return;
         .aquila-empire-center-brand{display:grid;place-items:center;gap:5px}.aquila-empire-center-brand img{width:clamp(48px,7vw,90px);border:2px solid #facc15;border-radius:18%}.aquila-empire-center-brand span{font-size:clamp(13px,2vw,26px);font-weight:900;letter-spacing:.12em}.aquila-empire-center-brand strong{color:#fde047;font-size:clamp(20px,3.4vw,46px);line-height:.85}.aquila-empire-center-brand small{color:#bfdbfe;font-weight:900;letter-spacing:.14em}
         .aquila-empire-center-event{width:min(92%,520px);display:grid;place-items:center;gap:7px;animation:aquilaEmpireEventIn .35s ease}.aquila-empire-center-event[hidden]{display:none}.aquila-empire-banker{padding:5px 11px;border:1px solid #facc15;border-radius:999px;background:#061f4f;color:#fde68a;font-size:clamp(8px,.9vw,12px);font-weight:900;letter-spacing:.12em}.aquila-empire-event-icon{font-size:clamp(30px,5vw,64px);filter:drop-shadow(0 5px 9px rgba(0,0,0,.4))}.aquila-empire-center-event>strong{color:#fde047;font-size:clamp(14px,2vw,28px);line-height:1.05}.aquila-empire-center-event p{margin:0;color:#fff;font-size:clamp(8px,1vw,14px);line-height:1.35}.aquila-empire-money-flow{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.aquila-empire-money-flow>div{padding:7px 4px;border:1px solid rgba(147,197,253,.35);border-radius:9px;background:rgba(2,18,55,.65)}.aquila-empire-money-flow span{display:block;color:#93c5fd;font-size:clamp(6px,.65vw,9px);font-weight:800}.aquila-empire-money-flow b{color:#fff;font-size:clamp(9px,1.3vw,18px)}.aquila-empire-money-flow .is-change b{color:#86efac}.aquila-empire-money-flow .is-negative b{color:#fca5a5}.aquila-empire-building-visual{font-size:clamp(24px,4vw,52px);letter-spacing:3px}
         .aquila-empire-portfolio{margin-top:12px;padding-top:10px;border-top:1px solid rgba(250,204,21,.25)}.aquila-empire-portfolio-list{display:grid;gap:7px;max-height:240px;overflow:auto;color:#dbeafe;font-size:10px}.aquila-empire-asset-card{padding:8px;border:1px solid rgba(147,197,253,.28);border-radius:9px;background:rgba(5,32,82,.8)}.aquila-empire-asset-card strong{display:block;color:#fff}.aquila-empire-asset-meta{display:flex;justify-content:space-between;gap:5px;color:#93c5fd}.aquila-empire-asset-actions{display:flex;gap:4px;margin-top:6px}.aquila-empire-asset-actions button{flex:1;padding:5px 3px;border:1px solid #facc15;border-radius:6px;background:#174ea6;color:#fff;font-size:8px;font-weight:800;cursor:pointer}.aquila-empire-asset-actions button:disabled{opacity:.4;cursor:not-allowed}.aquila-empire-settle-button{background:linear-gradient(135deg,#16a34a,#08752f)!important}.aquila-empire-bankruptcy-button{background:linear-gradient(135deg,#991b1b,#450a0a)!important}.aquila-empire-audio-gate{position:absolute;inset:0;z-index:30;display:grid;place-items:center;padding:25px;background:rgba(1,10,31,.86);backdrop-filter:blur(7px)}.aquila-empire-audio-gate[hidden]{display:none}.aquila-empire-audio-gate button{max-width:420px;padding:20px 28px;border:2px solid #facc15;border-radius:18px;background:linear-gradient(135deg,#0d47a1,#be123c);color:#fff;font-weight:900;font-size:18px;box-shadow:0 15px 45px rgba(0,0,0,.45)}
+        .aquila-empire-group-badge{position:absolute;left:3px;right:3px;top:3px;z-index:2;padding:3px 1px;border-radius:4px;background:var(--space-color,#2563eb);color:#fff;font-size:clamp(5px,.52vw,8px);font-weight:1000;line-height:1;text-align:center;text-shadow:0 1px 2px #000;letter-spacing:.04em}.aquila-empire-space.is-property{padding-top:18px!important;border:2px solid var(--space-color,#2563eb)!important;background:linear-gradient(180deg,color-mix(in srgb,var(--space-color) 28%,#fff) 0 36%,#eef5ff 78%)!important;box-shadow:inset 0 0 0 2px rgba(255,255,255,.68)}.aquila-empire-group-dot{display:inline-block;width:8px;height:8px;margin-right:4px;border:1px solid #fff;border-radius:50%;background:var(--group-color)}
+        .aquila-empire-group-legend{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px}.aquila-empire-group-legend span{padding:3px 5px;border:1px solid var(--group-color);border-radius:999px;background:color-mix(in srgb,var(--group-color) 25%,#071c48);color:#fff;font-size:7px;font-weight:900}
+        .aquila-empire-trade-button{background:linear-gradient(135deg,#7c3aed,#2563eb)!important}.aquila-empire-trade-panel{display:grid;gap:6px;margin-top:7px;padding:8px;border:1px solid #a78bfa;border-radius:10px;background:rgba(15,23,70,.94);font-size:9px}.aquila-empire-trade-panel[hidden]{display:none}.aquila-empire-trade-panel select,.aquila-empire-trade-panel input{width:100%;padding:7px;border:1px solid #60a5fa;border-radius:6px;background:#fff;color:#172554;font-size:9px}.aquila-empire-trade-panel button{padding:6px;border:1px solid #fde047;border-radius:6px;background:#174ea6;color:#fff;font-size:8px;font-weight:900}.aquila-empire-offer-card{display:grid;gap:4px;margin-top:5px;padding:6px;border:1px solid rgba(167,139,250,.5);border-radius:7px;background:rgba(30,58,138,.35)}.aquila-empire-offer-actions{display:flex;gap:3px}.aquila-empire-offer-actions button{flex:1}
+        .aquila-empire-center-roll{display:grid;place-items:center;gap:4px;width:min(88%,300px);padding:clamp(14px,3vw,30px);border:2px solid #fde047;border-radius:22px;background:linear-gradient(145deg,#1d4ed8,#be123c);color:#fff;cursor:pointer;box-shadow:0 15px 30px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.35);animation:aquilaEmpireRollPulse 1.8s ease-in-out infinite}.aquila-empire-center-roll>span{font-size:clamp(40px,7vw,86px);filter:drop-shadow(0 7px 8px rgba(0,0,0,.42))}.aquila-empire-center-roll>strong{font-size:clamp(16px,2.5vw,34px);color:#fff}.aquila-empire-center-roll>small{font-size:clamp(8px,.9vw,12px);color:#dbeafe}.aquila-empire-center-roll:disabled{opacity:.45;cursor:not-allowed;animation:none}.aquila-empire-space{transform-style:preserve-3d;box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(2,18,55,.25)}.aquila-empire-space.is-property{transform:translateZ(3px);transition:transform .2s,filter .2s}.aquila-empire-space.is-property:hover{z-index:8;transform:translateZ(12px) scale(1.06);filter:brightness(1.08)}.aquila-empire-owner-building{position:absolute;left:4px;bottom:16px;z-index:5;width:clamp(13px,1.7vw,24px);height:clamp(13px,1.7vw,24px);filter:drop-shadow(0 3px 3px rgba(0,0,0,.55))}.aquila-empire-owner-building .roof{position:absolute;left:8%;top:0;width:84%;height:38%;background:var(--owner-color);clip-path:polygon(50% 0,100% 100%,0 100%);filter:brightness(1.35)}.aquila-empire-owner-building .body{position:absolute;left:18%;right:18%;bottom:0;height:65%;border:1px solid rgba(255,255,255,.8);border-radius:2px;background:var(--owner-color);box-shadow:inset 0 0 0 2px rgba(0,0,0,.12)}.aquila-empire-owner-building.level-1{transform:scale(1.05)}.aquila-empire-owner-building.level-2{transform:scale(1.18);bottom:18px}.aquila-empire-owner-building.level-2 .body{height:82%}.aquila-empire-owner-building.level-3{transform:scale(1.35);bottom:20px}.aquila-empire-owner-building.level-3 .body{height:100%;background:linear-gradient(90deg,var(--owner-color),#fff,var(--owner-color))}
         @keyframes aquilaEmpireTokenHop{0%{transform:translateY(0) scale(1)}45%{transform:translateY(-13px) scale(1.18)}100%{transform:translateY(0) scale(1)}}
         @keyframes aquilaEmpireDiceShake{0%,100%{transform:rotate(-7deg) scale(1)}50%{transform:rotate(7deg) scale(1.08)}}
         @keyframes aquilaEmpireEventIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+        @keyframes aquilaEmpireRollPulse{0%,100%{transform:scale(1);box-shadow:0 15px 30px rgba(0,0,0,.38),0 0 0 0 rgba(250,204,21,.25)}50%{transform:scale(1.035);box-shadow:0 18px 38px rgba(0,0,0,.42),0 0 0 12px rgba(250,204,21,0)}}
         @media(max-width:850px){.aquila-empire-portfolio-list{max-height:150px}.aquila-empire-center-event{gap:4px}.aquila-empire-center-event p{max-height:38px;overflow:auto}}
       `;
       document.head.appendChild(style);
@@ -11185,6 +11285,7 @@ if(!stage || !overlay) return;
     );
     const settleButton = document.getElementById("aquilaEmpireSettleDebtButton");
     const bankruptcyButton = document.getElementById("aquilaEmpireBankruptcyButton");
+    const centerRollButton = document.getElementById("aquilaEmpireCenterRollButton");
   
     const notice =
       document.getElementById(
@@ -11231,7 +11332,17 @@ if(!stage || !overlay) return;
       !aquilaEmpirePropertyRequestRunning;
   
     rollButton.disabled = !canRoll;
-    rollButton.hidden = phase !== "roll_required";
+    rollButton.hidden = true;
+    if (centerRollButton) {
+      centerRollButton.disabled = !canRoll;
+      centerRollButton.hidden = phase !== "roll_required";
+    }
+    const centerBrand = document.getElementById("aquilaEmpireCenterBrand");
+    const centerEvent = document.getElementById("aquilaEmpireCenterEvent");
+    if (phase === "roll_required") {
+      if (centerBrand) centerBrand.hidden = false;
+      if (centerEvent) centerEvent.hidden = true;
+    }
   
     if (endTurnButton) {
       endTurnButton.hidden = !canEndTurn;
@@ -11439,12 +11550,17 @@ if(!stage || !overlay) return;
       document.getElementById(
         "aquilaEmpireRollButton"
       );
+    const centerButton = document.getElementById("aquilaEmpireCenterRollButton");
   
     aquilaEmpireRollRequestRunning = true;
   
     if (button) {
       button.disabled = true;
       button.textContent = "🎲 ROLLING…";
+    }
+    if (centerButton) {
+      centerButton.disabled = true;
+      centerButton.querySelector("strong").textContent = "ROLLING…";
     }
   
     try {
@@ -11527,6 +11643,7 @@ if(!stage || !overlay) return;
       if (button) {
         button.textContent = "🎲 ROLL DICE";
       }
+      if (centerButton) centerButton.querySelector("strong").textContent = "ROLL DICE";
   
       syncAquilaEmpireRollButton(
         aquilaEmpireLatestState
@@ -11724,6 +11841,15 @@ if(!stage || !overlay) return;
 
   document.getElementById("aquilaEmpireSettleDebtButton")?.addEventListener("click", function () { runAquilaEmpireDebtAction("settle"); });
   document.getElementById("aquilaEmpireBankruptcyButton")?.addEventListener("click", function () { runAquilaEmpireDebtAction("bankruptcy"); });
+  document.getElementById("aquilaEmpireTradeButton")?.addEventListener("click", function () {
+    const panel=document.getElementById("aquilaEmpireTradePanel");
+    if(panel){panel.hidden=!panel.hidden;if(!panel.hidden)loadAquilaEmpireTradeOffers();}
+  });
+  document.getElementById("aquilaEmpireSendOfferButton")?.addEventListener("click",sendAquilaEmpireTradeOffer);
+  document.getElementById("aquilaEmpireTradeOffers")?.addEventListener("click",function(event){
+    const button=event.target.closest("[data-trade-response]");
+    if(button)respondAquilaEmpireTrade(button.dataset.offerId,button.dataset.tradeResponse);
+  });
   
   document
     .getElementById("aquilaEmpireRollButton")
@@ -11731,6 +11857,8 @@ if(!stage || !overlay) return;
       "click",
       rollAquilaEmpireDice
     );
+
+  document.getElementById("aquilaEmpireCenterRollButton")?.addEventListener("click", rollAquilaEmpireDice);
 
   document
     .getElementById("aquilaEmpireModal")
