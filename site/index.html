@@ -10834,9 +10834,14 @@ if(!stage || !overlay) return;
   }
 
   function syncAquilaEmpireRollButton(state) {
-    const button =
+    const rollButton =
       document.getElementById(
         "aquilaEmpireRollButton"
+      );
+  
+    const endTurnButton =
+      document.getElementById(
+        "aquilaEmpireEndTurnButton"
       );
   
     const notice =
@@ -10844,55 +10849,67 @@ if(!stage || !overlay) return;
         "aquilaEmpireActionNotice"
       );
   
-    if (!button) return;
+    if (!rollButton) return;
   
     const myPlayer =
       getAquilaEmpireViewerPlayer(state);
   
+    const currentPlayer =
+      state?.players?.find(function (player) {
+        return (
+          String(player.player_id) ===
+          String(state?.turn?.current_player_id)
+        );
+      });
+  
     const isMyTurn =
       Boolean(myPlayer) &&
-      myPlayer.player_id ===
-        state?.turn?.current_player_id;
+      String(myPlayer.player_id) ===
+        String(state?.turn?.current_player_id);
+  
+    const phase =
+      state?.turn?.turn_phase || "";
   
     const canRoll =
       state?.room?.status === "active" &&
       isMyTurn &&
-      state?.turn?.turn_phase ===
-        "roll_required" &&
+      phase === "roll_required" &&
       !aquilaEmpireRollRequestRunning;
   
-    button.disabled = !canRoll;
+    const canEndTurn =
+      state?.room?.status === "active" &&
+      isMyTurn &&
+      phase === "turn_complete" &&
+      !aquilaEmpireEndTurnRequestRunning;
   
-    if (notice) {
-      if (!isMyTurn) {
-        const currentPlayer =
-          state?.players?.find(function (player) {
-            return (
-              String(player.player_id) ===
-              String(state?.turn?.current_player_id)
-            );
-          });
-      
-        notice.textContent =
-          "SESSION CHECK — Viewer: " +
-          String(state?.viewer_user_id || "NONE")
-            .slice(0, 8) +
-          " | Player: " +
-          String(myPlayer?.user_id || "NONE")
-            .slice(0, 8) +
-          " | Current: " +
-          String(currentPlayer?.user_id || "NONE")
-            .slice(0, 8);
-      } else if (
-        state?.turn?.turn_phase ===
-        "roll_required"
-      ) {
-        notice.textContent =
-          "Your turn—roll the dice!";
-      } else {
-        notice.textContent =
-          "Complete the current action.";
-      }
+    rollButton.disabled = !canRoll;
+    rollButton.hidden = phase !== "roll_required";
+  
+    if (endTurnButton) {
+      endTurnButton.hidden = !canEndTurn;
+      endTurnButton.disabled = !canEndTurn;
+    }
+  
+    if (!notice) return;
+  
+    if (!isMyTurn) {
+      notice.textContent =
+        "Waiting for " +
+        (
+          currentPlayer?.public_name ||
+          currentPlayer?.member_username ||
+          "the current player"
+        ) +
+        ".";
+    } else if (phase === "roll_required") {
+      notice.textContent =
+        "Your turn—roll the dice!";
+    } else if (phase === "turn_complete") {
+      notice.textContent =
+        "Move complete—end your turn.";
+    } else {
+      notice.textContent =
+        "Complete the current action.";
     }
   }
   
@@ -11042,6 +11059,92 @@ if(!stage || !overlay) return;
       );
     }
   }
+
+  let aquilaEmpireEndTurnRequestRunning = false;
+
+  async function endAquilaEmpireTurn() {
+    if (
+      !chatDb ||
+      !aquilaEmpireCurrentRoomId ||
+      aquilaEmpireEndTurnRequestRunning
+    ) {
+      return;
+    }
+  
+    const button =
+      document.getElementById(
+        "aquilaEmpireEndTurnButton"
+      );
+  
+    aquilaEmpireEndTurnRequestRunning = true;
+  
+    if (button) {
+      button.disabled = true;
+      button.textContent = "ENDING TURN…";
+    }
+  
+    try {
+      const { data, error } =
+        await chatDb.rpc(
+          "game_end_turn",
+          {
+            p_room_id:
+              aquilaEmpireCurrentRoomId,
+            p_action_request_id:
+              crypto.randomUUID()
+          }
+        );
+  
+      if (error) throw error;
+  
+      if (!data?.ok) {
+        throw new Error(
+          data?.notice ||
+          "The turn could not be ended."
+        );
+      }
+  
+      showAquilaEmpireMessage(
+        data.notice ||
+        "The next player’s turn has started.",
+        "success"
+      );
+  
+      await loadAquilaEmpireRoomState(
+        aquilaEmpireCurrentRoomId
+      );
+    } catch (error) {
+      console.error(
+        "Aquila Empire end turn:",
+        error
+      );
+  
+      showAquilaEmpireMessage(
+        error?.message ||
+        "The turn could not be ended.",
+        "warning"
+      );
+    } finally {
+      aquilaEmpireEndTurnRequestRunning = false;
+  
+      if (button) {
+        button.textContent = "END TURN";
+      }
+  
+      syncAquilaEmpireRollButton(
+        aquilaEmpireLatestState
+      );
+    }
+  }
+  
+  document
+    .getElementById(
+      "aquilaEmpireEndTurnButton"
+    )
+    ?.addEventListener(
+      "click",
+      endAquilaEmpireTurn
+    );
   
   document
     .getElementById("aquilaEmpireRollButton")
