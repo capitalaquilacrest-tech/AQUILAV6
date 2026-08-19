@@ -3132,6 +3132,157 @@
         font-size:10px;
       }
     }
+
+    /* AQUILA EMPIRE — JOIN ROOM */
+
+    .aquila-empire-join-action {
+      grid-column: 1 / -1;
+      min-height: 48px;
+      padding: 12px;
+      border: 1px solid #c4b5fd;
+      border-radius: 13px;
+      background:
+        linear-gradient(
+          135deg,
+          #6d28d9,
+          #4338ca
+        );
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+    
+    .aquila-empire-join-action:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+    
+    .aquila-empire-join-action:disabled {
+      cursor: not-allowed;
+      filter: grayscale(0.45);
+      opacity: 0.52;
+      transform: none;
+    }
+    
+    .aquila-empire-join-panel {
+      margin-top: 16px;
+      padding: 17px;
+      border: 1px solid rgba(196, 181, 253, 0.55);
+      border-radius: 17px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(2, 13, 39, 0.96),
+          rgba(49, 24, 105, 0.92)
+        );
+      text-align: left;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.09),
+        0 14px 30px rgba(0, 0, 0, 0.25);
+    }
+    
+    .aquila-empire-join-panel[hidden] {
+      display: none !important;
+    }
+    
+    #aquilaEmpireCancelJoin {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 22px;
+      cursor: pointer;
+    }
+    
+    #aquilaEmpireCancelJoin:hover {
+      border-color: #f87171;
+      background: #b91c1c;
+    }
+    
+    .aquila-empire-confirm-join {
+      width: 100%;
+      min-height: 49px;
+      border: 1px solid #c4b5fd;
+      border-radius: 12px;
+      background:
+        linear-gradient(
+          135deg,
+          #7c3aed,
+          #4338ca 55%,
+          #1d4ed8
+        );
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow:
+        0 8px 20px rgba(109, 40, 217, 0.28);
+    }
+    
+    .aquila-empire-confirm-join:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+    
+    .aquila-empire-confirm-join:disabled {
+      cursor: wait;
+      opacity: 0.6;
+      transform: none;
+    }
+    
+    /* Force hidden lobby sections to disappear */
+    
+    .aquila-empire-welcome[hidden],
+    .aquila-empire-identity[hidden],
+    .aquila-empire-lobby-actions[hidden],
+    .aquila-empire-create-panel[hidden],
+    .aquila-empire-join-panel[hidden],
+    .aquila-empire-waiting-room[hidden] {
+      display: none !important;
+    }
+    
+    /* iPhone notch and Dynamic Island protection */
+    
+    @media (max-width: 700px) {
+      .aquila-empire-topbar {
+        min-height:
+          calc(
+            72px + env(safe-area-inset-top)
+          );
+    
+        padding-top:
+          calc(
+            10px + env(safe-area-inset-top)
+          );
+      }
+    
+      .aquila-empire-content {
+        height:
+          calc(
+            100% -
+            72px -
+            env(safe-area-inset-top)
+          );
+    
+        padding-bottom:
+          calc(
+            18px + env(safe-area-inset-bottom)
+          );
+      }
+    
+      .aquila-empire-join-panel {
+        padding: 14px;
+      }
+    }
+    
 </style>
 </head>
 <body>
