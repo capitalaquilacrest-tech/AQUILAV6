@@ -9501,8 +9501,13 @@ if(!stage || !overlay) return;
     }
   
     aquilaEmpireLatestState = state;
-  
+
     const room = state.room;
+
+    if (room.status === "active") {
+      renderAquilaEmpireGame(state);
+      return;
+    }
     const players = Array.isArray(state.players)
       ? state.players
       : [];
@@ -10033,6 +10038,527 @@ if(!stage || !overlay) return;
       "click",
       joinAquilaEmpireRoom
     );
+
+  const aquilaEmpirePlayerColors = [
+    "#2563eb",
+    "#dc2626",
+    "#16a34a",
+    "#d6a82f"
+  ];
+  
+  const aquilaEmpireSpaceColors = {
+    blue: "#2563eb",
+    red: "#dc2626",
+    green: "#16a34a",
+    gold: "#d6a82f",
+    purple: "#7c3aed",
+    orange: "#ea580c",
+    cyan: "#0891b2",
+    pink: "#db2777"
+  };
+  
+  function getAquilaEmpireGridPosition(
+    position
+  ) {
+    const value = Number(position);
+  
+    if (value >= 1 && value <= 7) {
+      return {
+        row: 1,
+        column: value
+      };
+    }
+  
+    if (value >= 8 && value <= 12) {
+      return {
+        row: value - 6,
+        column: 7
+      };
+    }
+  
+    if (value >= 13 && value <= 19) {
+      return {
+        row: 7,
+        column: 20 - value
+      };
+    }
+  
+    if (value >= 20 && value <= 24) {
+      return {
+        row: 26 - value,
+        column: 1
+      };
+    }
+  
+    return {
+      row: 1,
+      column: 1
+    };
+  }
+  
+  function formatAquilaEmpireCredits(value) {
+    return Number(value || 0).toLocaleString(
+      "en-US",
+      {
+        maximumFractionDigits: 0
+      }
+    );
+  }
+  
+  function getAquilaEmpireSpaceColor(
+    colorGroup,
+    position
+  ) {
+    const normalized =
+      String(colorGroup || "")
+        .trim()
+        .toLowerCase();
+  
+    if (aquilaEmpireSpaceColors[normalized]) {
+      return aquilaEmpireSpaceColors[
+        normalized
+      ];
+    }
+  
+    const colors = Object.values(
+      aquilaEmpireSpaceColors
+    );
+  
+    return colors[
+      Number(position || 1) %
+      colors.length
+    ];
+  }
+  
+  function renderAquilaEmpireBoardSpaces(
+    state
+  ) {
+    const boardElement =
+      document.getElementById(
+        "aquilaEmpireBoard"
+      );
+  
+    if (!boardElement) {
+      return;
+    }
+  
+    boardElement.textContent = "";
+  
+    const spaces = Array.isArray(state.board)
+      ? state.board
+      : [];
+  
+    const players = Array.isArray(state.players)
+      ? state.players
+      : [];
+  
+    const playersById = new Map(
+      players.map(function (player, index) {
+        return [
+          player.player_id,
+          {
+            ...player,
+            playerColor:
+              aquilaEmpirePlayerColors[
+                index %
+                aquilaEmpirePlayerColors.length
+              ]
+          }
+        ];
+      })
+    );
+  
+    spaces.forEach(function (space) {
+      const grid =
+        getAquilaEmpireGridPosition(
+          space.board_position
+        );
+  
+      const cell =
+        document.createElement("div");
+  
+      cell.className =
+        "aquila-empire-space";
+  
+      cell.style.gridRow =
+        String(grid.row);
+  
+      cell.style.gridColumn =
+        String(grid.column);
+  
+      const type =
+        String(space.space_type || "")
+          .toLowerCase();
+  
+      if (
+        [1, 7, 13, 19].includes(
+          Number(space.board_position)
+        )
+      ) {
+        cell.classList.add("is-corner");
+      }
+  
+      if (type === "property") {
+        cell.classList.add("is-property");
+  
+        cell.style.setProperty(
+          "--space-color",
+          getAquilaEmpireSpaceColor(
+            space.color_group,
+            space.board_position
+          )
+        );
+      }
+  
+      if (type === "station") {
+        cell.classList.add("is-station");
+      }
+  
+      if (
+        type.includes("card") ||
+        type === "opportunity" ||
+        type === "community"
+      ) {
+        cell.classList.add("is-card");
+      }
+  
+      const name =
+        document.createElement("div");
+  
+      name.className =
+        "aquila-empire-space-name";
+  
+      name.textContent =
+        space.space_name ||
+        `Space ${space.board_position}`;
+  
+      cell.appendChild(name);
+  
+      if (
+        Number(space.purchase_price) > 0
+      ) {
+        const price =
+          document.createElement("div");
+  
+        price.className =
+          "aquila-empire-space-price";
+  
+        price.textContent =
+          `${formatAquilaEmpireCredits(
+            space.purchase_price
+          )} GC`;
+  
+        cell.appendChild(price);
+      }
+  
+      if (space.owner_player_id) {
+        const owner =
+          playersById.get(
+            space.owner_player_id
+          );
+  
+        const ownerBorder =
+          document.createElement("div");
+  
+        ownerBorder.className =
+          "aquila-empire-space-owner";
+  
+        ownerBorder.style.setProperty(
+          "--owner-color",
+          owner?.playerColor || "#facc15"
+        );
+  
+        cell.appendChild(ownerBorder);
+      }
+  
+      const playersOnSpace =
+        players.filter(function (player) {
+          return (
+            Number(player.board_position) ===
+            Number(space.board_position)
+          );
+        });
+  
+      if (playersOnSpace.length) {
+        const tokens =
+          document.createElement("div");
+  
+        tokens.className =
+          "aquila-empire-space-tokens";
+  
+        playersOnSpace.forEach(
+          function (player) {
+            const token =
+              document.createElement("div");
+  
+            token.className =
+              "aquila-empire-board-token";
+  
+            token.title =
+              player.public_name ||
+              player.member_username ||
+              "Aquila Player";
+  
+            token.textContent =
+              aquilaEmpireTokenIcons[
+                player.token
+              ] || "🎮";
+  
+            tokens.appendChild(token);
+          }
+        );
+  
+        cell.appendChild(tokens);
+      }
+  
+      boardElement.appendChild(cell);
+    });
+  }
+  
+  function renderAquilaEmpireGamePlayers(
+    state
+  ) {
+    const container =
+      document.getElementById(
+        "aquilaEmpireGamePlayers"
+      );
+  
+    if (!container) {
+      return;
+    }
+  
+    container.textContent = "";
+  
+    const players = Array.isArray(state.players)
+      ? state.players
+      : [];
+  
+    players.forEach(function (player) {
+      const card =
+        document.createElement("div");
+  
+      card.className =
+        "aquila-empire-game-player";
+  
+      if (
+        player.player_id ===
+        state.turn?.current_player_id
+      ) {
+        card.classList.add("is-current");
+      }
+  
+      const token =
+        document.createElement("div");
+  
+      token.className =
+        "aquila-empire-game-player-token";
+  
+      token.textContent =
+        aquilaEmpireTokenIcons[player.token] ||
+        "🎮";
+  
+      const info =
+        document.createElement("div");
+  
+      info.className =
+        "aquila-empire-game-player-info";
+  
+      const name =
+        document.createElement("strong");
+  
+      name.textContent =
+        player.public_name ||
+        player.member_username ||
+        "Aquila Player";
+  
+      const credits =
+        document.createElement("span");
+  
+      credits.textContent =
+        `${formatAquilaEmpireCredits(
+          player.game_credits
+        )} GC • Space ${
+          player.board_position
+        }`;
+  
+      info.append(name, credits);
+      card.append(token, info);
+      container.appendChild(card);
+    });
+  }
+  
+  function renderAquilaEmpireActionLog(
+    state
+  ) {
+    const container =
+      document.getElementById(
+        "aquilaEmpireActionLog"
+      );
+  
+    if (!container) {
+      return;
+    }
+  
+    container.textContent = "";
+  
+    const actions =
+      Array.isArray(state.recent_actions)
+        ? state.recent_actions.slice(0, 8)
+        : [];
+  
+    if (!actions.length) {
+      container.textContent =
+        "No match activity yet.";
+      return;
+    }
+  
+    actions.forEach(function (action) {
+      const row =
+        document.createElement("div");
+  
+      row.style.padding = "5px 0";
+      row.style.borderBottom =
+        "1px solid rgba(147,197,253,.12)";
+  
+      const actionName =
+        String(action.action_type || "activity")
+          .replaceAll("_", " ")
+          .toUpperCase();
+  
+      row.textContent =
+        `Turn ${action.turn_number}: ` +
+        actionName;
+  
+      container.appendChild(row);
+    });
+  }
+  
+  function renderAquilaEmpireGame(state) {
+    if (!state?.ok || !state?.room) {
+      return;
+    }
+  
+    aquilaEmpireLatestState = state;
+    aquilaEmpireCurrentRoomId =
+      state.room.id;
+  
+    aquilaEmpireCurrentRoomCode =
+      state.room.room_code;
+  
+    const lobby =
+      document.getElementById(
+        "aquilaEmpireLobby"
+      );
+  
+    const gameArea =
+      document.getElementById(
+        "aquilaEmpireGameArea"
+      );
+  
+    if (lobby) {
+      lobby.hidden = true;
+    }
+  
+    if (gameArea) {
+      gameArea.hidden = false;
+    }
+  
+    const roomCode =
+      document.getElementById(
+        "aquilaEmpireGameRoomCode"
+      );
+  
+    if (roomCode) {
+      roomCode.textContent =
+        state.room.room_code || "PRIVATE";
+    }
+  
+    const currentPlayer =
+      state.players?.find(
+        function (player) {
+          return (
+            player.player_id ===
+            state.turn?.current_player_id
+          );
+        }
+      );
+  
+    const currentTurnName =
+      document.getElementById(
+        "aquilaEmpireCurrentTurnName"
+      );
+  
+    if (currentTurnName) {
+      currentTurnName.textContent =
+        currentPlayer?.public_name ||
+        currentPlayer?.member_username ||
+        "Preparing next turn…";
+    }
+  
+    const myPlayer =
+      state.players?.find(
+        function (player) {
+          return player.is_current_user;
+        }
+      );
+  
+    const myCredits =
+      document.getElementById(
+        "aquilaEmpireMyCredits"
+      );
+  
+    if (myCredits) {
+      myCredits.textContent =
+        formatAquilaEmpireCredits(
+          myPlayer?.game_credits
+        );
+    }
+  
+    const dieFaces = [
+      "⚀",
+      "⚁",
+      "⚂",
+      "⚃",
+      "⚄",
+      "⚅"
+    ];
+  
+    const dieOne =
+      document.getElementById(
+        "aquilaEmpireDieOne"
+      );
+  
+    const dieTwo =
+      document.getElementById(
+        "aquilaEmpireDieTwo"
+      );
+  
+    if (dieOne) {
+      dieOne.textContent =
+        dieFaces[
+          Math.max(
+            0,
+            Number(state.turn?.dice_one || 1) -
+            1
+          )
+        ] || "⚀";
+    }
+  
+    if (dieTwo) {
+      dieTwo.textContent =
+        dieFaces[
+          Math.max(
+            0,
+            Number(state.turn?.dice_two || 1) -
+            1
+          )
+        ] || "⚀";
+    }
+  
+    renderAquilaEmpireBoardSpaces(state);
+    renderAquilaEmpireGamePlayers(state);
+    renderAquilaEmpireActionLog(state);
+  }
   
 </script>
 </body>
