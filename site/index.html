@@ -8430,6 +8430,471 @@ if(!stage || !overlay) return;
       "click",
       createAquilaEmpireRoom
     );
+
+  let aquilaEmpireRoomRefreshTimer = null;
+  let aquilaEmpireLatestState = null;
+  
+  const aquilaEmpireTokenIcons = {
+    eagle: "🦅",
+    crown: "👑",
+    rocket: "🚀",
+    shield: "🛡️"
+  };
+  
+  function setAquilaEmpireLobbyVisibility(
+    waitingRoomActive
+  ) {
+    const welcome =
+      document.querySelector(
+        ".aquila-empire-welcome"
+      );
+  
+    const identity =
+      document.getElementById(
+        "aquilaEmpireIdentity"
+      );
+  
+    const actions =
+      document.querySelector(
+        ".aquila-empire-lobby-actions"
+      );
+  
+    const createPanel =
+      document.getElementById(
+        "aquilaEmpireCreatePanel"
+      );
+  
+    const waitingRoom =
+      document.getElementById(
+        "aquilaEmpireWaitingRoom"
+      );
+  
+    if (welcome) {
+      welcome.hidden = waitingRoomActive;
+    }
+  
+    if (identity) {
+      identity.hidden = waitingRoomActive;
+    }
+  
+    if (actions) {
+      actions.hidden = waitingRoomActive;
+    }
+  
+    if (createPanel) {
+      createPanel.hidden = true;
+    }
+  
+    if (waitingRoom) {
+      waitingRoom.hidden = !waitingRoomActive;
+    }
+  }
+  
+  function renderAquilaEmpirePlayers(state) {
+    const playerList =
+      document.getElementById(
+        "aquilaEmpirePlayerList"
+      );
+  
+    if (!playerList) {
+      return;
+    }
+  
+    playerList.textContent = "";
+  
+    const players = Array.isArray(state?.players)
+      ? state.players
+      : [];
+  
+    if (!players.length) {
+      const placeholder =
+        document.createElement("div");
+  
+      placeholder.className =
+        "aquila-empire-player-placeholder";
+  
+      placeholder.textContent =
+        "Waiting for players…";
+  
+      playerList.appendChild(placeholder);
+      return;
+    }
+  
+    players.forEach(function (player) {
+      const card =
+        document.createElement("div");
+  
+      card.className =
+        "aquila-empire-player-card";
+  
+      const token =
+        document.createElement("div");
+  
+      token.className =
+        "aquila-empire-player-token";
+  
+      token.textContent =
+        aquilaEmpireTokenIcons[player.token] ||
+        "🎮";
+  
+      const details =
+        document.createElement("div");
+  
+      details.className =
+        "aquila-empire-player-details";
+  
+      const name =
+        document.createElement("strong");
+  
+      name.textContent =
+        player.public_name ||
+        player.member_username ||
+        "Aquila Player";
+  
+      const seat =
+        document.createElement("span");
+  
+      seat.textContent =
+        `Seat ${player.seat_number}` +
+        (player.is_current_user
+          ? " • YOU"
+          : "");
+  
+      details.append(name, seat);
+  
+      const ready =
+        document.createElement("div");
+  
+      ready.className =
+        "aquila-empire-player-ready";
+  
+      if (player.ready) {
+        ready.classList.add("is-ready");
+        ready.textContent = "READY";
+      } else {
+        ready.textContent = "WAITING";
+      }
+  
+      card.append(
+        token,
+        details,
+        ready
+      );
+  
+      playerList.appendChild(card);
+    });
+  }
+  
+  function renderAquilaEmpireWaitingRoom(state) {
+    if (!state?.ok || !state?.room) {
+      return;
+    }
+  
+    aquilaEmpireLatestState = state;
+  
+    const room = state.room;
+    const players = Array.isArray(state.players)
+      ? state.players
+      : [];
+  
+    const currentPlayer =
+      players.find(function (player) {
+        return player.is_current_user;
+      });
+  
+    const isHost =
+      room.host_user_id ===
+      state.viewer_user_id;
+  
+    const activePlayers =
+      players.filter(function (player) {
+        return ![
+          "forfeited",
+          "bankrupt",
+          "finished"
+        ].includes(player.player_status);
+      });
+  
+    const allPlayersReady =
+      activePlayers.length >= 2 &&
+      activePlayers.every(function (player) {
+        return player.ready;
+      });
+  
+    aquilaEmpireCurrentRoomId = room.id;
+    aquilaEmpireCurrentRoomCode =
+      room.room_code;
+  
+    setAquilaEmpireLobbyVisibility(true);
+  
+    const roomName =
+      document.getElementById(
+        "aquilaEmpireWaitingRoomName"
+      );
+  
+    const roomCode =
+      document.getElementById(
+        "aquilaEmpireRoomCode"
+      );
+  
+    const waitingStatus =
+      document.getElementById(
+        "aquilaEmpireWaitingStatus"
+      );
+  
+    const readyButton =
+      document.getElementById(
+        "aquilaEmpireReadyButton"
+      );
+  
+    const startButton =
+      document.getElementById(
+        "aquilaEmpireStartButton"
+      );
+  
+    if (roomName) {
+      roomName.textContent =
+        room.room_name ||
+        "Aquila Empire Room";
+    }
+  
+    if (roomCode) {
+      roomCode.textContent =
+        room.room_code || "PRIVATE";
+    }
+  
+    if (waitingStatus) {
+      waitingStatus.textContent =
+        `${activePlayers.length} of ` +
+        `${room.max_players} players connected`;
+    }
+  
+    if (readyButton) {
+      readyButton.classList.toggle(
+        "is-ready",
+        Boolean(currentPlayer?.ready)
+      );
+  
+      readyButton.textContent =
+        currentPlayer?.ready
+          ? "READY ✓ — CLICK TO CANCEL"
+          : "✓ I’M READY";
+    }
+  
+    if (startButton) {
+      startButton.hidden = !isHost;
+      startButton.disabled =
+        !allPlayersReady;
+  
+      startButton.textContent =
+        allPlayersReady
+          ? "👑 START GAME"
+          : "WAITING FOR READY PLAYERS";
+    }
+  
+    renderAquilaEmpirePlayers(state);
+  
+    showAquilaEmpireMessage(
+      room.status === "waiting"
+        ? "Share the room code with verified Aquila members."
+        : "The Aquila Empire match is active.",
+      "success"
+    );
+  }
+  
+  async function loadAquilaEmpireRoomState(
+    roomId,
+    silent = false
+  ) {
+    if (!roomId || !chatDb) {
+      return null;
+    }
+  
+    try {
+      const { data, error } =
+        await chatDb.rpc(
+          "game_get_state",
+          {
+            p_room_id: roomId
+          }
+        );
+  
+      if (error) {
+        throw error;
+      }
+  
+      if (!data?.ok) {
+        if (!silent) {
+          showAquilaEmpireMessage(
+            data?.notice ||
+              "The room could not be loaded.",
+            "error"
+          );
+        }
+  
+        return null;
+      }
+  
+      renderAquilaEmpireWaitingRoom(data);
+      return data;
+    } catch (error) {
+      console.error(
+        "Aquila Empire room state:",
+        error
+      );
+  
+      if (!silent) {
+        showAquilaEmpireMessage(
+          "Unable to refresh the game room.",
+          "error"
+        );
+      }
+  
+      return null;
+    }
+  }
+  
+  function startAquilaEmpireRoomRefresh() {
+    clearInterval(
+      aquilaEmpireRoomRefreshTimer
+    );
+  
+    aquilaEmpireRoomRefreshTimer =
+      setInterval(function () {
+        if (
+          aquilaEmpireCurrentRoomId &&
+          document
+            .getElementById(
+              "aquilaEmpireModal"
+            )
+            ?.classList.contains("is-open")
+        ) {
+          loadAquilaEmpireRoomState(
+            aquilaEmpireCurrentRoomId,
+            true
+          );
+        }
+      }, 3000);
+  }
+  
+  async function showAquilaEmpireWaitingRoom(
+    roomId
+  ) {
+    const state =
+      await loadAquilaEmpireRoomState(
+        roomId
+      );
+  
+    if (state) {
+      startAquilaEmpireRoomRefresh();
+    }
+  
+    return state;
+  }
+  
+  async function resumeAquilaEmpireRoom() {
+    if (!refreshAquilaEmpireAccess()) {
+      return;
+    }
+  
+    showAquilaEmpireMessage(
+      "Checking your available game rooms…"
+    );
+  
+    try {
+      const { data, error } =
+        await chatDb.rpc(
+          "game_list_rooms"
+        );
+  
+      if (error) {
+        throw error;
+      }
+  
+      if (!data?.ok) {
+        showAquilaEmpireMessage(
+          data?.notice ||
+            "Rooms could not be loaded.",
+          "error"
+        );
+  
+        return;
+      }
+  
+      const rooms =
+        Array.isArray(data.rooms)
+          ? data.rooms
+          : [];
+  
+      const connectedRoom =
+        rooms.find(function (room) {
+          return Boolean(room.room_code);
+        });
+  
+      if (!connectedRoom) {
+        showAquilaEmpireMessage(
+          "You have no active room. Public-room browsing will be added next.",
+          "info"
+        );
+  
+        return;
+      }
+  
+      await showAquilaEmpireWaitingRoom(
+        connectedRoom.room_id
+      );
+    } catch (error) {
+      console.error(
+        "Aquila Empire room resume:",
+        error
+      );
+  
+      showAquilaEmpireMessage(
+        "Unable to check your game rooms.",
+        "error"
+      );
+    }
+  }
+  
+  async function copyAquilaEmpireRoomCode() {
+    if (!aquilaEmpireCurrentRoomCode) {
+      return;
+    }
+  
+    try {
+      await navigator.clipboard.writeText(
+        aquilaEmpireCurrentRoomCode
+      );
+  
+      showAquilaEmpireMessage(
+        `Room code ${aquilaEmpireCurrentRoomCode} copied.`,
+        "success"
+      );
+    } catch (error) {
+      showAquilaEmpireMessage(
+        `Room Code: ${aquilaEmpireCurrentRoomCode}`,
+        "info"
+      );
+    }
+  }
+  
+  document
+    .getElementById(
+      "aquilaEmpireBrowseButton"
+    )
+    ?.addEventListener(
+      "click",
+      resumeAquilaEmpireRoom
+    );
+  
+  document
+    .getElementById(
+      "aquilaEmpireCopyCode"
+    )
+    ?.addEventListener(
+      "click",
+      copyAquilaEmpireRoomCode
+    );
   
 </script>
 </body>
