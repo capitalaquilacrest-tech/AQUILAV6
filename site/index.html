@@ -8370,6 +8370,29 @@ if(!stage || !overlay) return;
 
         </div>
 
+        <section
+          id="aquilaEmpireRoomBrowser"
+          class="aquila-empire-room-browser"
+          hidden
+        >
+          <div class="aquila-empire-panel-heading">
+            <div>
+              <span>LIVE EMPIRE DIRECTORY</span>
+              <strong>Browse Open Rooms</strong>
+            </div>
+            <button id="aquilaEmpireCloseBrowser" type="button" aria-label="Close room browser">×</button>
+          </div>
+          <p class="aquila-empire-browser-copy">
+            Join a waiting public room or watch an active match live as a spectator.
+          </p>
+          <div id="aquilaEmpirePublicRooms" class="aquila-empire-public-rooms">
+            Loading available rooms…
+          </div>
+          <button id="aquilaEmpireRefreshRooms" class="aquila-empire-refresh-rooms" type="button">
+            ↻ REFRESH ROOMS
+          </button>
+        </section>
+
         <div
           id="aquilaEmpireJoinPanel"
           class="aquila-empire-join-panel"
@@ -8758,7 +8781,6 @@ if(!stage || !overlay) return;
               <div class="aquila-empire-board-center" id="aquilaEmpireCenter">
 
                 <div class="aquila-empire-center-brand" id="aquilaEmpireCenterBrand">
-                  <small>YOUR EMPIRE AWAITS</small>
                   <button id="aquilaEmpireCenterRollButton" class="aquila-empire-center-roll" type="button" disabled>
                     <span>🎲</span>
                     <strong>ROLL DICE</strong>
@@ -8777,6 +8799,12 @@ if(!stage || !overlay) return;
                     <div><span>AFTER</span><b id="aquilaEmpireBalanceAfter">—</b></div>
                   </div>
                   <div class="aquila-empire-building-visual" id="aquilaEmpireBuildingVisual" hidden></div>
+                </div>
+
+                <div id="aquilaEmpireCenterActions" class="aquila-empire-center-actions" hidden>
+                  <button id="aquilaEmpireCenterBuyButton" class="is-buy" type="button">🏙️ ACQUIRE PROPERTY</button>
+                  <button id="aquilaEmpireCenterPassButton" class="is-pass" type="button">PASS</button>
+                  <button id="aquilaEmpireCenterEndTurnButton" class="is-end" type="button">END TURN</button>
                 </div>
       
                 <div
@@ -9416,6 +9444,11 @@ if(!stage || !overlay) return;
       document.getElementById(
         "aquilaEmpireWaitingRoom"
       );
+
+    const roomBrowser =
+      document.getElementById(
+        "aquilaEmpireRoomBrowser"
+      );
   
     if (welcome) {
       welcome.hidden = waitingRoomActive;
@@ -9435,6 +9468,10 @@ if(!stage || !overlay) return;
   
     if (waitingRoom) {
       waitingRoom.hidden = !waitingRoomActive;
+    }
+
+    if (roomBrowser && waitingRoomActive) {
+      roomBrowser.hidden = true;
     }
   }
   
@@ -9745,20 +9782,31 @@ if(!stage || !overlay) return;
     return state;
   }
   
-  async function resumeAquilaEmpireRoom() {
+  function closeAquilaEmpireRoomBrowser() {
+    const browser = document.getElementById("aquilaEmpireRoomBrowser");
+    if (browser) browser.hidden = true;
+  }
+
+  async function openAquilaEmpireRoomBrowser() {
     if (!refreshAquilaEmpireAccess()) {
       return;
     }
-  
+
+    const browser = document.getElementById("aquilaEmpireRoomBrowser");
+    const list = document.getElementById("aquilaEmpirePublicRooms");
+    if (browser) browser.hidden = false;
+    if (list) list.textContent = "Loading available rooms…";
+
     showAquilaEmpireMessage(
-      "Checking your available game rooms…"
+      "Loading public Aquila Empire rooms…"
     );
-  
+
     try {
-      const { data, error } =
-        await chatDb.rpc(
-          "game_list_rooms"
-        );
+      let response = await chatDb.rpc("game_browse_rooms");
+      if (response.error && String(response.error.message || "").includes("game_browse_rooms")) {
+        response = await chatDb.rpc("game_list_rooms");
+      }
+      const { data, error } = response;
   
       if (error) {
         throw error;
@@ -9779,33 +9827,77 @@ if(!stage || !overlay) return;
           ? data.rooms
           : [];
   
-      const connectedRoom =
-        rooms.find(function (room) {
-          return Boolean(room.room_code);
-        });
-  
-      if (!connectedRoom) {
-        showAquilaEmpireMessage(
-          "You have no active room. Public-room browsing will be added next.",
-          "info"
-        );
-  
-        return;
-      }
-  
-      await showAquilaEmpireWaitingRoom(
-        connectedRoom.room_id
+      renderAquilaEmpirePublicRooms(rooms);
+      showAquilaEmpireMessage(
+        rooms.length ? `${rooms.length} public or connected room(s) found.` : "No public rooms are available right now.",
+        rooms.length ? "success" : "info"
       );
     } catch (error) {
       console.error(
-        "Aquila Empire room resume:",
+        "Aquila Empire room browser:",
         error
       );
   
       showAquilaEmpireMessage(
-        "Unable to check your game rooms.",
+        "Unable to load public rooms.",
         "error"
       );
+      if (list) list.textContent = "Rooms could not be loaded. Run the included Browse & Spectator SQL upgrade, then try again.";
+    }
+  }
+
+  function renderAquilaEmpirePublicRooms(rooms) {
+    const list = document.getElementById("aquilaEmpirePublicRooms");
+    if (!list) return;
+    list.textContent = "";
+    const visibleRooms = (rooms || []).filter(room => ["waiting", "active"].includes(String(room.status)));
+    if (!visibleRooms.length) {
+      list.innerHTML = '<div class="aquila-empire-room-empty">No open rooms yet.<br><small>Create a Public Room so other verified members can join.</small></div>';
+      return;
+    }
+    visibleRooms.forEach(function (room) {
+      const card = document.createElement("article");
+      card.className = `aquila-empire-room-card is-${room.status}`;
+      const isConnected = Boolean(room.is_member || room.room_code);
+      const canJoin = room.status === "waiting" && Number(room.player_count || 0) < Number(room.max_players || 4) && Boolean(room.join_code || room.room_code);
+      const primaryLabel = isConnected ? "↩ RETURN TO ROOM" : canJoin ? "🎮 JOIN ROOM" : room.status === "active" ? "👁 WATCH LIVE" : "ROOM FULL";
+      card.innerHTML = `
+        <div class="aquila-empire-room-card-head">
+          <div><span>${room.status === "active" ? "🔴 LIVE MATCH" : "🟢 OPEN LOBBY"}</span><strong>${room.room_name || "Aquila Empire Room"}</strong></div>
+          <b>${Number(room.player_count || 0)}/${Number(room.max_players || 4)}</b>
+        </div>
+        <div class="aquila-empire-room-meta">
+          <span>👑 ${room.host_name || "Aquila Host"}</span>
+          <span>⏱ ${room.game_duration_minutes || 30} min</span>
+          <span>🎲 ${room.turn_seconds || 45}s turns</span>
+        </div>
+        <button type="button" data-empire-room-id="${room.room_id}" data-empire-room-code="${room.join_code || room.room_code || ""}" data-empire-room-status="${room.status}" data-empire-room-member="${isConnected ? "1" : "0"}" ${!isConnected && !canJoin && room.status !== "active" ? "disabled" : ""}>${primaryLabel}</button>`;
+      list.appendChild(card);
+    });
+  }
+
+  async function enterAquilaEmpireListedRoom(button) {
+    const roomId = button.dataset.empireRoomId;
+    const roomCode = button.dataset.empireRoomCode;
+    const status = button.dataset.empireRoomStatus;
+    const isMember = button.dataset.empireRoomMember === "1";
+    if (isMember) {
+      closeAquilaEmpireRoomBrowser();
+      await showAquilaEmpireWaitingRoom(roomId);
+      return;
+    }
+    if (status === "waiting" && roomCode) {
+      closeAquilaEmpireRoomBrowser();
+      openAquilaEmpireJoinPanel();
+      const input = document.getElementById("aquilaEmpireJoinCode");
+      if (input) input.value = roomCode;
+      showAquilaEmpireMessage("Choose your character, then join this public room.", "info");
+      return;
+    }
+    closeAquilaEmpireRoomBrowser();
+    const state = await showAquilaEmpireWaitingRoom(roomId);
+    if (state && !getAquilaEmpireViewerPlayer(state)) {
+      showAquilaEmpireMessage("👁 Spectator Mode: You are watching this match live. Game controls are disabled.", "success");
     }
   }
   
@@ -9837,8 +9929,15 @@ if(!stage || !overlay) return;
     )
     ?.addEventListener(
       "click",
-      resumeAquilaEmpireRoom
+      openAquilaEmpireRoomBrowser
     );
+
+  document.getElementById("aquilaEmpireCloseBrowser")?.addEventListener("click", closeAquilaEmpireRoomBrowser);
+  document.getElementById("aquilaEmpireRefreshRooms")?.addEventListener("click", openAquilaEmpireRoomBrowser);
+  document.getElementById("aquilaEmpirePublicRooms")?.addEventListener("click", function (event) {
+    const button = event.target.closest("[data-empire-room-id]");
+    if (button && !button.disabled) enterAquilaEmpireListedRoom(button);
+  });
   
   document
     .getElementById(
@@ -9850,6 +9949,7 @@ if(!stage || !overlay) return;
     );
 
   function openAquilaEmpireJoinPanel() {
+    closeAquilaEmpireRoomBrowser();
     if (!refreshAquilaEmpireAccess()) {
       return;
     }
@@ -10669,7 +10769,7 @@ if(!stage || !overlay) return;
   
     if (roomCode) {
       roomCode.textContent =
-        state.room.room_code || "PRIVATE";
+        state.room.room_code || (state.viewer_is_player ? "PRIVATE" : "LIVE VIEW");
     }
   
     const currentPlayer =
@@ -10707,10 +10807,9 @@ if(!stage || !overlay) return;
       );
   
     if (myCredits) {
-      myCredits.textContent =
-        formatAquilaEmpireCredits(
-          myPlayer?.game_credits
-        );
+      myCredits.textContent = myPlayer
+        ? formatAquilaEmpireCredits(myPlayer.game_credits)
+        : "SPECTATOR";
     }
   
     const dieFaces = [
@@ -11115,6 +11214,7 @@ if(!stage || !overlay) return;
       playAquilaEmpireTone(
         melody[noteIndex], 1.8, .012, "sine", 0
       );
+
       playAquilaEmpireTone(
         melody[(noteIndex + 2) % melody.length] / 2,
         1.9,
@@ -11192,15 +11292,16 @@ if(!stage || !overlay) return;
         .aquila-empire-center-brand{display:grid;place-items:center;gap:5px}.aquila-empire-center-brand img{width:clamp(48px,7vw,90px);border:2px solid #facc15;border-radius:18%}.aquila-empire-center-brand span{font-size:clamp(13px,2vw,26px);font-weight:900;letter-spacing:.12em}.aquila-empire-center-brand strong{color:#fde047;font-size:clamp(20px,3.4vw,46px);line-height:.85}.aquila-empire-center-brand small{color:#bfdbfe;font-weight:900;letter-spacing:.14em}
         .aquila-empire-center-event{width:min(92%,520px);display:grid;place-items:center;gap:7px;animation:aquilaEmpireEventIn .35s ease}.aquila-empire-center-event[hidden]{display:none}.aquila-empire-banker{padding:5px 11px;border:1px solid #facc15;border-radius:999px;background:#061f4f;color:#fde68a;font-size:clamp(8px,.9vw,12px);font-weight:900;letter-spacing:.12em}.aquila-empire-event-icon{font-size:clamp(30px,5vw,64px);filter:drop-shadow(0 5px 9px rgba(0,0,0,.4))}.aquila-empire-center-event>strong{color:#fde047;font-size:clamp(14px,2vw,28px);line-height:1.05}.aquila-empire-center-event p{margin:0;color:#fff;font-size:clamp(8px,1vw,14px);line-height:1.35}.aquila-empire-money-flow{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.aquila-empire-money-flow>div{padding:7px 4px;border:1px solid rgba(147,197,253,.35);border-radius:9px;background:rgba(2,18,55,.65)}.aquila-empire-money-flow span{display:block;color:#93c5fd;font-size:clamp(6px,.65vw,9px);font-weight:800}.aquila-empire-money-flow b{color:#fff;font-size:clamp(9px,1.3vw,18px)}.aquila-empire-money-flow .is-change b{color:#86efac}.aquila-empire-money-flow .is-negative b{color:#fca5a5}.aquila-empire-building-visual{font-size:clamp(24px,4vw,52px);letter-spacing:3px}
         .aquila-empire-portfolio{margin-top:12px;padding-top:10px;border-top:1px solid rgba(250,204,21,.25)}.aquila-empire-portfolio-list{display:grid;gap:7px;max-height:240px;overflow:auto;color:#dbeafe;font-size:10px}.aquila-empire-asset-card{padding:8px;border:1px solid rgba(147,197,253,.28);border-radius:9px;background:rgba(5,32,82,.8)}.aquila-empire-asset-card strong{display:block;color:#fff}.aquila-empire-asset-meta{display:flex;justify-content:space-between;gap:5px;color:#93c5fd}.aquila-empire-asset-actions{display:flex;gap:4px;margin-top:6px}.aquila-empire-asset-actions button{flex:1;padding:5px 3px;border:1px solid #facc15;border-radius:6px;background:#174ea6;color:#fff;font-size:8px;font-weight:800;cursor:pointer}.aquila-empire-asset-actions button:disabled{opacity:.4;cursor:not-allowed}.aquila-empire-settle-button{background:linear-gradient(135deg,#16a34a,#08752f)!important}.aquila-empire-bankruptcy-button{background:linear-gradient(135deg,#991b1b,#450a0a)!important}.aquila-empire-audio-gate{position:absolute;inset:0;z-index:30;display:grid;place-items:center;padding:25px;background:rgba(1,10,31,.86);backdrop-filter:blur(7px)}.aquila-empire-audio-gate[hidden]{display:none}.aquila-empire-audio-gate button{max-width:420px;padding:20px 28px;border:2px solid #facc15;border-radius:18px;background:linear-gradient(135deg,#0d47a1,#be123c);color:#fff;font-weight:900;font-size:18px;box-shadow:0 15px 45px rgba(0,0,0,.45)}
-        .aquila-empire-group-badge{position:absolute;left:3px;right:3px;top:3px;z-index:2;padding:3px 1px;border-radius:4px;background:var(--space-color,#2563eb);color:#fff;font-size:clamp(5px,.52vw,8px);font-weight:1000;line-height:1;text-align:center;text-shadow:0 1px 2px #000;letter-spacing:.04em}.aquila-empire-space.is-property{padding-top:18px!important;border:2px solid var(--space-color,#2563eb)!important;background:linear-gradient(180deg,color-mix(in srgb,var(--space-color) 28%,#fff) 0 36%,#eef5ff 78%)!important;box-shadow:inset 0 0 0 2px rgba(255,255,255,.68)}.aquila-empire-group-dot{display:inline-block;width:8px;height:8px;margin-right:4px;border:1px solid #fff;border-radius:50%;background:var(--group-color)}
+        .aquila-empire-group-badge{position:absolute;left:2px;right:2px;top:2px;z-index:2;padding:4px 1px;border:1px solid rgba(255,255,255,.92);border-radius:4px;background:var(--space-color,#2563eb);color:#fff;font-size:clamp(6px,.58vw,9px);font-weight:1000;line-height:1;text-align:center;text-shadow:0 1px 3px #000;letter-spacing:.055em;box-shadow:0 2px 5px rgba(0,0,0,.32)}.aquila-empire-space.is-property{padding-top:20px!important;border:3px solid var(--space-color,#2563eb)!important;background:linear-gradient(180deg,color-mix(in srgb,var(--space-color) 54%,#fff) 0 42%,color-mix(in srgb,var(--space-color) 15%,#fff) 72%,#fff 100%)!important;box-shadow:inset 0 0 0 2px rgba(255,255,255,.88),0 3px 9px color-mix(in srgb,var(--space-color) 45%,transparent)!important}.aquila-empire-group-dot{display:inline-block;width:9px;height:9px;margin-right:4px;border:1px solid #fff;border-radius:50%;background:var(--group-color)}
         .aquila-empire-group-legend{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px}.aquila-empire-group-legend span{padding:3px 5px;border:1px solid var(--group-color);border-radius:999px;background:color-mix(in srgb,var(--group-color) 25%,#071c48);color:#fff;font-size:7px;font-weight:900}
         .aquila-empire-trade-button{background:linear-gradient(135deg,#7c3aed,#2563eb)!important}.aquila-empire-trade-panel{display:grid;gap:6px;margin-top:7px;padding:8px;border:1px solid #a78bfa;border-radius:10px;background:rgba(15,23,70,.94);font-size:9px}.aquila-empire-trade-panel[hidden]{display:none}.aquila-empire-trade-panel select,.aquila-empire-trade-panel input{width:100%;padding:7px;border:1px solid #60a5fa;border-radius:6px;background:#fff;color:#172554;font-size:9px}.aquila-empire-trade-panel button{padding:6px;border:1px solid #fde047;border-radius:6px;background:#174ea6;color:#fff;font-size:8px;font-weight:900}.aquila-empire-offer-card{display:grid;gap:4px;margin-top:5px;padding:6px;border:1px solid rgba(167,139,250,.5);border-radius:7px;background:rgba(30,58,138,.35)}.aquila-empire-offer-actions{display:flex;gap:3px}.aquila-empire-offer-actions button{flex:1}
-        .aquila-empire-center-roll{display:grid;place-items:center;gap:4px;width:min(88%,300px);padding:clamp(14px,3vw,30px);border:2px solid #fde047;border-radius:22px;background:linear-gradient(145deg,#1d4ed8,#be123c);color:#fff;cursor:pointer;box-shadow:0 15px 30px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.35);animation:aquilaEmpireRollPulse 1.8s ease-in-out infinite}.aquila-empire-center-roll>span{font-size:clamp(40px,7vw,86px);filter:drop-shadow(0 7px 8px rgba(0,0,0,.42))}.aquila-empire-center-roll>strong{font-size:clamp(16px,2.5vw,34px);color:#fff}.aquila-empire-center-roll>small{font-size:clamp(8px,.9vw,12px);color:#dbeafe}.aquila-empire-center-roll:disabled{opacity:.45;cursor:not-allowed;animation:none}.aquila-empire-space{transform-style:preserve-3d;box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(2,18,55,.25)}.aquila-empire-space.is-property{transform:translateZ(3px);transition:transform .2s,filter .2s}.aquila-empire-space.is-property:hover{z-index:8;transform:translateZ(12px) scale(1.06);filter:brightness(1.08)}.aquila-empire-owner-building{position:absolute;left:4px;bottom:16px;z-index:5;width:clamp(13px,1.7vw,24px);height:clamp(13px,1.7vw,24px);filter:drop-shadow(0 3px 3px rgba(0,0,0,.55))}.aquila-empire-owner-building .roof{position:absolute;left:8%;top:0;width:84%;height:38%;background:var(--owner-color);clip-path:polygon(50% 0,100% 100%,0 100%);filter:brightness(1.35)}.aquila-empire-owner-building .body{position:absolute;left:18%;right:18%;bottom:0;height:65%;border:1px solid rgba(255,255,255,.8);border-radius:2px;background:var(--owner-color);box-shadow:inset 0 0 0 2px rgba(0,0,0,.12)}.aquila-empire-owner-building.level-1{transform:scale(1.05)}.aquila-empire-owner-building.level-2{transform:scale(1.18);bottom:18px}.aquila-empire-owner-building.level-2 .body{height:82%}.aquila-empire-owner-building.level-3{transform:scale(1.35);bottom:20px}.aquila-empire-owner-building.level-3 .body{height:100%;background:linear-gradient(90deg,var(--owner-color),#fff,var(--owner-color))}
+        .aquila-empire-center-roll{display:grid;place-items:center;gap:2px;width:min(78%,250px);padding:clamp(8px,1.7vw,17px);border:2px solid #fde047;border-radius:18px;background:linear-gradient(145deg,#1d4ed8,#be123c);color:#fff;cursor:pointer;box-shadow:0 12px 26px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.35);animation:aquilaEmpireRollPulse 1.8s ease-in-out infinite}.aquila-empire-center-roll>span{font-size:clamp(30px,5.3vw,62px);filter:drop-shadow(0 7px 8px rgba(0,0,0,.42))}.aquila-empire-center-roll>strong{font-size:clamp(14px,2vw,28px);color:#fff}.aquila-empire-center-roll>small{font-size:clamp(7px,.78vw,10px);color:#dbeafe}.aquila-empire-center-roll:disabled{opacity:.45;cursor:not-allowed;animation:none}.aquila-empire-center-actions{position:absolute;right:8%;bottom:7%;left:8%;z-index:12;display:grid;grid-template-columns:1fr 1fr;gap:7px}.aquila-empire-center-actions[hidden]{display:none}.aquila-empire-center-actions button{min-height:38px;padding:8px 6px;border:1px solid #fde047;border-radius:10px;color:#fff;font-size:clamp(8px,1vw,13px);font-weight:1000;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,.35)}.aquila-empire-center-actions .is-buy{background:linear-gradient(135deg,#16a34a,#08752f)}.aquila-empire-center-actions .is-pass{background:linear-gradient(135deg,#64748b,#334155)}.aquila-empire-center-actions .is-end{grid-column:1/-1;background:linear-gradient(135deg,#2563eb,#174ea6)}.aquila-empire-space{transform-style:preserve-3d;box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(2,18,55,.25)}.aquila-empire-space.is-property{transform:translateZ(3px);transition:transform .2s,filter .2s}.aquila-empire-space.is-property:hover{z-index:8;transform:translateZ(12px) scale(1.06);filter:brightness(1.08)}.aquila-empire-owner-building{position:absolute;left:4px;bottom:16px;z-index:5;width:clamp(13px,1.7vw,24px);height:clamp(13px,1.7vw,24px);filter:drop-shadow(0 3px 3px rgba(0,0,0,.55))}.aquila-empire-owner-building .roof{position:absolute;left:8%;top:0;width:84%;height:38%;background:var(--owner-color);clip-path:polygon(50% 0,100% 100%,0 100%);filter:brightness(1.35)}.aquila-empire-owner-building .body{position:absolute;left:18%;right:18%;bottom:0;height:65%;border:1px solid rgba(255,255,255,.8);border-radius:2px;background:var(--owner-color);box-shadow:inset 0 0 0 2px rgba(0,0,0,.12)}.aquila-empire-owner-building.level-1{transform:scale(1.05)}.aquila-empire-owner-building.level-2{transform:scale(1.18);bottom:18px}.aquila-empire-owner-building.level-2 .body{height:82%}.aquila-empire-owner-building.level-3{transform:scale(1.35);bottom:20px}.aquila-empire-owner-building.level-3 .body{height:100%;background:linear-gradient(90deg,var(--owner-color),#fff,var(--owner-color))}
         @keyframes aquilaEmpireTokenHop{0%{transform:translateY(0) scale(1)}45%{transform:translateY(-13px) scale(1.18)}100%{transform:translateY(0) scale(1)}}
         @keyframes aquilaEmpireDiceShake{0%,100%{transform:rotate(-7deg) scale(1)}50%{transform:rotate(7deg) scale(1.08)}}
         @keyframes aquilaEmpireEventIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
         @keyframes aquilaEmpireRollPulse{0%,100%{transform:scale(1);box-shadow:0 15px 30px rgba(0,0,0,.38),0 0 0 0 rgba(250,204,21,.25)}50%{transform:scale(1.035);box-shadow:0 18px 38px rgba(0,0,0,.42),0 0 0 12px rgba(250,204,21,0)}}
-        @media(max-width:850px){.aquila-empire-portfolio-list{max-height:150px}.aquila-empire-center-event{gap:4px}.aquila-empire-center-event p{max-height:38px;overflow:auto}}
+        .aquila-empire-room-browser{margin:14px 0;padding:16px;border:1px solid #d6a82f;border-radius:16px;background:rgba(3,22,66,.94);color:#fff}.aquila-empire-room-browser[hidden]{display:none}.aquila-empire-browser-copy{margin:8px 0 13px;color:#bfdbfe;font-size:12px}.aquila-empire-public-rooms{display:grid;gap:10px;max-height:390px;overflow:auto}.aquila-empire-room-card{display:grid;gap:9px;padding:13px;border:1px solid rgba(96,165,250,.55);border-radius:13px;background:linear-gradient(135deg,rgba(15,55,125,.9),rgba(87,20,76,.88));box-shadow:0 7px 18px rgba(0,0,0,.24)}.aquila-empire-room-card.is-active{border-color:#ef4444}.aquila-empire-room-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.aquila-empire-room-card-head>div{display:grid;gap:2px}.aquila-empire-room-card-head span{color:#86efac;font-size:8px;font-weight:900;letter-spacing:.12em}.aquila-empire-room-card.is-active .aquila-empire-room-card-head span{color:#fca5a5}.aquila-empire-room-card-head strong{font-size:14px}.aquila-empire-room-card-head>b{padding:5px 9px;border:1px solid #fde047;border-radius:999px;color:#fde68a}.aquila-empire-room-meta{display:flex;flex-wrap:wrap;gap:6px}.aquila-empire-room-meta span{padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.09);color:#dbeafe;font-size:9px}.aquila-empire-room-card>button,.aquila-empire-refresh-rooms{padding:10px;border:1px solid #fde047;border-radius:9px;background:linear-gradient(135deg,#2563eb,#174ea6);color:#fff;font-weight:900;cursor:pointer}.aquila-empire-room-card.is-active>button{background:linear-gradient(135deg,#dc2626,#9f1239)}.aquila-empire-refresh-rooms{width:100%;margin-top:10px}.aquila-empire-room-empty{padding:22px;border:1px dashed #60a5fa;border-radius:12px;color:#dbeafe;text-align:center}
+        @media(max-width:850px){.aquila-empire-portfolio-list{max-height:150px}.aquila-empire-center-event{gap:3px}.aquila-empire-center-event p{max-height:34px;overflow:auto}.aquila-empire-center-roll{width:70%;padding:7px}.aquila-empire-center-roll>span{font-size:34px}.aquila-empire-center-roll>strong{font-size:15px}.aquila-empire-center-roll>small{font-size:7px}.aquila-empire-dice-display{margin-top:3px}.aquila-empire-dice-display>div{width:26px;height:26px;font-size:21px}.aquila-empire-center-actions{right:5%;bottom:5%;left:5%;gap:5px}.aquila-empire-center-actions button{min-height:31px;padding:5px 4px;font-size:8px}.aquila-empire-group-badge{font-size:5px;padding:3px 0}.aquila-empire-space.is-property{padding-top:16px!important}.aquila-empire-space-name{font-size:5.7px!important}.aquila-empire-space-price{font-size:4.8px!important}}
       `;
       document.head.appendChild(style);
     }
@@ -11286,6 +11387,10 @@ if(!stage || !overlay) return;
     const settleButton = document.getElementById("aquilaEmpireSettleDebtButton");
     const bankruptcyButton = document.getElementById("aquilaEmpireBankruptcyButton");
     const centerRollButton = document.getElementById("aquilaEmpireCenterRollButton");
+    const centerActions = document.getElementById("aquilaEmpireCenterActions");
+    const centerBuyButton = document.getElementById("aquilaEmpireCenterBuyButton");
+    const centerPassButton = document.getElementById("aquilaEmpireCenterPassButton");
+    const centerEndTurnButton = document.getElementById("aquilaEmpireCenterEndTurnButton");
   
     const notice =
       document.getElementById(
@@ -11357,13 +11462,28 @@ if(!stage || !overlay) return;
       declineButton.hidden = !canChooseProperty;
       declineButton.disabled = !canChooseProperty;
     }
+    if (centerActions) centerActions.hidden = !(canChooseProperty || canEndTurn);
+    if (centerBuyButton) {
+      centerBuyButton.hidden = !canChooseProperty;
+      centerBuyButton.disabled = !canChooseProperty;
+    }
+    if (centerPassButton) {
+      centerPassButton.hidden = !canChooseProperty;
+      centerPassButton.disabled = !canChooseProperty;
+    }
+    if (centerEndTurnButton) {
+      centerEndTurnButton.hidden = !canEndTurn;
+      centerEndTurnButton.disabled = !canEndTurn;
+    }
     const needsAssets = state?.room?.status === "active" && isMyTurn && phase === "asset_management";
     if (settleButton) { settleButton.hidden = !needsAssets; settleButton.disabled = !needsAssets; }
     if (bankruptcyButton) { bankruptcyButton.hidden = !needsAssets; bankruptcyButton.disabled = !needsAssets; }
   
     if (!notice) return;
   
-    if (!isMyTurn) {
+    if (!myPlayer) {
+      notice.textContent = "👁 Spectator Mode — watching the match live.";
+    } else if (!isMyTurn) {
       notice.textContent =
         "Waiting for " +
         (
@@ -11859,6 +11979,9 @@ if(!stage || !overlay) return;
     );
 
   document.getElementById("aquilaEmpireCenterRollButton")?.addEventListener("click", rollAquilaEmpireDice);
+  document.getElementById("aquilaEmpireCenterBuyButton")?.addEventListener("click", function () { decideAquilaEmpireProperty(true); });
+  document.getElementById("aquilaEmpireCenterPassButton")?.addEventListener("click", function () { decideAquilaEmpireProperty(false); });
+  document.getElementById("aquilaEmpireCenterEndTurnButton")?.addEventListener("click", endAquilaEmpireTurn);
 
   document
     .getElementById("aquilaEmpireModal")
