@@ -9475,6 +9475,7 @@ if(!stage || !overlay) return;
   let aquilaEmpireVoiceAudioContext = null;
   const aquilaEmpireVoicePeers = new Map();
   const aquilaEmpireRemoteAudio = new Map();
+  const aquilaEmpirePendingIce = new Map();
   
   const aquilaEmpireTokenIcons = {
     eagle: "🦅",
@@ -9645,7 +9646,12 @@ if(!stage || !overlay) return;
 
     const room = state.room;
 
-    if (room.status === "active") {
+    // ACTIVE and FINISHED matches must stay in the game renderer.
+    // Previously FINISHED fell through to the waiting-room renderer, so the
+    // winner/podium/exit screen could never appear even though it existed.
+    if (["active", "finished"].includes(String(room.status || ""))) {
+      aquilaEmpireCurrentRoomId = room.id;
+      aquilaEmpireCurrentRoomCode = room.room_code;
       renderAquilaEmpireGame(state);
       return;
     }
@@ -12346,15 +12352,33 @@ if(!stage || !overlay) return;
   function closeAquilaEmpireVoicePeer(peerId) {
     try { aquilaEmpireVoicePeers.get(peerId)?.close(); } catch (_) {}
     aquilaEmpireVoicePeers.delete(peerId);
+    aquilaEmpirePendingIce.delete(String(peerId));
     const audio = aquilaEmpireRemoteAudio.get(peerId);
     if (audio) audio.remove();
     aquilaEmpireRemoteAudio.delete(peerId);
   }
 
+  async function flushAquilaEmpirePendingIce(peerId, peer) {
+    const key = String(peerId);
+    const queued = aquilaEmpirePendingIce.get(key) || [];
+    if (!peer?.remoteDescription || !queued.length) return;
+    aquilaEmpirePendingIce.delete(key);
+    for (const candidate of queued) {
+      try { await peer.addIceCandidate(candidate); } catch (_) {}
+    }
+  }
+
   function createAquilaEmpireVoicePeer(peerId, shouldOffer) {
     if (aquilaEmpireVoicePeers.has(peerId)) return aquilaEmpireVoicePeers.get(peerId);
     const me = getAquilaEmpireViewerPlayer(aquilaEmpireLatestState);
-    const peer = new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}]});
+    const peer = new RTCPeerConnection({
+      iceServers:[
+        {urls:"stun:stun.l.google.com:19302"},
+        {urls:"stun:stun1.l.google.com:19302"}
+      ],
+      iceCandidatePoolSize: 8,
+      bundlePolicy: "max-bundle"
+    });
     const localTracks = aquilaEmpireVoiceStream?.getAudioTracks() || [];
     if (localTracks.length) {
       localTracks.forEach(function (track) { peer.addTrack(track, aquilaEmpireVoiceStream); });
@@ -12381,6 +12405,9 @@ if(!stage || !overlay) return;
       }
     };
     peer.onconnectionstatechange = function () {
+      if (peer.connectionState === "connected") {
+        showAquilaEmpireMessage("Game voice connected.", "success");
+      }
       if (["failed","closed"].includes(peer.connectionState)) closeAquilaEmpireVoicePeer(peerId);
     };
     aquilaEmpireVoicePeers.set(peerId, peer);
@@ -12397,9 +12424,27 @@ if(!stage || !overlay) return;
     if (payload.kind === "announce") { createAquilaEmpireVoicePeer(payload.from, String(me.player_id) < String(payload.from)); return; }
     const peer = createAquilaEmpireVoicePeer(payload.from, false);
     try {
-      if (payload.kind === "offer") { await peer.setRemoteDescription(payload.description); const answer = await peer.createAnswer(); await peer.setLocalDescription(answer); sendAquilaEmpireVoiceSignal({from:me.player_id,to:payload.from,kind:"answer",description:answer}); }
-      else if (payload.kind === "answer") await peer.setRemoteDescription(payload.description);
-      else if (payload.kind === "ice" && payload.candidate) await peer.addIceCandidate(payload.candidate);
+      if (payload.kind === "offer") {
+        await peer.setRemoteDescription(payload.description);
+        await flushAquilaEmpirePendingIce(payload.from, peer);
+        const answer = await peer.createAnswer();
+        await peer.setLocalDescription(answer);
+        sendAquilaEmpireVoiceSignal({from:me.player_id,to:payload.from,kind:"answer",description:answer});
+      }
+      else if (payload.kind === "answer") {
+        await peer.setRemoteDescription(payload.description);
+        await flushAquilaEmpirePendingIce(payload.from, peer);
+      }
+      else if (payload.kind === "ice" && payload.candidate) {
+        if (peer.remoteDescription) {
+          await peer.addIceCandidate(payload.candidate);
+        } else {
+          const key = String(payload.from);
+          const queued = aquilaEmpirePendingIce.get(key) || [];
+          queued.push(payload.candidate);
+          aquilaEmpirePendingIce.set(key, queued);
+        }
+      }
     } catch (_) {}
   }
 
@@ -12412,11 +12457,23 @@ if(!stage || !overlay) return;
     if (aquilaEmpireVoiceConnected) return true;
     try {
       await unlockAquilaEmpireVoiceAudio();
-      aquilaEmpireVoiceConnected = true;
       aquilaEmpireVoiceChannel = chatDb.channel(`aquila-empire-voice-${aquilaEmpireCurrentRoomId}`,{config:{broadcast:{self:false}}});
-      aquilaEmpireVoiceChannel.on("broadcast",{event:"voice-signal"},handleAquilaEmpireVoiceSignal).subscribe(function (status) {
-        if (status === "SUBSCRIBED") sendAquilaEmpireVoiceSignal({from:me.player_id,kind:"announce"});
+      aquilaEmpireVoiceChannel.on("broadcast",{event:"voice-signal"},handleAquilaEmpireVoiceSignal);
+      await new Promise(function (resolve, reject) {
+        let settled = false;
+        const timer = setTimeout(function () {
+          if (!settled) { settled = true; reject(new Error("Voice channel subscription timed out.")); }
+        }, 6000);
+        aquilaEmpireVoiceChannel.subscribe(function (status) {
+          if (status === "SUBSCRIBED" && !settled) {
+            settled = true; clearTimeout(timer); resolve();
+          } else if (["CHANNEL_ERROR","TIMED_OUT","CLOSED"].includes(status) && !settled) {
+            settled = true; clearTimeout(timer); reject(new Error(`Voice channel status: ${status}`));
+          }
+        });
       });
+      aquilaEmpireVoiceConnected = true;
+      sendAquilaEmpireVoiceSignal({from:me.player_id,kind:"announce"});
       updateAquilaEmpireVoiceButtons();
       return true;
     } catch (error) {
@@ -12441,6 +12498,8 @@ if(!stage || !overlay) return;
   }
 
   async function toggleAquilaEmpireMicrophone() {
+    // Do the audio unlock immediately from the user's tap (important on iPhone/Safari).
+    await unlockAquilaEmpireVoiceAudio();
     if (aquilaEmpireMicEnabled) {
       aquilaEmpireVoiceStream?.getTracks().forEach(function (track) { track.stop(); });
       aquilaEmpireVoiceStream = null;
@@ -12501,6 +12560,7 @@ if(!stage || !overlay) return;
     aquilaEmpireMicEnabled = false;
     aquilaEmpireListenEnabled = false;
     aquilaEmpireVoicePeers.forEach(function (_, peerId) { closeAquilaEmpireVoicePeer(peerId); });
+    aquilaEmpirePendingIce.clear();
     if (aquilaEmpireVoiceChannel && chatDb) chatDb.removeChannel(aquilaEmpireVoiceChannel).catch(function () {});
     aquilaEmpireVoiceChannel = null;
     updateAquilaEmpireVoiceButtons();
@@ -12750,8 +12810,15 @@ if(!stage || !overlay) return;
     }
   });
 
-  document.getElementById("aquilaEmpireReturnLobbyButton")?.addEventListener("click", function () {
-    leaveAquilaEmpireFinal({forfeit:false});
+  document.getElementById("aquilaEmpireReturnLobbyButton")?.addEventListener("click", async function () {
+    const button = this;
+    button.disabled = true;
+    button.textContent = "RETURNING TO LOBBY…";
+    const ok = await leaveAquilaEmpireFinal({forfeit:false});
+    if (!ok) {
+      button.disabled = false;
+      button.textContent = "RETURN TO GAME LOBBY";
+    }
   });
   document.getElementById("aquilaEmpireCloseFinishedButton")?.addEventListener("click", async function () {
     await leaveAquilaEmpireFinal({forfeit:false});
