@@ -3963,6 +3963,36 @@
     .snake-game-modal .snake-roll-btn{grid-column:1/3;grid-row:3;min-height:42px;margin-top:3px;font-size:9px}
     .snake-game-modal .snake-last-action{grid-column:1/3;grid-row:4;font-size:7px}
   }
+/* =========================================================
+   AQUILA MEMBER GAMES — CHESS + WORD BATTLE PREMIUM FINAL
+   Strictly scoped. Does not alter Empire / Snake / page UI.
+   ========================================================= */
+.chess-game-modal,.word-game-modal{position:fixed;inset:0;z-index:1000006;display:none;background:radial-gradient(circle at 50% 8%,rgba(245,158,11,.16),transparent 30%),radial-gradient(circle at 18% 70%,rgba(37,99,235,.18),transparent 35%),linear-gradient(180deg,rgba(1,6,19,.99),rgba(2,7,24,.995));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:#fff}
+.chess-game-modal.is-open,.word-game-modal.is-open{display:flex;align-items:center;justify-content:center;animation:aquilaPremiumGameIn .28s ease}
+@keyframes aquilaPremiumGameIn{from{opacity:0;transform:scale(.988)}to{opacity:1;transform:scale(1)}}
+.chess-shell,.word-shell{position:relative;isolation:isolate;width:min(1580px,100%);height:min(960px,100vh);overflow:hidden;border:1px solid rgba(255,214,92,.7);border-radius:28px;background:linear-gradient(145deg,#071631 0%,#0a2458 47%,#351337 100%);box-shadow:0 42px 130px rgba(0,0,0,.78),0 0 65px rgba(37,99,235,.17),0 0 42px rgba(245,158,11,.12)}
+.chess-shell:before,.word-shell:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(#000,transparent 92%)}
+.chess-topbar,.word-topbar{position:relative;z-index:5;min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;border-bottom:1px solid rgba(253,224,71,.48);background:linear-gradient(90deg,rgba(7,27,72,.98),rgba(28,76,165,.95) 47%,rgba(113,22,60,.95));box-shadow:0 9px 30px rgba(0,0,0,.3)}
+.chess-brand,.word-brand{display:flex;align-items:center;gap:11px;min-width:0}.chess-brand img,.word-brand img{width:48px;height:48px;object-fit:cover;border:2px solid #fde047;border-radius:14px;background:#fff;box-shadow:0 0 20px rgba(250,204,21,.32)}
+.chess-brand div,.word-brand div{display:grid;gap:2px}.chess-brand strong,.word-brand strong{font-size:clamp(16px,2vw,24px);letter-spacing:.055em}.chess-brand span,.word-brand span{color:#d7e7ff;font-size:9px;font-weight:850;letter-spacing:.1em}
+.chess-close,.word-close{width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;border:1px solid rgba(255,255,255,.33);border-radius:13px;background:rgba(255,255,255,.1);color:#fff;font-size:28px;cursor:pointer}.chess-close:hover,.word-close:hover{background:#b91c1c;transform:rotate(3deg)}
+.chess-content,.word-content{position:relative;z-index:2;height:calc(100% - 76px);overflow:auto;padding:18px}
+.chess-screen,.word-screen{display:none;min-height:100%}.chess-screen.is-active,.word-screen.is-active{display:block}
+.chess-lobby,.word-lobby{width:min(780px,100%);margin:auto;padding:clamp(18px,3vw,34px);text-align:center}.chess-hero,.word-hero{padding:22px 14px}.chess-hero-art,.word-hero-art{font-size:clamp(58px,8vw,98px);filter:drop-shadow(0 14px 28px rgba(0,0,0,.45))}.chess-hero h2,.word-hero h2{margin:9px 0 10px;font-size:clamp(36px,5.5vw,68px);line-height:.94;letter-spacing:-.045em}.chess-hero h2 em,.word-hero h2 em{font-style:normal;color:#fde047}.chess-hero p,.word-hero p{max-width:690px;margin:0 auto;color:#c7daf6;font-size:13px;line-height:1.65}
+.chess-access,.word-access{display:grid;gap:4px;margin:8px auto 18px;padding:14px 16px;border:1px solid rgba(147,197,253,.28);border-radius:15px;background:rgba(3,15,46,.65)}.chess-access span,.word-access span{color:#93c5fd;font-size:8px;font-weight:950;letter-spacing:.15em}.chess-access strong,.word-access strong{font-size:16px}.chess-access small,.word-access small{color:#b9cdeb;font-size:10px}
+.chess-lobby-actions,.word-lobby-actions,.chess-wait-actions,.word-wait-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.chess-btn,.word-btn{min-height:48px;padding:10px 12px;border-radius:12px;color:#fff;font-size:10px;font-weight:950;letter-spacing:.04em;cursor:pointer}.chess-btn.primary,.word-btn.primary{border:1px solid #fde047;background:linear-gradient(135deg,#dc2626,#a71928 55%,#846108);box-shadow:0 10px 24px rgba(220,38,38,.2)}.chess-btn.secondary,.word-btn.secondary{border:1px solid #60a5fa;background:linear-gradient(135deg,#2563eb,#123a84)}.chess-btn.danger,.word-btn.danger{border:1px solid #fb7185;background:linear-gradient(135deg,#9f1239,#6b1029)}.chess-btn:disabled,.word-btn:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.4)}
+.chess-message,.word-message{min-height:23px;margin:12px 0 0;color:#fde68a;font-size:10px;line-height:1.45}.chess-panel,.word-panel,.chess-waiting,.word-waiting{margin-top:14px;padding:15px;border:1px solid rgba(250,204,21,.42);border-radius:16px;background:linear-gradient(145deg,rgba(3,19,55,.95),rgba(18,49,105,.91));text-align:left}.chess-panel[hidden],.word-panel[hidden],.chess-waiting[hidden],.word-waiting[hidden]{display:none!important}
+.chess-panel-head,.word-panel-head,.chess-wait-head,.word-wait-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.chess-panel-head strong,.word-panel-head strong{font-size:13px}.chess-panel-head button,.word-panel-head button{width:32px;height:32px;border:1px solid rgba(255,255,255,.25);border-radius:9px;background:rgba(255,255,255,.07);color:#fff;cursor:pointer}.chess-field,.word-field{display:grid;gap:5px;text-align:left}.chess-field span,.word-field span{color:#bcd4f4;font-size:8px;font-weight:900}.chess-field input,.chess-field select,.word-field input,.word-field select{width:100%;min-height:43px;padding:9px 10px;border:1px solid rgba(147,197,253,.4);border-radius:10px;background:#f8fbff;color:#0b2454;font:inherit;font-size:12px;outline:none}.chess-form-grid,.word-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.chess-room-list,.word-room-list{display:grid;gap:7px;max-height:260px;overflow:auto}.chess-room-row,.word-room-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px;border:1px solid rgba(147,197,253,.22);border-radius:10px;background:rgba(255,255,255,.05)}.chess-room-row strong,.word-room-row strong{display:block;font-size:10px}.chess-room-row small,.word-room-row small{display:block;margin-top:3px;color:#9db7dc;font-size:8px}.chess-room-row button,.word-room-row button{padding:7px 10px;border:1px solid #fde047;border-radius:8px;background:#174ea6;color:#fff;font-size:8px;font-weight:900;cursor:pointer}
+.chess-resume,.word-resume{display:none;align-items:center;justify-content:space-between;gap:12px;margin:12px 0;padding:12px 14px;border:1px solid rgba(134,239,172,.4);border-radius:14px;background:linear-gradient(135deg,rgba(22,163,74,.17),rgba(3,28,74,.72));text-align:left}.chess-resume.is-visible,.word-resume.is-visible{display:flex}.chess-resume span,.word-resume span{color:#86efac;font-size:8px;font-weight:950;letter-spacing:.12em}.chess-resume strong,.word-resume strong{display:block;margin:3px 0;font-size:12px}.chess-resume small,.word-resume small{color:#b9cdeb;font-size:8px}
+.chess-wait-code,.word-wait-code{padding:8px 11px;border:1px solid rgba(250,204,21,.5);border-radius:10px;background:rgba(250,204,21,.08);text-align:center}.chess-wait-code span,.word-wait-code span{display:block;color:#fde68a;font-size:7px;font-weight:900}.chess-wait-code strong,.word-wait-code strong{font-size:18px;letter-spacing:.12em}.chess-wait-players,.word-wait-players{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}.word-wait-players{grid-template-columns:repeat(2,1fr)}.chess-wait-player,.word-wait-player{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid rgba(147,197,253,.22);border-radius:10px;background:rgba(255,255,255,.05)}.chess-wait-player div,.word-wait-player div{min-width:0;flex:1}.chess-wait-player strong,.word-wait-player strong{display:block;font-size:10px}.chess-wait-player small,.word-wait-player small{color:#9db7dc;font-size:7px}.game-ready-chip{padding:5px 7px;border-radius:999px;background:rgba(239,68,68,.13);color:#fca5a5;font-size:7px;font-weight:950}.game-ready-chip.ready{background:rgba(34,197,94,.18);color:#86efac}
+/* CHESS BOARD */
+.chess-arena{display:grid;grid-template-columns:minmax(210px,280px) minmax(420px,720px) minmax(220px,300px);gap:14px;align-items:start;max-width:1320px;margin:0 auto}.chess-side-card{padding:13px;border:1px solid rgba(147,197,253,.22);border-radius:14px;background:linear-gradient(145deg,rgba(4,21,60,.94),rgba(8,39,91,.9));box-shadow:0 16px 32px rgba(0,0,0,.24)}.chess-card-title{margin-bottom:9px;color:#fde68a;font-size:8px;font-weight:950;letter-spacing:.14em}.chess-player-card{display:flex;align-items:center;gap:9px;margin:7px 0;padding:10px;border:1px solid rgba(255,255,255,.13);border-radius:11px;background:rgba(255,255,255,.055)}.chess-player-card.is-turn{border-color:#fde047;box-shadow:0 0 20px rgba(250,204,21,.16)}.chess-color-piece{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:rgba(255,255,255,.1);font-size:24px}.chess-player-card div{min-width:0;flex:1}.chess-player-card strong{display:block;font-size:10px}.chess-player-card small{color:#9cb7dc;font-size:7px}.chess-board-shell{position:relative;padding:8px;border:2px solid #d5a72e;border-radius:18px;background:linear-gradient(145deg,#4b250d,#0a1b3e);box-shadow:0 28px 65px rgba(0,0,0,.48),0 0 35px rgba(250,204,21,.16)}.chess-board{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;overflow:hidden;border-radius:11px}.chess-square{position:relative;display:grid;border:0;padding:0;place-items:center;min-width:0;cursor:pointer;user-select:none}.chess-square.light{background:linear-gradient(145deg,#f4e8c8,#d6c08f)}.chess-square.dark{background:linear-gradient(145deg,#8b5e34,#5e351c)}.chess-square:after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}.chess-square.is-selected{box-shadow:inset 0 0 0 4px #22d3ee,inset 0 0 28px rgba(34,211,238,.45);z-index:2}.chess-square.is-last{box-shadow:inset 0 0 0 4px rgba(250,204,21,.75),inset 0 0 30px rgba(250,204,21,.32)}.chess-square.is-target:before{content:"";position:absolute;width:24%;height:24%;border-radius:50%;background:rgba(16,185,129,.62);box-shadow:0 0 18px rgba(16,185,129,.72);z-index:1}.chess-square.is-capture:before{content:"";position:absolute;inset:7%;border:4px solid rgba(239,68,68,.74);border-radius:50%;box-shadow:0 0 16px rgba(239,68,68,.44);z-index:1}.chess-piece{position:relative;z-index:2;font-family:"Segoe UI Symbol","Noto Sans Symbols 2",serif;font-size:clamp(34px,5.4vw,64px);line-height:1;filter:drop-shadow(0 5px 4px rgba(0,0,0,.34));transition:transform .14s ease}.chess-square:hover .chess-piece{transform:translateY(-2px) scale(1.04)}.chess-coord{position:absolute;z-index:3;font-size:7px;font-weight:900;opacity:.56;pointer-events:none}.chess-coord.file{right:3px;bottom:2px}.chess-coord.rank{left:3px;top:2px}.chess-status-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;padding:9px 11px;border:1px solid rgba(250,204,21,.32);border-radius:11px;background:rgba(3,18,52,.78)}.chess-status-banner span{color:#9fc0ec;font-size:8px;font-weight:900}.chess-status-banner strong{font-size:11px;color:#fff}.chess-moves{max-height:330px;overflow:auto;display:grid;gap:5px}.chess-move-row{display:grid;grid-template-columns:28px 1fr;gap:7px;padding:7px;border-bottom:1px solid rgba(147,197,253,.12);font-size:9px}.chess-move-row span{color:#93c5fd}.chess-move-row b{font-weight:850}.chess-action-stack{display:grid;gap:8px;margin-top:10px}.chess-check{color:#fca5a5!important;text-shadow:0 0 12px rgba(239,68,68,.5)}.chess-result{position:absolute;inset:8%;z-index:12;display:grid;place-items:center;align-content:center;gap:8px;padding:18px;border:2px solid #fde047;border-radius:20px;background:radial-gradient(circle at 50% 10%,rgba(250,204,21,.34),transparent 32%),linear-gradient(145deg,rgba(6,31,78,.98),rgba(73,22,76,.98));box-shadow:0 0 60px rgba(250,204,21,.38);text-align:center}.chess-result[hidden]{display:none!important}.chess-result .crown{font-size:62px;filter:drop-shadow(0 0 20px rgba(250,204,21,.5))}.chess-result>span{color:#fde68a;font-size:8px;font-weight:950;letter-spacing:.16em}.chess-result>strong{font-size:clamp(24px,4vw,44px)}.chess-result>p{max-width:480px;margin:0;color:#c8dbf6;font-size:10px;line-height:1.55}.chess-result-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+/* WORD BATTLE */
+.word-arena{display:grid;grid-template-columns:minmax(210px,280px) minmax(500px,760px) minmax(230px,310px);gap:13px;align-items:start;max-width:1380px;margin:0 auto}.word-side-card{padding:12px;border:1px solid rgba(147,197,253,.22);border-radius:14px;background:linear-gradient(145deg,rgba(4,21,60,.94),rgba(9,40,90,.9));box-shadow:0 15px 34px rgba(0,0,0,.25)}.word-card-title{margin-bottom:8px;color:#fde68a;font-size:8px;font-weight:950;letter-spacing:.14em}.word-player-row{display:grid;grid-template-columns:1fr auto;gap:7px;margin:6px 0;padding:8px;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:rgba(255,255,255,.045)}.word-player-row.is-turn{border-color:#fde047;box-shadow:0 0 18px rgba(250,204,21,.13)}.word-player-row strong{font-size:9px}.word-player-row small{display:block;color:#9bb8dd;font-size:7px;margin-top:2px}.word-score{color:#86efac;font-size:13px;font-weight:950}.word-board-shell{position:relative;padding:7px;border:2px solid #d6a82f;border-radius:16px;background:linear-gradient(145deg,#382006,#091b3e);box-shadow:0 28px 65px rgba(0,0,0,.5),0 0 35px rgba(250,204,21,.13)}.word-board{display:grid;grid-template-columns:repeat(15,1fr);aspect-ratio:1;gap:1px;padding:2px;border-radius:9px;background:#071229}.word-cell{position:relative;display:grid;border:0;padding:0;place-items:center;min-width:0;overflow:hidden;background:linear-gradient(145deg,#e8d8b4,#c9ae78);color:#38220d;cursor:pointer;user-select:none}.word-cell:before{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(71,43,15,.18);pointer-events:none}.word-cell.dl{background:linear-gradient(145deg,#86d7ff,#3a8bd2);color:#06234c}.word-cell.tl{background:linear-gradient(145deg,#3199ff,#174d9a);color:#fff}.word-cell.dw{background:linear-gradient(145deg,#ffb5bd,#de6676);color:#54131e}.word-cell.tw{background:linear-gradient(145deg,#ff705f,#b72631);color:#fff}.word-cell.center{background:radial-gradient(circle,#fff0a5,#e59d22);color:#522e00}.word-premium-label{font-size:clamp(4px,.55vw,7px);font-weight:950;text-align:center;line-height:1.05;opacity:.9}.word-tile{position:absolute;inset:7%;z-index:3;display:grid;place-items:center;border:1px solid rgba(91,55,20,.42);border-radius:6px;background:linear-gradient(145deg,#fff3c8,#d5a94f);color:#2d1c08;font-size:clamp(10px,1.55vw,21px);font-weight:1000;box-shadow:0 4px 7px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.75)}.word-tile small{position:absolute;right:2px;bottom:1px;font-size:5px}.word-tile.pending{outline:2px solid #22d3ee;box-shadow:0 0 15px rgba(34,211,238,.65),0 4px 7px rgba(0,0,0,.3)}.word-rack-shell{margin-top:10px;padding:9px;border:1px solid rgba(250,204,21,.36);border-radius:13px;background:linear-gradient(180deg,rgba(74,39,8,.75),rgba(24,14,8,.9));box-shadow:inset 0 7px 16px rgba(0,0,0,.3)}.word-rack{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;min-height:58px}.word-rack-tile{position:relative;display:grid;place-items:center;min-height:52px;border:1px solid #c68d28;border-radius:8px;background:linear-gradient(145deg,#fff2be,#cfa348);color:#2e1c08;font-size:20px;font-weight:1000;cursor:pointer;box-shadow:0 5px 9px rgba(0,0,0,.28),inset 0 1px 0 #fff9dc;transition:.12s ease}.word-rack-tile:hover{transform:translateY(-3px)}.word-rack-tile.is-selected{outline:3px solid #22d3ee;box-shadow:0 0 18px rgba(34,211,238,.6),0 5px 9px rgba(0,0,0,.28)}.word-rack-tile small{position:absolute;right:4px;bottom:2px;font-size:7px}.word-turn-banner{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding:8px 10px;border:1px solid rgba(250,204,21,.3);border-radius:10px;background:rgba(3,18,52,.78)}.word-turn-banner span{color:#9ec0ea;font-size:7px;font-weight:900}.word-turn-banner strong{font-size:10px}.word-controls{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.word-controls .wide{grid-column:1/-1}.word-help{color:#9fb9dc;font-size:8px;line-height:1.5}.word-log{max-height:260px;overflow:auto;display:grid;gap:5px}.word-log-row{padding:7px;border-bottom:1px solid rgba(147,197,253,.12);font-size:8px;line-height:1.4}.word-log-row strong{color:#fde68a}.word-result{position:absolute;inset:7%;z-index:14;display:grid;place-items:center;align-content:center;gap:8px;padding:18px;border:2px solid #fde047;border-radius:20px;background:radial-gradient(circle at 50% 8%,rgba(250,204,21,.34),transparent 34%),linear-gradient(145deg,rgba(6,31,78,.99),rgba(80,20,70,.99));box-shadow:0 0 65px rgba(250,204,21,.4);text-align:center}.word-result[hidden]{display:none!important}.word-result .trophy{font-size:62px}.word-result>span{color:#fde68a;font-size:8px;font-weight:950;letter-spacing:.16em}.word-result>strong{font-size:clamp(24px,4vw,44px)}.word-final-list{width:min(430px,95%);display:grid;gap:5px}.word-final-row{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:7px;padding:8px;border:1px solid rgba(255,255,255,.22);border-radius:9px;background:rgba(1,15,47,.65);text-align:left}.word-final-row strong{font-size:9px}.word-final-row small{display:block;color:#9eb8dd;font-size:7px}.word-final-row b{color:#86efac;font-size:11px}.word-result-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.aquila-game-card.chess-featured{border-color:rgba(139,92,246,.62);background:linear-gradient(150deg,rgba(58,27,112,.34),rgba(4,24,67,.95) 55%,rgba(30,15,55,.92));box-shadow:0 24px 65px rgba(88,28,135,.17)}.aquila-game-card.word-featured{border-color:rgba(34,211,238,.55);background:linear-gradient(150deg,rgba(10,92,112,.3),rgba(4,24,67,.95) 55%,rgba(50,36,8,.9));box-shadow:0 24px 65px rgba(8,145,178,.14)}
+@media(max-width:1100px){.chess-arena,.word-arena{grid-template-columns:1fr;max-width:760px}.chess-board-shell,.word-board-shell{order:1}.chess-arena>aside:first-child,.word-arena>aside:first-child{order:2}.chess-arena>aside:last-child,.word-arena>aside:last-child{order:3}.chess-moves,.word-log{max-height:180px}}
+@media(max-width:700px){.chess-shell,.word-shell{width:100%;height:100%;border:0;border-radius:0}.chess-topbar,.word-topbar{min-height:66px;padding:8px 9px}.chess-brand img,.word-brand img{width:40px;height:40px}.chess-brand strong,.word-brand strong{font-size:14px}.chess-brand span,.word-brand span{font-size:7px}.chess-content,.word-content{height:calc(100% - 66px);padding:8px}.chess-lobby-actions,.word-lobby-actions,.chess-wait-actions,.word-wait-actions,.chess-form-grid,.word-form-grid{grid-template-columns:1fr}.chess-wait-players,.word-wait-players{grid-template-columns:1fr}.chess-arena,.word-arena{gap:8px}.chess-board-shell,.word-board-shell{padding:4px;border-radius:11px}.chess-piece{font-size:clamp(28px,10vw,46px)}.chess-coord{font-size:5px}.word-board{gap:0}.word-premium-label{font-size:3.8px}.word-tile{inset:4%;font-size:clamp(8px,4vw,14px);border-radius:3px}.word-rack{gap:3px}.word-rack-tile{min-height:43px;font-size:16px}.chess-result,.word-result{inset:3%;padding:10px}.chess-result .crown,.word-result .trophy{font-size:46px}}
+
 </style>
 
 </head>
@@ -8465,6 +8495,8 @@ if(!stage || !overlay) return;
           <div class="aquila-game-grid">
             <article class="aquila-game-card"><span class="aquila-game-badge">STRATEGY • 2–4 PLAYERS</span><div class="aquila-game-art">🏙️👑</div><h4>AQUILA EMPIRE</h4><p>Build, trade, acquire properties, survive obligations, and finish with the strongest empire.</p><div class="aquila-game-meta"><span>PROPERTY STRATEGY</span><span>LIVE MULTIPLAYER</span><span>VOICE</span><span>RANKINGS</span></div><div class="aquila-game-card-actions"><button class="details" type="button" onclick="showAquilaGameDetails('empire')">GAME DETAILS</button><button class="play" type="button" onclick="launchAquilaEmpireFromHub()">PLAY EMPIRE</button></div></article>
             <article class="aquila-game-card snake-featured"><span class="aquila-game-badge">🔥 FEATURED • 2–6 PLAYERS</span><div class="aquila-game-art">🐍🪜🎲</div><h4>SNAKE & LADDERS</h4><p>A longer, more intense Battle Difficulty race to Square 100. Climb tactical ladders, survive brutal upper-board snakes, protect every lead, and fight for an exact finish.</p><div class="aquila-game-meta"><span>2–6 PLAYERS</span><span>100-SQUARE BOARD</span><span>LIVE ROOMS</span><span>TURN-BASED</span><span>BATTLE DIFFICULTY</span><span>WINNER CEREMONY</span></div><div class="aquila-game-card-actions"><button class="details" type="button" onclick="showAquilaGameDetails('snake')">GAME DETAILS</button><button class="play" type="button" onclick="launchSnakeGameFromHub()">PLAY SNAKE & LADDERS</button></div></article>
+            <article class="aquila-game-card chess-featured"><span class="aquila-game-badge">♟️ PREMIUM • 2 PLAYERS</span><div class="aquila-game-art">♔♛♜</div><h4>CHESS ARENA</h4><p>A classic head-to-head strategy duel with legal-move enforcement, check, checkmate, castling, en passant, promotion, reconnect, and a cinematic result screen.</p><div class="aquila-game-meta"><span>2 PLAYERS</span><span>CLASSIC RULES</span><span>CHECKMATE</span><span>PUBLIC/PRIVATE</span><span>RECONNECT</span></div><div class="aquila-game-card-actions"><button class="details" type="button" onclick="showAquilaGameDetails('chess')">GAME DETAILS</button><button class="play" type="button" onclick="launchChessGameFromHub()">PLAY CHESS</button></div></article>
+            <article class="aquila-game-card word-featured"><span class="aquila-game-badge">🔤 NEW • 2–4 PLAYERS</span><div class="aquila-game-art">🔤🧠🏆</div><h4>WORD BATTLE</h4><p>A premium Scrabble-style word strategy arena. Build connected words, control custom premium squares, manage a seven-tile rack, exchange, pass, and fight for the highest score.</p><div class="aquila-game-meta"><span>2–4 PLAYERS</span><span>15×15 BOARD</span><span>TILE RACK</span><span>PREMIUM SQUARES</span><span>LIVE SCORE</span></div><div class="aquila-game-card-actions"><button class="details" type="button" onclick="showAquilaGameDetails('word')">GAME DETAILS</button><button class="play" type="button" onclick="launchWordGameFromHub()">PLAY WORD BATTLE</button></div></article>
           </div>
           <div class="aquila-games-cta"><button class="aquila-games-btn secondary" type="button" onclick="showAquilaGamesView('intro')">← BACK</button></div>
         </div>
@@ -8474,6 +8506,73 @@ if(!stage || !overlay) return;
   </div>
 </div>
 <!-- END AQUILA MEMBER GAMES HUB -->
+
+<!-- AQUILA CHESS ARENA -->
+<div id="chessGameModal" class="chess-game-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="chessGameTitle">
+  <div class="chess-shell">
+    <div class="chess-topbar">
+      <div class="chess-brand"><img src="assets/logo.jpg" alt="Aquila Crest Capital"><div><strong id="chessGameTitle">♟️ AQUILA CHESS ARENA</strong><span>2-PLAYER CLASSIC STRATEGY • VERIFIED MEMBERS</span></div></div>
+      <button class="chess-close" type="button" onclick="closeChessGame()" aria-label="Close Chess">×</button>
+    </div>
+    <div class="chess-content">
+      <section id="chessLobbyScreen" class="chess-screen is-active">
+        <div class="chess-lobby">
+          <div class="chess-hero"><div class="chess-hero-art">♔♛♜</div><span class="aquila-games-eyebrow">AQUILA MEMBER STRATEGY DUEL</span><h2>CHESS <em>ARENA</em></h2><p>Enter a focused two-player battle of calculation, pressure, and precision. Create a private duel for a friend or open a public challenge for another verified Aquila member.</p></div>
+          <div class="chess-access"><span>PLAYER ACCESS</span><strong id="chessPlayerName">Checking member session…</strong><small id="chessPlayerStatus">Verified-member access is required.</small></div>
+          <div class="chess-lobby-actions"><button id="chessCreateOpen" class="chess-btn primary" type="button">CREATE DUEL</button><button id="chessBrowseOpen" class="chess-btn secondary" type="button">PUBLIC DUELS</button><button id="chessJoinOpen" class="chess-btn secondary" type="button">JOIN BY CODE</button></div>
+          <div id="chessResumeCard" class="chess-resume"><div><span id="chessResumeKicker">ACTIVE DUEL FOUND</span><strong id="chessResumeTitle">Resume your Chess match</strong><small id="chessResumeMeta">Your room is still available.</small></div><button id="chessResumeButton" class="chess-btn primary" type="button">RESUME</button></div>
+          <div id="chessLobbyMessage" class="chess-message">Classic Chess • Entertainment only • No cash betting or real-money rewards</div>
+          <div id="chessCreatePanel" class="chess-panel" hidden><div class="chess-panel-head"><strong>CREATE CHESS DUEL</strong><button type="button" data-chess-close-panel>×</button></div><div class="chess-form-grid"><label class="chess-field"><span>ROOM VISIBILITY</span><select id="chessVisibility"><option value="public">Public Challenge</option><option value="private">Private Duel</option></select></label><label class="chess-field"><span>FORMAT</span><select disabled><option>Classic • No Clock</option></select></label></div><button id="chessCreateConfirm" class="chess-btn primary" type="button">CREATE CHESS ROOM</button></div>
+          <div id="chessJoinPanel" class="chess-panel" hidden><div class="chess-panel-head"><strong>JOIN CHESS ROOM</strong><button type="button" data-chess-close-panel>×</button></div><label class="chess-field"><span>ROOM CODE</span><input id="chessRoomCodeInput" maxlength="7" autocomplete="off" placeholder="CABC123"></label><button id="chessJoinConfirm" class="chess-btn primary" type="button">JOIN DUEL</button></div>
+          <div id="chessBrowsePanel" class="chess-panel" hidden><div class="chess-panel-head"><strong>PUBLIC CHESS DUELS</strong><button type="button" data-chess-close-panel>×</button></div><div id="chessPublicRooms" class="chess-room-list">Loading rooms…</div></div>
+          <div id="chessWaitingRoom" class="chess-waiting" hidden><div class="chess-wait-head"><div><span class="aquila-games-eyebrow">CHESS WAITING ROOM</span><h3 id="chessWaitingTitle">PREPARE YOUR OPENING</h3></div><div class="chess-wait-code"><span>ROOM CODE</span><strong id="chessWaitingCode">-------</strong></div></div><div id="chessWaitingPlayers" class="chess-wait-players"></div><div class="chess-wait-actions"><button id="chessReadyButton" class="chess-btn secondary" type="button">I'M READY</button><button id="chessStartButton" class="chess-btn primary" type="button">START DUEL</button><button id="chessLeaveButton" class="chess-btn danger" type="button">LEAVE ROOM</button></div><div id="chessWaitingMessage" class="chess-message"></div></div>
+        </div>
+      </section>
+      <section id="chessGameScreen" class="chess-screen">
+        <div class="chess-arena">
+          <aside><div class="chess-side-card"><div class="chess-card-title">DUELISTS</div><div id="chessPlayers"></div></div><div class="chess-side-card" style="margin-top:10px"><div class="chess-card-title">RULES</div><div class="word-help">♙ Standard piece movement<br>♔ Check and self-check protection<br>♜ Castling supported<br>♟ En passant supported<br>♛ Pawn promotion supported<br>🏆 Checkmate ends the duel<br>🤝 Stalemate ends as a draw</div></div></aside>
+          <main><div class="chess-status-banner"><span id="chessHudCode">ROOM -------</span><strong id="chessTurnText">Preparing…</strong><span id="chessCheckText">CLASSIC CHESS</span></div><div class="chess-board-shell"><div id="chessBoard" class="chess-board"></div><div id="chessResult" class="chess-result" hidden><div class="crown">🏆</div><span>CHESS DUEL COMPLETE</span><strong id="chessResultTitle">CHECKMATE</strong><p id="chessResultText">The match has officially ended.</p><div class="chess-result-actions"><button id="chessReturnLobby" class="chess-btn primary" type="button">RETURN TO GAME LOBBY</button><button id="chessCloseFinished" class="chess-btn secondary" type="button">CLOSE GAME</button></div></div></div></main>
+          <aside><div class="chess-side-card"><div class="chess-card-title">MOVE HISTORY</div><div id="chessMoves" class="chess-moves"></div></div><div class="chess-side-card" style="margin-top:10px"><div class="chess-card-title">MATCH CONTROL</div><div id="chessSelectedMove" class="word-help">Select one of your pieces, then select a legal destination.</div><div class="chess-action-stack"><button id="chessResignButton" class="chess-btn danger" type="button">RESIGN MATCH</button></div></div></aside>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<!-- END AQUILA CHESS ARENA -->
+
+<!-- AQUILA WORD BATTLE — SCRABBLE-STYLE -->
+<div id="wordGameModal" class="word-game-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="wordGameTitle">
+  <div class="word-shell">
+    <div class="word-topbar">
+      <div class="word-brand"><img src="assets/logo.jpg" alt="Aquila Crest Capital"><div><strong id="wordGameTitle">🔤 AQUILA WORD BATTLE</strong><span>SCRABBLE-STYLE • 2–4 PLAYER WORD STRATEGY</span></div></div>
+      <button class="word-close" type="button" onclick="closeWordGame()" aria-label="Close Word Battle">×</button>
+    </div>
+    <div class="word-content">
+      <section id="wordLobbyScreen" class="word-screen is-active">
+        <div class="word-lobby">
+          <div class="word-hero"><div class="word-hero-art">🔤🧠🏆</div><span class="aquila-games-eyebrow">AQUILA MEMBER WORD ARENA</span><h2>WORD <em>BATTLE</em></h2><p>A premium Scrabble-style multiplayer word board for 2–4 verified members. Build connected words, control premium squares, manage your seven-tile rack, and finish with the highest score.</p></div>
+          <div class="word-access"><span>PLAYER ACCESS</span><strong id="wordPlayerName">Checking member session…</strong><small id="wordPlayerStatus">Verified-member access is required.</small></div>
+          <div class="word-lobby-actions"><button id="wordCreateOpen" class="word-btn primary" type="button">CREATE WORD BATTLE</button><button id="wordBrowseOpen" class="word-btn secondary" type="button">PUBLIC ROOMS</button><button id="wordJoinOpen" class="word-btn secondary" type="button">JOIN BY CODE</button></div>
+          <div id="wordResumeCard" class="word-resume"><div><span id="wordResumeKicker">ACTIVE BATTLE FOUND</span><strong id="wordResumeTitle">Resume your Word Battle</strong><small id="wordResumeMeta">Your room is still available.</small></div><button id="wordResumeButton" class="word-btn primary" type="button">RESUME</button></div>
+          <div id="wordLobbyMessage" class="word-message">Word strategy • Custom Aquila premium-square layout • Entertainment only</div>
+          <div id="wordCreatePanel" class="word-panel" hidden><div class="word-panel-head"><strong>CREATE WORD BATTLE</strong><button type="button" data-word-close-panel>×</button></div><div class="word-form-grid"><label class="word-field"><span>ROOM VISIBILITY</span><select id="wordVisibility"><option value="public">Public Room</option><option value="private">Private Room</option></select></label><label class="word-field"><span>MAX PLAYERS</span><select id="wordMaxPlayers"><option>2</option><option>3</option><option selected>4</option></select></label></div><button id="wordCreateConfirm" class="word-btn primary" type="button">CREATE ROOM</button></div>
+          <div id="wordJoinPanel" class="word-panel" hidden><div class="word-panel-head"><strong>JOIN WORD BATTLE</strong><button type="button" data-word-close-panel>×</button></div><label class="word-field"><span>ROOM CODE</span><input id="wordRoomCodeInput" maxlength="7" autocomplete="off" placeholder="WABC123"></label><button id="wordJoinConfirm" class="word-btn primary" type="button">JOIN BATTLE</button></div>
+          <div id="wordBrowsePanel" class="word-panel" hidden><div class="word-panel-head"><strong>PUBLIC WORD BATTLES</strong><button type="button" data-word-close-panel>×</button></div><div id="wordPublicRooms" class="word-room-list">Loading rooms…</div></div>
+          <div id="wordWaitingRoom" class="word-waiting" hidden><div class="word-wait-head"><div><span class="aquila-games-eyebrow">WORD WAITING ROOM</span><h3>PREPARE YOUR RACK</h3></div><div class="word-wait-code"><span>ROOM CODE</span><strong id="wordWaitingCode">-------</strong></div></div><div id="wordWaitingPlayers" class="word-wait-players"></div><div class="word-wait-actions"><button id="wordReadyButton" class="word-btn secondary" type="button">I'M READY</button><button id="wordStartButton" class="word-btn primary" type="button">START WORD BATTLE</button><button id="wordLeaveButton" class="word-btn danger" type="button">LEAVE ROOM</button></div><div id="wordWaitingMessage" class="word-message"></div></div>
+        </div>
+      </section>
+      <section id="wordGameScreen" class="word-screen">
+        <div class="word-arena">
+          <aside><div class="word-side-card"><div class="word-card-title">PLAYERS & SCORE</div><div id="wordPlayers"></div></div><div class="word-side-card" style="margin-top:9px"><div class="word-card-title">PREMIUM SQUARES</div><div class="word-help">🔴 TW — Triple Word<br>🌸 DW — Double Word<br>🔵 TL — Triple Letter<br>💠 DL — Double Letter<br>⭐ Center — Opening premium<br><br>First play must cross the center. New plays must connect to the existing board.</div></div></aside>
+          <main><div class="word-turn-banner"><span id="wordHudCode">ROOM -------</span><strong id="wordTurnText">Preparing…</strong><span id="wordBagText">BAG --</span></div><div class="word-board-shell"><div id="wordBoard" class="word-board"></div><div id="wordResult" class="word-result" hidden><div class="trophy">🏆</div><span>WORD BATTLE COMPLETE</span><strong id="wordWinnerName">WORD CHAMPION</strong><div id="wordFinalList" class="word-final-list"></div><div class="word-result-actions"><button id="wordReturnLobby" class="word-btn primary" type="button">RETURN TO GAME LOBBY</button><button id="wordCloseFinished" class="word-btn secondary" type="button">CLOSE GAME</button></div></div></div><div class="word-rack-shell"><div id="wordRack" class="word-rack"></div></div></main>
+          <aside><div class="word-side-card"><div class="word-card-title">TURN CONTROL</div><div id="wordMoveHelp" class="word-help">Select a rack tile, then tap an empty board square. Build your play in one row or one column.</div><div class="word-controls"><button id="wordSubmitButton" class="word-btn primary wide" type="button">SUBMIT WORD PLAY</button><button id="wordUndoButton" class="word-btn secondary" type="button">UNDO</button><button id="wordClearButton" class="word-btn secondary" type="button">CLEAR</button><button id="wordExchangeButton" class="word-btn secondary" type="button">EXCHANGE SELECTED</button><button id="wordPassButton" class="word-btn danger" type="button">PASS TURN</button></div></div><div class="word-side-card" style="margin-top:9px"><div class="word-card-title">LIVE ACTION LOG</div><div id="wordActionLog" class="word-log"></div></div><button id="wordActiveLeave" class="word-btn danger" style="width:100%;margin-top:9px" type="button">LEAVE / FORFEIT MATCH</button></aside>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<!-- END AQUILA WORD BATTLE -->
+
 
 <!-- AQUILA SNAKE & LADDERS -->
 <div id="snakeGameModal" class="snake-game-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="snakeGameTitle">
@@ -13104,6 +13203,8 @@ if(!stage || !overlay) return;
   window.showAquilaGameDetails=function(game){
     const body=document.getElementById('aquilaGameDetailsBody');if(!body)return;
     if(game==='snake') body.innerHTML=`<span class="aquila-games-eyebrow">🐍🪜 FEATURED MEMBER BATTLE</span><h3>SNAKE & LADDERS: THE RACE TO 100</h3><p>Enter a high-energy multiplayer race made for 2–6 official verified Aquila members. Everyone begins at the starting line with the same objective: survive the board, control your nerves, and become the first player to land exactly on Square 100. A single roll can change the entire battle. You can climb from the lower board into the lead in seconds—or hit a snake near the finish and watch the whole room catch up.</p><div class="aquila-game-detail-list"><div><b>🎯 THE OBJECTIVE</b><br>Reach Square 100 before everyone else. The finish is exact: if your roll goes beyond 100, you stay on your current square and the battle continues.</div><div><b>👥 2–6 PLAYER ROOMS</b><br>Create a public battle for the community or a private room for friends, then share the six-character room code.</div><div><b>🪜 MOMENTUM LADDERS</b><br>Land exactly on a ladder base and your token climbs to the connected higher square. Battle Difficulty uses shorter tactical climbs—there is no direct ladder to Square 100—so leads must be earned across the board.</div><div><b>🐍 DANGER ZONES</b><br>Land on a snake head and you are sent down to its tail. Battle Difficulty adds more danger in the upper half, including brutal late-game drops near the finish.</div><div><b>🎲 FAIR SERVER DICE</b><br>The browser does not decide your real roll or final position. Dice and movement are resolved by the multiplayer database function before every device receives the result.</div><div><b>⚡ LIVE TURN BATTLE</b><br>Every connected player sees the same current turn, positions, rolls, ladders, snakes, action log, and winner state as the room refreshes.</div><div><b>🔄 RECONNECT SAFE</b><br>Closing the game window does not automatically forfeit an active match. Reopen Snake & Ladders and use Resume Match to return to your current room.</div><div><b>🏆 FINAL CEREMONY</b><br>When somebody conquers Square 100, rolling stops immediately and the arena shows the champion plus the final player standings.</div></div><p><strong>Battle flow:</strong> create or join a room → every player marks READY → the host starts the match → the first turn is randomized → players roll one at a time → ladders and snakes resolve automatically → the first exact landing on 100 becomes champion. Game activity is for entertainment and community competition only; there is no entry fee, cash betting, or real-money reward attached to any roll, position, ranking, or win.</p><div class="aquila-games-cta"><button class="aquila-games-btn secondary" onclick="showAquilaGamesView('select')">← BACK TO GAMES</button><button class="aquila-games-btn primary" onclick="launchSnakeGameFromHub()">ENTER THE ARENA</button></div>`;
+    else if(game==='chess') body.innerHTML=`<span class="aquila-games-eyebrow">♟️ PREMIUM STRATEGY DUEL</span><h3>CHESS ARENA: CALCULATE • PRESSURE • CHECKMATE</h3><p>Aquila Chess Arena is a full two-player classic strategy duel for verified members. White moves first, every move is validated by the multiplayer database, and the board supports standard piece movement, king safety, castling, en passant, pawn promotion, check, checkmate, stalemate, resignation, public/private rooms, and reconnect-safe match continuation.</p><div class="aquila-game-detail-list"><div><b>♔ CLASSIC BOARD</b><br>Full 8×8 board with White and Black orientation, last-move highlighting, selected-piece guidance, and legal-destination assistance.</div><div><b>🛡️ KING SAFETY</b><br>Moves that leave your own king in check are rejected by the server. Check and checkmate states are calculated from the official board.</div><div><b>♜ SPECIAL MOVES</b><br>Castling, en passant, and pawn promotion are included. Promotion lets you choose Queen, Rook, Bishop, or Knight.</div><div><b>🌐 PUBLIC OR PRIVATE</b><br>Create an open challenge for another verified member or share a private room code with a specific opponent.</div><div><b>🔄 RECONNECT SAFE</b><br>Closing the Chess window does not resign. Reopen the arena and resume the same waiting, active, or finished duel.</div><div><b>🏆 CLEAN FINISH</b><br>Checkmate, stalemate, or resignation produces a dedicated result screen with Return to Lobby and Close Game controls.</div></div><div class="aquila-games-cta"><button class="aquila-games-btn secondary" onclick="showAquilaGamesView('select')">← BACK TO GAMES</button><button class="aquila-games-btn primary" onclick="launchChessGameFromHub()">ENTER CHESS ARENA</button></div>`;
+    else if(game==='word') body.innerHTML=`<span class="aquila-games-eyebrow">🔤 2–4 PLAYER WORD STRATEGY</span><h3>WORD BATTLE: BUILD • SCORE • OUTTHINK</h3><p>Aquila Word Battle is a premium Scrabble-style multiplayer experience built around a custom Aquila 15×15 board. Each player receives a seven-tile rack, builds connected words, targets letter and word multipliers, manages the remaining bag, and competes for the highest score.</p><div class="aquila-game-detail-list"><div><b>🧠 WORD CONSTRUCTION</b><br>Place one or more rack tiles in a single row or column. The opening play crosses the center; future plays must connect to the live board.</div><div><b>💠 CUSTOM PREMIUM BOARD</b><br>Double Letter, Triple Letter, Double Word, Triple Word, and the glowing center star create tactical scoring opportunities on an original Aquila premium-square pattern.</div><div><b>🎒 SEVEN-TILE RACK</b><br>Tiles are drawn from a shared server-side bag. Select tiles for placement, undo before submitting, exchange tiles when the bag allows it, or pass your turn.</div><div><b>📊 LIVE SCOREBOARD</b><br>Every device sees current scores, tile counts, current turn, remaining bag, placed tiles, and recent plays.</div><div><b>🔄 RECONNECT SAFE</b><br>Closing the game window does not forfeit. Resume your current room from the Word Battle lobby.</div><div><b>ℹ️ WORD POLICY</b><br>This is a community entertainment word game, not an official commercial Scrabble product. The engine validates board placement and scoring; vocabulary disputes follow your room/community rules rather than an external paid dictionary service.</div></div><div class="aquila-games-cta"><button class="aquila-games-btn secondary" onclick="showAquilaGamesView('select')">← BACK TO GAMES</button><button class="aquila-games-btn primary" onclick="launchWordGameFromHub()">ENTER WORD BATTLE</button></div>`;
     else body.innerHTML=`<span class="aquila-games-eyebrow">🏙️ AQUILA EMPIRE</span><h3>BUILD • TRADE • RULE</h3><p>Aquila Empire is the strategic property battle already available to verified Aquila members. Acquire spaces, collect usage fees, trade with rivals, build upgrades, protect your Game Credits, and finish with the strongest final empire.</p><div class="aquila-game-detail-list"><div><b>🏙️ BUILD</b><br>Acquire strategic properties and upgrade your empire.</div><div><b>🤝 TRADE</b><br>Negotiate property offers with other players.</div><div><b>🎲 SERVER DICE</b><br>Movement and actions are controlled by the multiplayer game engine.</div><div><b>🏆 FINAL STANDINGS</b><br>Winner and podium are calculated from the official final match results.</div></div><div class="aquila-games-cta"><button class="aquila-games-btn secondary" onclick="showAquilaGamesView('select')">← BACK TO GAMES</button><button class="aquila-games-btn primary" onclick="launchAquilaEmpireFromHub()">PLAY EMPIRE</button></div>`;
     showAquilaGamesView('details');
   };
@@ -13111,279 +13212,10 @@ if(!stage || !overlay) return;
 
   function updateSnakeSoundButton(){const b=document.getElementById('snakeSoundButton');if(!b)return;b.classList.toggle('is-on',snakeSoundOn);b.innerHTML=`<span class="snake-top-icon">${snakeSoundOn?'🔊':'🔇'}</span> ${snakeSoundOn?'SOUND ON':'SOUND OFF'}`}
   function ensureSnakeAudio(){if(!snakeSoundOn)return null;try{snakeAudioContext=snakeAudioContext||new (window.AudioContext||window.webkitAudioContext)();if(snakeAudioContext.state==='suspended')snakeAudioContext.resume();return snakeAudioContext}catch(_){return null}}
-  /* =========================================================
-     AQUILA SNAKE & LADDERS — PREMIUM GAME SOUND ENGINE
-     ========================================================= */
-
-  function snakeTone(kind = "roll") {
-    const ctx = ensureSnakeAudio();
-    if (!ctx || !snakeSoundOn) return;
-  
-    const now = ctx.currentTime;
-  
-    function tone({
-      type = "sine",
-      start = 300,
-      end = null,
-      volume = 0.18,
-      delay = 0,
-      duration = 0.18
-    }) {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-  
-      osc.type = type;
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-  
-      const t = now + delay;
-  
-      osc.frequency.setValueAtTime(start, t);
-  
-      if (end) {
-        osc.frequency.exponentialRampToValueAtTime(
-          Math.max(30, end),
-          t + duration
-        );
-      }
-  
-      gain.gain.setValueAtTime(0.0001, t);
-      gain.gain.exponentialRampToValueAtTime(
-        Math.max(0.001, volume),
-        t + 0.012
-      );
-      gain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        t + duration
-      );
-  
-      osc.start(t);
-      osc.stop(t + duration + 0.03);
-    }
-  
-    switch (kind) {
-  
-      /* 🎲 DICE ROLL */
-      case "roll":
-        tone({
-          type: "square",
-          start: 185,
-          end: 240,
-          volume: 0.16,
-          duration: 0.08
-        });
-  
-        tone({
-          type: "triangle",
-          start: 340,
-          end: 270,
-          volume: 0.13,
-          delay: 0.06,
-          duration: 0.1
-        });
-  
-        tone({
-          type: "square",
-          start: 220,
-          end: 300,
-          volume: 0.14,
-          delay: 0.13,
-          duration: 0.08
-        });
-        break;
-  
-  
-      /* 🦘 TOKEN HOP — one sound per square */
-      case "hop":
-        tone({
-          type: "triangle",
-          start: 330,
-          end: 430,
-          volume: 0.15,
-          duration: 0.07
-        });
-  
-        tone({
-          type: "sine",
-          start: 150,
-          end: 115,
-          volume: 0.08,
-          delay: 0.035,
-          duration: 0.07
-        });
-        break;
-  
-  
-      /* 🪜 LADDER CLIMB */
-      case "ladder":
-        tone({
-          type: "triangle",
-          start: 330,
-          end: 540,
-          volume: 0.22,
-          duration: 0.16
-        });
-  
-        tone({
-          type: "triangle",
-          start: 470,
-          end: 720,
-          volume: 0.23,
-          delay: 0.11,
-          duration: 0.17
-        });
-  
-        tone({
-          type: "sine",
-          start: 680,
-          end: 1100,
-          volume: 0.26,
-          delay: 0.23,
-          duration: 0.28
-        });
-  
-        tone({
-          type: "sine",
-          start: 1050,
-          end: 1450,
-          volume: 0.16,
-          delay: 0.39,
-          duration: 0.22
-        });
-        break;
-  
-  
-      /* 🐍 SNAKE ATTACK / DROP */
-      case "snake":
-        tone({
-          type: "sawtooth",
-          start: 480,
-          end: 110,
-          volume: 0.24,
-          duration: 0.34
-        });
-  
-        tone({
-          type: "square",
-          start: 155,
-          end: 65,
-          volume: 0.22,
-          delay: 0.14,
-          duration: 0.38
-        });
-  
-        tone({
-          type: "sawtooth",
-          start: 92,
-          end: 45,
-          volume: 0.17,
-          delay: 0.34,
-          duration: 0.38
-        });
-        break;
-  
-  
-      /* ⚠️ EXACT-100 MISS / BLOCKED */
-      case "blocked":
-        tone({
-          type: "square",
-          start: 210,
-          end: 165,
-          volume: 0.18,
-          duration: 0.14
-        });
-  
-        tone({
-          type: "square",
-          start: 175,
-          end: 120,
-          volume: 0.18,
-          delay: 0.16,
-          duration: 0.17
-        });
-        break;
-  
-  
-      /* 👥 PLAYER JOIN / READY */
-      case "join":
-        tone({
-          type: "sine",
-          start: 420,
-          end: 620,
-          volume: 0.15,
-          duration: 0.15
-        });
-  
-        tone({
-          type: "sine",
-          start: 620,
-          end: 820,
-          volume: 0.13,
-          delay: 0.12,
-          duration: 0.15
-        });
-        break;
-  
-  
-      /* 🔥 TURN START */
-      case "turn":
-        tone({
-          type: "triangle",
-          start: 350,
-          end: 520,
-          volume: 0.16,
-          duration: 0.11
-        });
-  
-        tone({
-          type: "triangle",
-          start: 520,
-          end: 760,
-          volume: 0.17,
-          delay: 0.10,
-          duration: 0.13
-        });
-        break;
-  
-  
-      /* 🏆 WINNER */
-      case "win":
-        tone({
-          type: "triangle",
-          start: 440,
-          end: 660,
-          volume: 0.22,
-          duration: 0.2
-        });
-  
-        tone({
-          type: "triangle",
-          start: 660,
-          end: 880,
-          volume: 0.24,
-          delay: 0.18,
-          duration: 0.22
-        });
-  
-        tone({
-          type: "sine",
-          start: 880,
-          end: 1320,
-          volume: 0.28,
-          delay: 0.38,
-          duration: 0.35
-        });
-  
-        tone({
-          type: "sine",
-          start: 1320,
-          end: 1760,
-          volume: 0.19,
-          delay: 0.67,
-          duration: 0.35
-        });
-        break;
-    }
+  function snakeTone(kind='roll'){
+    const ctx=ensureSnakeAudio();if(!ctx||!snakeSoundOn)return;const now=ctx.currentTime;
+    function tone({type='sine',start=300,end=null,volume=.18,delay=0,duration=.18}){const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=type;osc.connect(gain);gain.connect(ctx.destination);const t=now+delay;osc.frequency.setValueAtTime(start,t);if(end)osc.frequency.exponentialRampToValueAtTime(Math.max(30,end),t+duration);gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(Math.max(.001,volume),t+.012);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);osc.start(t);osc.stop(t+duration+.03)}
+    switch(kind){case'roll':tone({type:'square',start:185,end:240,volume:.16,duration:.08});tone({type:'triangle',start:340,end:270,volume:.13,delay:.06,duration:.1});tone({type:'square',start:220,end:300,volume:.14,delay:.13,duration:.08});break;case'hop':tone({type:'triangle',start:330,end:430,volume:.15,duration:.07});tone({type:'sine',start:150,end:115,volume:.08,delay:.035,duration:.07});break;case'ladder':tone({type:'triangle',start:330,end:540,volume:.22,duration:.16});tone({type:'triangle',start:470,end:720,volume:.23,delay:.11,duration:.17});tone({type:'sine',start:680,end:1100,volume:.26,delay:.23,duration:.28});tone({type:'sine',start:1050,end:1450,volume:.16,delay:.39,duration:.22});break;case'snake':tone({type:'sawtooth',start:480,end:110,volume:.24,duration:.34});tone({type:'square',start:155,end:65,volume:.22,delay:.14,duration:.38});tone({type:'sawtooth',start:92,end:45,volume:.17,delay:.34,duration:.38});break;case'blocked':tone({type:'square',start:210,end:165,volume:.18,duration:.14});tone({type:'square',start:175,end:120,volume:.18,delay:.16,duration:.17});break;case'join':tone({type:'sine',start:420,end:620,volume:.15,duration:.15});tone({type:'sine',start:620,end:820,volume:.13,delay:.12,duration:.15});break;case'turn':tone({type:'triangle',start:350,end:520,volume:.16,duration:.11});tone({type:'triangle',start:520,end:760,volume:.17,delay:.10,duration:.13});break;case'win':tone({type:'triangle',start:440,end:660,volume:.22,duration:.2});tone({type:'triangle',start:660,end:880,volume:.24,delay:.18,duration:.22});tone({type:'sine',start:880,end:1320,volume:.28,delay:.38,duration:.35});tone({type:'sine',start:1320,end:1760,volume:.19,delay:.67,duration:.35});break;}
   }
 
   function squareCenter(n){const idx=n-1,row=Math.floor(idx/10),colInRow=idx%10;const col=row%2===0?colInRow:9-colInRow;return{x:(col+.5)*10,y:100-(row+.5)*10}}
@@ -13442,47 +13274,9 @@ if(!stage || !overlay) return;
   }
   function showSnakeImpact(title,text){const b=document.getElementById('snakeImpactBanner');if(!b)return;document.getElementById('snakeImpactTitle').textContent=title;document.getElementById('snakeImpactText').textContent=text;b.classList.remove('show');void b.offsetWidth;b.classList.add('show')}
   async function animateSnakeAction(action,players){
-    if(!action||snakeLastAnimatedActionId===action.action_id)return;
-  
-    const type=String(action.action_type||'');
-  
-    if(!['dice_rolled','game_won'].includes(type))return;
-  
-    snakeLastAnimatedActionId=action.action_id;
-  
-    const d=
-      typeof action.action_data==='string'
-        ? JSON.parse(action.action_data)
-        : action.action_data||{};
-  
-    const player=players.find(
-      p=>String(p.player_id)===String(action.player_id)
-    );
-  
-    if(!player)return;
-  
-    const from=Number(d.from||0);
-    const landed=Number(d.landed??d.position??from);
-    const finalPos=Number(d.position??landed);
-  
-    /* EXACT-100 OVERSHOOT SOUND */
-    if (
-      Number(d.dice || 0) > 0 &&
-      from > 0 &&
-      landed === from &&
-      finalPos === from
-    ) {
-      showSnakeImpact(
-        '🎯 EXACT 100 REQUIRED!',
-        `${player.public_name || player.member_username || 'Player'} needs the exact roll to reach Square 100.`
-      );
-  
-      snakeTone('blocked');
-  
-      return;
-    }
-  
-    if(from<0||landed<0)return;
+    if(!action||snakeLastAnimatedActionId===action.action_id)return;const type=String(action.action_type||'');if(!['dice_rolled','game_won'].includes(type))return;snakeLastAnimatedActionId=action.action_id;
+    const d=typeof action.action_data==='string'?JSON.parse(action.action_data):action.action_data||{};const player=players.find(p=>String(p.player_id)===String(action.player_id));if(!player)return;
+    const from=Number(d.from||0),landed=Number(d.landed??d.position??from),finalPos=Number(d.position??landed);if(Number(d.dice||0)>0&&from>0&&landed===from&&finalPos===from){showSnakeImpact('🎯 EXACT 100 REQUIRED!',`${player.public_name||player.member_username||'Player'} needs the exact roll to reach Square 100.`);snakeTone('blocked');return}if(from<0||landed<0)return;
     let token=document.querySelector(`.snake-board-token[data-player-id="${CSS.escape(String(player.player_id))}"]`);if(!token)return;
     const startZone=document.querySelector(`.snake-cell[data-square="${Math.max(1,from)}"] .snake-cell-tokens`);if(from>0&&startZone)startZone.appendChild(token);
     const steps=[];for(let n=Math.max(1,from+1);n<=landed;n++)steps.push(n);
@@ -13526,6 +13320,83 @@ if(!stage || !overlay) return;
   document.getElementById('snakeCloseFinished')?.addEventListener('click',async()=>{await leaveSnake(false);window.closeSnakeGame()});
   document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(SNAKE?.classList.contains('is-open'))window.closeSnakeGame();else if(HUB?.classList.contains('is-open'))closeAquilaGameHub()});
   updateSnakeSoundButton();buildSnakeBoard();
+})();
+</script>
+
+<script>
+/* =========================================================
+   AQUILA CHESS ARENA — isolated client
+   ========================================================= */
+(function(){
+  const MOD=document.getElementById('chessGameModal');
+  let roomId=null,state=null,timer=null,selected=null,resumeInfo=null,busy=false;
+  const pieces={wK:'♔',wQ:'♕',wR:'♖',wB:'♗',wN:'♘',wP:'♙',bK:'♚',bQ:'♛',bR:'♜',bB:'♝',bN:'♞',bP:'♟'};
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function profile(){try{return typeof chatProfile!=='undefined'?chatProfile:null}catch(_){return null}}
+  function access(){const p=profile(),ok=p?.role==='admin'||(p?.identity_status==='verified'&&p?.member_username);document.getElementById('chessPlayerName').textContent=ok?(p.public_name||p.member_username||'Verified Member'):(p?.public_name||'Login required');document.getElementById('chessPlayerStatus').textContent=ok?(p.role==='admin'?'OFFICIAL ADMIN • Chess access enabled':`VERIFIED MEMBER • ${p.member_username}`):'Sign in and complete identity verification to play.';['chessCreateOpen','chessBrowseOpen','chessJoinOpen'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=!ok});return !!ok}
+  async function rpc(name,args={}){if(typeof chatDb==='undefined'||!chatDb)throw new Error('Game connection is not ready. Please log in again.');const {data,error}=await chatDb.rpc(name,args);if(error)throw error;if(!data?.ok)throw new Error(data?.notice||'Chess request failed.');return data}
+  function msg(t,type=''){const e=document.getElementById('chessLobbyMessage');if(e){e.textContent=t||'';e.style.color=type==='error'?'#fecaca':type==='success'?'#86efac':'#fde68a'}}
+  function screen(game){document.getElementById('chessLobbyScreen')?.classList.toggle('is-active',!game);document.getElementById('chessGameScreen')?.classList.toggle('is-active',!!game)}
+  function panel(id){['chessCreatePanel','chessJoinPanel','chessBrowsePanel'].forEach(x=>{const e=document.getElementById(x);if(e)e.hidden=x!==id})}
+  function stop(){clearInterval(timer);timer=null}
+  async function detectResume(){const card=document.getElementById('chessResumeCard');card?.classList.remove('is-visible');resumeInfo=null;if(!access())return;try{const d=await rpc('chess_find_my_room');if(!d.room_id)return;resumeInfo=d;card?.classList.add('is-visible');document.getElementById('chessResumeKicker').textContent=d.status==='finished'?'RECENT RESULT':'OPEN CHESS DUEL';document.getElementById('chessResumeTitle').textContent=d.status==='finished'?'View your latest Chess result':'Resume your Chess match';document.getElementById('chessResumeMeta').textContent=`Room ${d.room_code} • ${String(d.status).toUpperCase()}`;document.getElementById('chessResumeButton').textContent=d.status==='finished'?'VIEW RESULT':'RESUME'}catch(_){}}
+  async function resume(){if(!resumeInfo)return;roomId=resumeInfo.room_id;await load();startRefresh()}
+  window.launchChessGameFromHub=async function(){if(typeof closeAquilaGameHub==='function')closeAquilaGameHub();MOD?.classList.add('is-open');MOD?.setAttribute('aria-hidden','false');document.body.classList.add('aquila-games-open');screen(false);panel(null);access();await detectResume()};
+  window.closeChessGame=function(){if(!MOD)return;if(state?.room?.status==='active'&&state?.viewer_player_id){if(!confirm('Close the Chess window?\n\nYou will remain in the duel and can reopen Chess to resume. Use RESIGN only to permanently end your match.'))return}stop();MOD.classList.remove('is-open');MOD.setAttribute('aria-hidden','true');document.body.classList.remove('aquila-games-open')};
+  async function create(){if(!access())return;const b=document.getElementById('chessCreateConfirm');b.disabled=true;try{const d=await rpc('chess_create_room',{p_visibility:document.getElementById('chessVisibility').value});roomId=d.room_id;msg(d.notice,'success');await load();startRefresh()}catch(e){msg(e.message,'error');await detectResume()}finally{b.disabled=false}}
+  async function join(code){if(!access())return;try{const d=await rpc('chess_join_room',{p_room_code:String(code||'').trim().toUpperCase()});roomId=d.room_id;msg(d.notice,'success');await load();startRefresh()}catch(e){msg(e.message,'error');await detectResume()}}
+  async function browse(){panel('chessBrowsePanel');const box=document.getElementById('chessPublicRooms');box.textContent='Loading public Chess duels…';try{const d=await rpc('chess_browse_rooms');box.innerHTML='';if(!d.rooms?.length){box.textContent='No public Chess rooms are waiting right now.';return}(d.rooms||[]).forEach(r=>{const row=document.createElement('div');row.className='chess-room-row';row.innerHTML=`<div><strong>${esc(r.host_name)} • ${esc(r.room_code)}</strong><small>${Number(r.player_count||0)}/2 players • waiting</small></div><button>JOIN</button>`;row.querySelector('button').onclick=()=>join(r.room_code);box.appendChild(row)})}catch(e){box.textContent=e.message}}
+  async function load(silent=false){if(!roomId)return;try{const d=await rpc('chess_get_state',{p_room_id:roomId});state=d;render(d);return d}catch(e){if(!silent)msg(e.message,'error')}}
+  function startRefresh(){stop();timer=setInterval(()=>{if(MOD?.classList.contains('is-open')&&roomId)load(true)},1200)}
+  function render(s){const r=s.room||{};if(r.status==='cancelled'){reset();msg('This Chess room was cancelled.','error');return}if(r.status==='waiting'){screen(false);document.getElementById('chessWaitingRoom').hidden=false;panel(null);document.getElementById('chessWaitingCode').textContent=r.room_code||'-------';const box=document.getElementById('chessWaitingPlayers');box.innerHTML='';(s.players||[]).forEach(p=>{const row=document.createElement('div');row.className='chess-wait-player';row.innerHTML=`<span class="chess-color-piece">${p.color==='b'?'♚':'♔'}</span><div><strong>${esc(p.public_name||p.member_username||'Player')}</strong><small>${p.color==='b'?'BLACK':'WHITE'} • ${String(p.user_id)===String(r.host_user_id)?'HOST':'CHALLENGER'}</small></div><span class="game-ready-chip ${p.ready?'ready':''}">${p.ready?'READY':'NOT READY'}</span>`;box.appendChild(row)});const me=(s.players||[]).find(p=>String(p.player_id)===String(s.viewer_player_id));document.getElementById('chessReadyButton').textContent=me?.ready?'CANCEL READY':"I'M READY";const host=String(r.host_user_id)===String(s.players?.find(p=>String(p.player_id)===String(s.viewer_player_id))?.user_id);document.getElementById('chessStartButton').disabled=!host||(s.players||[]).filter(p=>p.player_status==='active').length!==2||(s.players||[]).some(p=>p.player_status==='active'&&!p.ready);return}screen(true);renderGame(s)}
+  function pseudoTargets(board,from){const pc=board[from];if(!pc)return[];const out=[];const ff=from.charCodeAt(0)-96,fr=+from[1],color=pc[0],type=pc[1];for(let f=1;f<=8;f++)for(let r=1;r<=8;r++){const to=String.fromCharCode(96+f)+r;if(to===from)continue;const t=board[to];if(t&&t[0]===color)continue;const df=f-ff,dr=r-fr;let ok=false;if(type==='P'){const dir=color==='w'?1:-1;ok=(df===0&&(dr===dir||dr===2*dir))||(Math.abs(df)===1&&dr===dir)}else if(type==='N')ok=(Math.abs(df)===1&&Math.abs(dr)===2)||(Math.abs(df)===2&&Math.abs(dr)===1);else if(type==='B')ok=Math.abs(df)===Math.abs(dr);else if(type==='R')ok=df===0||dr===0;else if(type==='Q')ok=df===0||dr===0||Math.abs(df)===Math.abs(dr);else if(type==='K')ok=Math.max(Math.abs(df),Math.abs(dr))<=1||(dr===0&&Math.abs(df)===2);if(ok)out.push(to)}return out}
+  function renderBoard(s){const b=document.getElementById('chessBoard'),board=s.room.board||{},whiteBottom=s.viewer_color!=='b',last=s.room.last_move||{};b.innerHTML='';const ranks=whiteBottom?[8,7,6,5,4,3,2,1]:[1,2,3,4,5,6,7,8],files=whiteBottom?['a','b','c','d','e','f','g','h']:['h','g','f','e','d','c','b','a'];const targets=selected?pseudoTargets(board,selected):[];ranks.forEach((rank,ri)=>files.forEach((file,fi)=>{const sq=file+rank,pc=board[sq];const d=document.createElement('button');d.type='button';d.className=`chess-square ${(fi+ri)%2?'dark':'light'}${selected===sq?' is-selected':''}${last.from===sq||last.to===sq?' is-last':''}${targets.includes(sq)?(pc?' is-capture':' is-target'):''}`;d.dataset.sq=sq;d.innerHTML=`${pc?`<span class="chess-piece">${pieces[pc]||''}</span>`:''}${ri===7?`<span class="chess-coord file">${file}</span>`:''}${fi===0?`<span class="chess-coord rank">${rank}</span>`:''}`;d.onclick=()=>clickSquare(sq);b.appendChild(d)}))}
+  async function clickSquare(sq){if(!state||state.room.status!=='active'||busy)return;const board=state.room.board||{},pc=board[sq],myColor=state.viewer_color;if(!selected){if(pc?.[0]!==myColor)return;if(state.room.side_to_move!==myColor)return;selected=sq;renderBoard(state);document.getElementById('chessSelectedMove').textContent=`Selected ${sq.toUpperCase()}. Choose a destination.`;return}if(sq===selected){selected=null;renderBoard(state);return}if(pc?.[0]===myColor){selected=sq;renderBoard(state);return}let promotion='Q';const moving=board[selected];if(moving?.[1]==='P'&&(sq[1]==='8'||sq[1]==='1')){const pick=prompt('Promote pawn to Q, R, B, or N:','Q');promotion=['Q','R','B','N'].includes(String(pick||'Q').toUpperCase())?String(pick).toUpperCase():'Q'}busy=true;const from=selected;selected=null;try{const d=await rpc('chess_make_move',{p_room_id:roomId,p_from:from,p_to:sq,p_promotion:promotion});document.getElementById('chessSelectedMove').textContent=d.notice||'Move accepted.';await load()}catch(e){document.getElementById('chessSelectedMove').textContent=e.message;await load(true)}finally{busy=false}}
+  function renderGame(s){const r=s.room,players=s.players||[];document.getElementById('chessHudCode').textContent=`ROOM ${r.room_code}`;const turnP=players.find(p=>p.color===r.side_to_move);document.getElementById('chessTurnText').textContent=r.status==='finished'?'MATCH COMPLETE':`${r.side_to_move==='w'?'WHITE':'BLACK'} TO MOVE • ${turnP?.public_name||turnP?.member_username||'Player'}`;const lastMove=(s.moves||[]).find(m=>m.action_type==='move');document.getElementById('chessCheckText').textContent=lastMove?.action_data?.check?(lastMove.action_data.checkmate?'CHECKMATE':'CHECK'):'CLASSIC CHESS';document.getElementById('chessCheckText').classList.toggle('chess-check',!!lastMove?.action_data?.check);const pb=document.getElementById('chessPlayers');pb.innerHTML='';players.forEach(p=>{const row=document.createElement('div');row.className='chess-player-card'+(p.color===r.side_to_move&&r.status==='active'?' is-turn':'');row.innerHTML=`<span class="chess-color-piece">${p.color==='w'?'♔':'♚'}</span><div><strong>${esc(p.public_name||p.member_username||'Player')}</strong><small>${p.color==='w'?'WHITE':'BLACK'} • ${p.player_status==='forfeited'?'RESIGNED':p.color===r.side_to_move&&r.status==='active'?'YOUR MOVE / TO MOVE':'IN DUEL'}</small></div>`;pb.appendChild(row)});renderBoard(s);const moves=document.getElementById('chessMoves');moves.innerHTML='';(s.moves||[]).filter(m=>m.action_type==='move').slice(0,30).reverse().forEach(m=>{const row=document.createElement('div');row.className='chess-move-row';row.innerHTML=`<span>${m.move_number}.</span><b>${esc(m.notation||`${m.from}→${m.to}`)}</b>`;moves.appendChild(row)});const result=document.getElementById('chessResult');result.hidden=r.status!=='finished';if(r.status==='finished'){const winner=players.find(p=>String(p.user_id)===String(r.winner_user_id));document.getElementById('chessResultTitle').textContent=r.finish_reason==='STALEMATE'?'DRAW — STALEMATE':winner?(winner.public_name||winner.member_username||'CHESS CHAMPION'):'DRAW';document.getElementById('chessResultText').textContent=r.finish_reason==='CHECKMATE'?`Checkmate. ${winner?.public_name||winner?.member_username||'The winner'} conquered the king.`:r.finish_reason==='RESIGNATION'?`${winner?.public_name||winner?.member_username||'The winner'} wins by resignation.`:'The position ended without a legal move and without check.'}}
+  async function toggleReady(){try{await rpc('chess_toggle_ready',{p_room_id:roomId});await load()}catch(e){document.getElementById('chessWaitingMessage').textContent=e.message}}
+  async function start(){try{await rpc('chess_start_room',{p_room_id:roomId});await load()}catch(e){document.getElementById('chessWaitingMessage').textContent=e.message}}
+  async function resign(waiting=false){if(!roomId)return reset();if(!waiting&&state?.room?.status==='active'&&!confirm('Resign this Chess match?\n\nThis permanently ends your duel and awards the win to your opponent.'))return;try{await rpc('chess_resign',{p_room_id:roomId})}catch(e){if(!waiting){document.getElementById('chessSelectedMove').textContent=e.message;return}}if(waiting)reset();else await load()}
+  function reset(){stop();roomId=null;state=null;selected=null;document.getElementById('chessWaitingRoom').hidden=true;screen(false);panel(null);detectResume()}
+  document.getElementById('chessResumeButton')?.addEventListener('click',resume);document.getElementById('chessCreateOpen')?.addEventListener('click',()=>panel('chessCreatePanel'));document.getElementById('chessBrowseOpen')?.addEventListener('click',browse);document.getElementById('chessJoinOpen')?.addEventListener('click',()=>panel('chessJoinPanel'));document.querySelectorAll('[data-chess-close-panel]').forEach(b=>b.addEventListener('click',()=>panel(null)));document.getElementById('chessCreateConfirm')?.addEventListener('click',create);document.getElementById('chessJoinConfirm')?.addEventListener('click',()=>join(document.getElementById('chessRoomCodeInput').value));document.getElementById('chessReadyButton')?.addEventListener('click',toggleReady);document.getElementById('chessStartButton')?.addEventListener('click',start);document.getElementById('chessLeaveButton')?.addEventListener('click',()=>resign(true));document.getElementById('chessResignButton')?.addEventListener('click',()=>resign(false));document.getElementById('chessReturnLobby')?.addEventListener('click',reset);document.getElementById('chessCloseFinished')?.addEventListener('click',()=>{reset();closeChessGame()});
+})();
+
+/* =========================================================
+   AQUILA WORD BATTLE — isolated client
+   ========================================================= */
+(function(){
+  const MOD=document.getElementById('wordGameModal');let roomId=null,state=null,timer=null,resumeInfo=null,pending=new Map(),selectedRack=new Set(),busy=false;
+  const values={A:1,B:3,C:3,D:2,E:1,F:4,G:2,H:4,I:1,J:8,K:5,L:1,M:3,N:1,O:1,P:3,Q:10,R:1,S:1,T:1,U:1,V:4,W:4,X:8,Y:4,Z:10};
+  const DL=new Set(['0,3','0,11','2,6','2,8','3,0','3,7','3,14','6,2','6,6','6,8','6,12','7,3','7,11','8,2','8,6','8,8','8,12','11,0','11,7','11,14','12,6','12,8','14,3','14,11']);
+  const TL=new Set(['1,5','1,9','5,1','5,5','5,9','5,13','9,1','9,5','9,9','9,13','13,5','13,9']);
+  const TW=new Set(['0,0','0,14','14,0','14,14','7,7']);
+  const DW=new Set(['1,1','2,2','3,3','4,4','10,10','11,11','12,12','13,13','1,13','2,12','3,11','4,10','10,4','11,3','12,2','13,1']);
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function profile(){try{return typeof chatProfile!=='undefined'?chatProfile:null}catch(_){return null}}
+  function access(){const p=profile(),ok=p?.role==='admin'||(p?.identity_status==='verified'&&p?.member_username);document.getElementById('wordPlayerName').textContent=ok?(p.public_name||p.member_username||'Verified Member'):(p?.public_name||'Login required');document.getElementById('wordPlayerStatus').textContent=ok?(p.role==='admin'?'OFFICIAL ADMIN • Word Battle access enabled':`VERIFIED MEMBER • ${p.member_username}`):'Sign in and complete identity verification to play.';['wordCreateOpen','wordBrowseOpen','wordJoinOpen'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=!ok});return !!ok}
+  async function rpc(name,args={}){if(typeof chatDb==='undefined'||!chatDb)throw new Error('Game connection is not ready. Please log in again.');const {data,error}=await chatDb.rpc(name,args);if(error)throw error;if(!data?.ok)throw new Error(data?.notice||'Word Battle request failed.');return data}
+  function msg(t,type=''){const e=document.getElementById('wordLobbyMessage');if(e){e.textContent=t||'';e.style.color=type==='error'?'#fecaca':type==='success'?'#86efac':'#fde68a'}}function screen(game){document.getElementById('wordLobbyScreen')?.classList.toggle('is-active',!game);document.getElementById('wordGameScreen')?.classList.toggle('is-active',!!game)}function panel(id){['wordCreatePanel','wordJoinPanel','wordBrowsePanel'].forEach(x=>{const e=document.getElementById(x);if(e)e.hidden=x!==id})}function stop(){clearInterval(timer);timer=null}
+  async function detectResume(){const card=document.getElementById('wordResumeCard');card?.classList.remove('is-visible');resumeInfo=null;if(!access())return;try{const d=await rpc('word_find_my_room');if(!d.room_id)return;resumeInfo=d;card?.classList.add('is-visible');document.getElementById('wordResumeKicker').textContent=d.status==='finished'?'RECENT RESULT':'OPEN WORD BATTLE';document.getElementById('wordResumeTitle').textContent=d.status==='finished'?'View your latest Word Battle result':'Resume your Word Battle';document.getElementById('wordResumeMeta').textContent=`Room ${d.room_code} • ${String(d.status).toUpperCase()}`;document.getElementById('wordResumeButton').textContent=d.status==='finished'?'VIEW RESULT':'RESUME'}catch(_){}}
+  async function resume(){if(!resumeInfo)return;roomId=resumeInfo.room_id;await load();startRefresh()}
+  window.launchWordGameFromHub=async function(){if(typeof closeAquilaGameHub==='function')closeAquilaGameHub();MOD?.classList.add('is-open');MOD?.setAttribute('aria-hidden','false');document.body.classList.add('aquila-games-open');screen(false);panel(null);access();buildBoard();await detectResume()};window.closeWordGame=function(){if(!MOD)return;if(state?.room?.status==='active'&&state?.viewer_player_id){if(!confirm('Close the Word Battle window?\n\nYou will remain in the match and can reopen Word Battle to resume. Use LEAVE / FORFEIT only for a permanent exit.'))return}stop();MOD.classList.remove('is-open');MOD.setAttribute('aria-hidden','true');document.body.classList.remove('aquila-games-open')};
+  function buildBoard(){const b=document.getElementById('wordBoard');if(!b||b.dataset.built)return;b.dataset.built='1';for(let r=0;r<15;r++)for(let c=0;c<15;c++){const k=`${r},${c}`,d=document.createElement('button');d.type='button';let cls='word-cell',label='';if(TW.has(k)){cls+=' tw';label='TW'}else if(DW.has(k)){cls+=' dw';label='DW'}else if(TL.has(k)){cls+=' tl';label='TL'}else if(DL.has(k)){cls+=' dl';label='DL'}if(k==='7,7'){cls+=' center';label='★'}d.className=cls;d.dataset.key=k;d.innerHTML=label?`<span class="word-premium-label">${label}</span>`:'';d.onclick=()=>placeOn(k);b.appendChild(d)}}
+  async function create(){if(!access())return;const b=document.getElementById('wordCreateConfirm');b.disabled=true;try{const d=await rpc('word_create_room',{p_visibility:document.getElementById('wordVisibility').value,p_max_players:Number(document.getElementById('wordMaxPlayers').value)});roomId=d.room_id;msg(d.notice,'success');await load();startRefresh()}catch(e){msg(e.message,'error');await detectResume()}finally{b.disabled=false}}
+  async function join(code){if(!access())return;try{const d=await rpc('word_join_room',{p_room_code:String(code||'').trim().toUpperCase()});roomId=d.room_id;msg(d.notice,'success');await load();startRefresh()}catch(e){msg(e.message,'error');await detectResume()}}
+  async function browse(){panel('wordBrowsePanel');const box=document.getElementById('wordPublicRooms');box.textContent='Loading public Word Battles…';try{const d=await rpc('word_browse_rooms');box.innerHTML='';if(!d.rooms?.length){box.textContent='No public Word Battle rooms are waiting right now.';return}(d.rooms||[]).forEach(r=>{const row=document.createElement('div');row.className='word-room-row';row.innerHTML=`<div><strong>${esc(r.host_name)} • ${esc(r.room_code)}</strong><small>${Number(r.player_count||0)}/${Number(r.max_players||0)} players • waiting</small></div><button>JOIN</button>`;row.querySelector('button').onclick=()=>join(r.room_code);box.appendChild(row)})}catch(e){box.textContent=e.message}}
+  async function load(silent=false){if(!roomId)return;try{const d=await rpc('word_get_state',{p_room_id:roomId});state=d;render(d);return d}catch(e){if(!silent)msg(e.message,'error')}}function startRefresh(){stop();timer=setInterval(()=>{if(MOD?.classList.contains('is-open')&&roomId)load(true)},1300)}
+  function render(s){const r=s.room||{};if(r.status==='cancelled'){reset();msg('This Word Battle room was cancelled.','error');return}if(r.status==='waiting'){screen(false);document.getElementById('wordWaitingRoom').hidden=false;panel(null);document.getElementById('wordWaitingCode').textContent=r.room_code||'-------';const box=document.getElementById('wordWaitingPlayers');box.innerHTML='';(s.players||[]).forEach(p=>{const row=document.createElement('div');row.className='word-wait-player';row.innerHTML=`<div><strong>${esc(p.public_name||p.member_username||'Player')}</strong><small>${String(p.user_id)===String(r.host_user_id)?'ROOM HOST':'PLAYER'}</small></div><span class="game-ready-chip ${p.ready?'ready':''}">${p.ready?'READY':'NOT READY'}</span>`;box.appendChild(row)});const me=(s.players||[]).find(p=>String(p.player_id)===String(s.viewer_player_id));document.getElementById('wordReadyButton').textContent=me?.ready?'CANCEL READY':"I'M READY";const host=String(r.host_user_id)===String(me?.user_id);document.getElementById('wordStartButton').disabled=!host||(s.players||[]).filter(p=>p.player_status==='active').length<2||(s.players||[]).some(p=>p.player_status==='active'&&!p.ready);return}screen(true);renderGame(s)}
+  function renderBoardState(board){buildBoard();document.querySelectorAll('#wordBoard .word-cell').forEach(cell=>{const k=cell.dataset.key,base=board?.[k],pend=pending.get(k);cell.querySelector('.word-tile')?.remove();const t=pend||base;if(t){const el=document.createElement('span');el.className='word-tile'+(pend?' pending':'');el.innerHTML=`${esc(t.l)}<small>${values[t.l]||t.v||0}</small>`;cell.appendChild(el)}})}
+  function viewer(){return(state?.players||[]).find(p=>String(p.player_id)===String(state?.viewer_player_id))}
+  function renderRack(){const rack=viewer()?.rack||[],box=document.getElementById('wordRack');box.innerHTML='';rack.forEach((l,i)=>{const used=[...pending.values()].some(x=>x.i===i),b=document.createElement('button');b.type='button';b.className='word-rack-tile'+(selectedRack.has(i)?' is-selected':'');if(used){b.style.opacity='.3';b.disabled=true}b.innerHTML=`${esc(l)}<small>${values[l]||0}</small>`;b.onclick=()=>{if(selectedRack.has(i))selectedRack.delete(i);else selectedRack.add(i);renderRack();document.getElementById('wordMoveHelp').textContent=selectedRack.size?`${selectedRack.size} rack tile(s) selected. Tap an empty board square to place the first selected tile, or use EXCHANGE SELECTED.`:'Select rack tiles to place or exchange.'};box.appendChild(b)})}
+  function placeOn(k){if(!state||state.room.status!=='active'||String(state.viewer_player_id)!==String(state.room.current_turn_player_id))return;const board=state.room.board||{};if(board[k])return;if(pending.has(k)){selectedRack.add(pending.get(k).i);pending.delete(k);renderBoardState(board);renderRack();return}const idx=[...selectedRack].sort((a,b)=>a-b).find(i=>![...pending.values()].some(x=>x.i===i));if(idx==null)return;const rack=viewer()?.rack||[];const l=rack[idx];if(!l)return;pending.set(k,{l,i:idx});selectedRack.delete(idx);renderBoardState(board);renderRack();document.getElementById('wordMoveHelp').textContent=`Pending tiles: ${[...pending.values()].map(x=>x.l).join(' ')}. Submit when your word is ready.`}
+  function clearPending(){pending.clear();selectedRack.clear();if(state){renderBoardState(state.room.board||{});renderRack()}document.getElementById('wordMoveHelp').textContent='Select a rack tile, then tap an empty board square.'}
+  function undo(){const arr=[...pending.entries()];if(!arr.length)return;const [k,v]=arr[arr.length-1];pending.delete(k);selectedRack.add(v.i);renderBoardState(state.room.board||{});renderRack()}
+  async function submit(){if(busy||!pending.size)return;busy=true;try{const tiles=[...pending.entries()].map(([k,v])=>{const [r,c]=k.split(',').map(Number);return{r,c,l:v.l}});const d=await rpc('word_submit_move',{p_room_id:roomId,p_tiles:tiles});pending.clear();selectedRack.clear();document.getElementById('wordMoveHelp').textContent=d.notice||'Word accepted.';await load()}catch(e){document.getElementById('wordMoveHelp').textContent=e.message}finally{busy=false}}
+  async function pass(){if(!confirm('Pass this turn without playing a word?'))return;try{await rpc('word_pass_turn',{p_room_id:roomId});clearPending();await load()}catch(e){document.getElementById('wordMoveHelp').textContent=e.message}}
+  async function exchange(){if(!selectedRack.size)return document.getElementById('wordMoveHelp').textContent='Select one or more rack tiles first.';if(pending.size)return document.getElementById('wordMoveHelp').textContent='Clear pending board tiles before exchanging.';const rack=viewer()?.rack||[],letters=[...selectedRack].sort((a,b)=>a-b).map(i=>rack[i]).filter(Boolean);try{await rpc('word_exchange_tiles',{p_room_id:roomId,p_letters:letters});selectedRack.clear();await load()}catch(e){document.getElementById('wordMoveHelp').textContent=e.message}}
+  function renderGame(s){const r=s.room,players=s.players||[];document.getElementById('wordHudCode').textContent=`ROOM ${r.room_code}`;document.getElementById('wordBagText').textContent=`BAG ${Number(r.bag_count||0)}`;const turn=players.find(p=>String(p.player_id)===String(r.current_turn_player_id));document.getElementById('wordTurnText').textContent=r.status==='finished'?'MATCH COMPLETE':`${turn?.public_name||turn?.member_username||'Player'} TO PLAY`;const pbox=document.getElementById('wordPlayers');pbox.innerHTML='';players.forEach(p=>{const row=document.createElement('div');row.className='word-player-row'+(String(p.player_id)===String(r.current_turn_player_id)&&r.status==='active'?' is-turn':'');row.innerHTML=`<div><strong>${esc(p.public_name||p.member_username||'Player')}</strong><small>${p.player_status==='forfeited'?'FORFEITED':String(p.player_id)===String(r.current_turn_player_id)&&r.status==='active'?'CURRENT TURN':`${Number(p.rack_count||0)} tiles`}</small></div><span class="word-score">${Number(p.score||0)}</span>`;pbox.appendChild(row)});if(!pending.size)renderBoardState(r.board||{});else renderBoardState(r.board||{});renderRack();const myTurn=String(s.viewer_player_id)===String(r.current_turn_player_id)&&r.status==='active';['wordSubmitButton','wordUndoButton','wordClearButton','wordExchangeButton','wordPassButton'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=!myTurn});const log=document.getElementById('wordActionLog');log.innerHTML='';(s.recent_actions||[]).slice(0,22).forEach(a=>{const d=a.action_data||{},row=document.createElement('div');row.className='word-log-row';row.innerHTML=`<strong>${esc(a.player_name||'GAME')}</strong><br>${esc(d.notice||String(a.action_type||'').replaceAll('_',' '))}`;log.appendChild(row)});const result=document.getElementById('wordResult');result.hidden=r.status!=='finished';if(r.status==='finished'){const ranked=[...players].sort((a,b)=>Number(b.score||0)-Number(a.score||0)),winner=players.find(p=>String(p.player_id)===String(r.winner_player_id))||ranked[0];document.getElementById('wordWinnerName').textContent=winner?.public_name||winner?.member_username||'WORD CHAMPION';const box=document.getElementById('wordFinalList');box.innerHTML='';const medals=['🥇','🥈','🥉'];ranked.forEach((p,i)=>{const row=document.createElement('div');row.className='word-final-row';row.innerHTML=`<span>${medals[i]||'#'+(i+1)}</span><div><strong>${esc(p.public_name||p.member_username||'Player')}</strong><small>${p.player_status==='forfeited'?'FORFEITED':'FINAL SCORE'}</small></div><b>${Number(p.score||0)} PTS</b>`;box.appendChild(row)})}}
+  async function toggleReady(){try{await rpc('word_toggle_ready',{p_room_id:roomId});await load()}catch(e){document.getElementById('wordWaitingMessage').textContent=e.message}}async function start(){try{await rpc('word_start_room',{p_room_id:roomId});await load()}catch(e){document.getElementById('wordWaitingMessage').textContent=e.message}}
+  async function leave(forfeit=false){if(!roomId)return reset();if(forfeit&&!confirm('Leave and FORFEIT this active Word Battle?\n\nThis is permanent for the current match.'))return;try{await rpc('word_leave_room',{p_room_id:roomId,p_forfeit:!!forfeit})}catch(e){if(forfeit){document.getElementById('wordMoveHelp').textContent=e.message;return}}reset()}
+  function reset(){stop();roomId=null;state=null;pending.clear();selectedRack.clear();document.getElementById('wordWaitingRoom').hidden=true;screen(false);panel(null);detectResume()}
+  document.getElementById('wordResumeButton')?.addEventListener('click',resume);document.getElementById('wordCreateOpen')?.addEventListener('click',()=>panel('wordCreatePanel'));document.getElementById('wordBrowseOpen')?.addEventListener('click',browse);document.getElementById('wordJoinOpen')?.addEventListener('click',()=>panel('wordJoinPanel'));document.querySelectorAll('[data-word-close-panel]').forEach(b=>b.addEventListener('click',()=>panel(null)));document.getElementById('wordCreateConfirm')?.addEventListener('click',create);document.getElementById('wordJoinConfirm')?.addEventListener('click',()=>join(document.getElementById('wordRoomCodeInput').value));document.getElementById('wordReadyButton')?.addEventListener('click',toggleReady);document.getElementById('wordStartButton')?.addEventListener('click',start);document.getElementById('wordLeaveButton')?.addEventListener('click',()=>leave(false));document.getElementById('wordActiveLeave')?.addEventListener('click',()=>leave(true));document.getElementById('wordSubmitButton')?.addEventListener('click',submit);document.getElementById('wordUndoButton')?.addEventListener('click',undo);document.getElementById('wordClearButton')?.addEventListener('click',clearPending);document.getElementById('wordExchangeButton')?.addEventListener('click',exchange);document.getElementById('wordPassButton')?.addEventListener('click',pass);document.getElementById('wordReturnLobby')?.addEventListener('click',reset);document.getElementById('wordCloseFinished')?.addEventListener('click',()=>{reset();closeWordGame()});buildBoard();
 })();
 </script>
 
