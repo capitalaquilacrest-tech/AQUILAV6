@@ -4095,6 +4095,20 @@
 @media(prefers-reduced-motion:reduce){.aquila-games-modal:before,.aquila-games-topbar:after,.chess-topbar:after,.word-topbar:after,.aquila-game-card:after,.aquila-games-hero-emblem span,.aquila-games-enter-btn:after,.snake-game-modal .snake-cell.is-finish{animation:none!important}}
 </style>
 
+
+<style id="aquilaFinalViewerAudioPolish">
+/* FINAL BOARD VIEWER HUD — visible while watching the board, never covers a tile. */
+.aquila-empire-board-frame{position:relative}
+.aquila-empire-board-viewers{position:absolute;z-index:38;top:10px;right:10px;display:flex;align-items:center;gap:6px;min-height:31px;padding:6px 11px;border:1px solid rgba(125,211,252,.58);border-radius:999px;background:linear-gradient(135deg,rgba(2,15,47,.94),rgba(8,47,107,.91));color:#fff;font-size:9px;font-weight:950;letter-spacing:.055em;line-height:1;box-shadow:0 8px 24px rgba(0,0,0,.42),0 0 16px rgba(56,189,248,.24),inset 0 1px 0 rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);pointer-events:none;white-space:nowrap}
+.aquila-empire-board-viewers .aquila-empire-viewer-eye{font-size:15px;line-height:1;filter:drop-shadow(0 0 7px rgba(125,211,252,.9));animation:aquilaViewerEyePulse 2.1s ease-in-out infinite}
+.aquila-empire-board-viewers.is-live{border-color:rgba(134,239,172,.78);box-shadow:0 8px 24px rgba(0,0,0,.42),0 0 20px rgba(34,197,94,.32),inset 0 1px 0 rgba(255,255,255,.15)}
+.aquila-empire-board-viewers.is-live .aquila-empire-viewer-eye{filter:drop-shadow(0 0 8px rgba(134,239,172,1))}
+.aquila-empire-board-viewers.is-spectator{background:linear-gradient(135deg,rgba(76,29,149,.94),rgba(8,47,107,.92));border-color:rgba(196,181,253,.72)}
+@keyframes aquilaViewerEyePulse{50%{transform:scale(1.11);filter:drop-shadow(0 0 10px rgba(125,211,252,1))}}
+@media(max-width:700px){.aquila-empire-board-viewers{top:5px;right:5px;min-height:25px;padding:4px 7px;gap:4px;font-size:6.5px;letter-spacing:.035em}.aquila-empire-board-viewers .aquila-empire-viewer-eye{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.aquila-empire-board-viewers .aquila-empire-viewer-eye{animation:none!important}}
+</style>
+
 </head>
 <body>
   <div class="intro" id="intro">
@@ -11795,6 +11809,24 @@ if(!stage || !overlay) return;
     aquilaEmpireBirdTimer = null;
   }
 
+  function primeAquilaEmpireAudioFromGesture() {
+    if (aquilaEmpireAudioMuted) return null;
+    const context = getAquilaEmpireAudioContext();
+    if (!context) return null;
+    try {
+      const buffer = context.createBuffer(1, 1, Math.max(8000, context.sampleRate || 44100));
+      const source = context.createBufferSource();
+      const gain = context.createGain();
+      gain.gain.value = 0.00001;
+      source.buffer = buffer;
+      source.connect(gain);
+      gain.connect(context.destination);
+      source.start(0);
+    } catch (_) {}
+    aquilaEmpireAudioUnlocked = true;
+    return context;
+  }
+
   async function unlockAquilaEmpireAudio() {
     if (aquilaEmpireAudioMuted) aquilaEmpireAudioMuted = false;
     const context = getAquilaEmpireAudioContext();
@@ -13082,13 +13114,23 @@ if(!stage || !overlay) return;
 
   function ensureAquilaEmpireLifecycleUi() {
     const sidebar = document.querySelector(".aquila-empire-action-sidebar");
-    if (sidebar && !document.getElementById("aquilaEmpireLivePresence")) {
-      const presence = document.createElement("div");
-      presence.id = "aquilaEmpireLivePresence";
-      presence.className = "aquila-empire-live-presence";
-      presence.textContent = "👁 0 WATCHING";
-      sidebar.insertBefore(presence, sidebar.firstChild?.nextSibling || null);
+    const boardFrame = document.querySelector(".aquila-empire-board-frame");
 
+    /* Keep the live viewer count beside the board itself so players can see it
+       without covering any property tile, center control, dice or token. */
+    let presence = document.getElementById("aquilaEmpireLivePresence");
+    if (!presence && boardFrame) {
+      presence = document.createElement("div");
+      presence.id = "aquilaEmpireLivePresence";
+      presence.className = "aquila-empire-live-presence aquila-empire-board-viewers";
+      presence.innerHTML = '<span class="aquila-empire-viewer-eye" aria-hidden="true">👁</span><span class="aquila-empire-viewer-text">0 WATCHING</span>';
+      boardFrame.appendChild(presence);
+    } else if (presence && boardFrame && presence.parentElement !== boardFrame) {
+      presence.classList.add("aquila-empire-board-viewers");
+      boardFrame.appendChild(presence);
+    }
+
+    if (sidebar && !document.getElementById("aquilaEmpireLifecycleActions")) {
       const actions = document.createElement("div");
       actions.id = "aquilaEmpireLifecycleActions";
       actions.className = "aquila-empire-lifecycle-actions";
@@ -13111,10 +13153,14 @@ if(!stage || !overlay) return;
       const count = Number(data?.viewer_count || 0);
       const badge = document.getElementById("aquilaEmpireLivePresence");
       if (badge) {
-        badge.textContent = aquilaEmpirePresenceIsSpectator
-          ? `👁 SPECTATOR MODE · ${count} WATCHING`
-          : `👁 ${count} WATCHING`;
+        const text = badge.querySelector(".aquila-empire-viewer-text");
+        const label = aquilaEmpirePresenceIsSpectator
+          ? `SPECTATOR · ${count} WATCHING`
+          : `${count} WATCHING`;
+        if (text) text.textContent = label;
+        else badge.textContent = `👁 ${label}`;
         badge.classList.toggle("is-spectator", aquilaEmpirePresenceIsSpectator);
+        badge.classList.toggle("is-live", count > 0);
       }
       return count;
     } catch (error) {
@@ -13319,11 +13365,13 @@ if(!stage || !overlay) return;
   window.launchAquilaEmpireFromHub=function(){closeAquilaGameHub();setTimeout(()=>{if(typeof openAquilaEmpire==='function')openAquilaEmpire()},40)};
 
   function updateSnakeSoundButton(){const b=document.getElementById('snakeSoundButton');if(!b)return;b.classList.toggle('is-on',snakeSoundOn);b.innerHTML=`<span class="snake-top-icon">${snakeSoundOn?'🔊':'🔇'}</span> ${snakeSoundOn?'SOUND ON':'SOUND OFF'}`}
-  function ensureSnakeAudio(){if(!snakeSoundOn)return null;try{snakeAudioContext=snakeAudioContext||new (window.AudioContext||window.webkitAudioContext)();if(snakeAudioContext.state==='suspended')snakeAudioContext.resume();return snakeAudioContext}catch(_){return null}}
+  function ensureSnakeAudio(){if(!snakeSoundOn)return null;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;snakeAudioContext=snakeAudioContext||new AC();if(snakeAudioContext.state==='suspended')snakeAudioContext.resume().catch(()=>{});return snakeAudioContext}catch(_){return null}}
+  function primeSnakeAudioFromGesture(){if(!snakeSoundOn)return null;const ctx=ensureSnakeAudio();if(!ctx)return null;try{if(ctx.state==='suspended')ctx.resume().catch(()=>{});const b=ctx.createBuffer(1,1,Math.max(8000,ctx.sampleRate||44100)),src=ctx.createBufferSource(),g=ctx.createGain();g.gain.value=.00001;src.buffer=b;src.connect(g);g.connect(getSnakeMaster(ctx));src.start(0)}catch(_){}return ctx}
+  window.aquilaPrimeSnakeAudio=primeSnakeAudioFromGesture;
   let snakeMasterGain=null,snakeCompressor=null;
   function getSnakeMaster(ctx){
     if(!snakeMasterGain){
-      snakeMasterGain=ctx.createGain();snakeMasterGain.gain.value=1.35;
+      snakeMasterGain=ctx.createGain();snakeMasterGain.gain.value=1.62;
       snakeCompressor=ctx.createDynamicsCompressor();
       snakeCompressor.threshold.value=-16;snakeCompressor.knee.value=18;snakeCompressor.ratio.value=5;snakeCompressor.attack.value=.003;snakeCompressor.release.value=.18;
       snakeMasterGain.connect(snakeCompressor);snakeCompressor.connect(ctx.destination);
@@ -13537,7 +13585,7 @@ if(!stage || !overlay) return;
     try{
       const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
       fxCtx=fxCtx||new AC();if(fxCtx.state==='suspended')fxCtx.resume().catch(()=>{});
-      if(!fxMaster){fxMaster=fxCtx.createGain();fxMaster.gain.value=1.18;fxComp=fxCtx.createDynamicsCompressor();fxComp.threshold.value=-18;fxComp.knee.value=16;fxComp.ratio.value=4;fxMaster.connect(fxComp);fxComp.connect(fxCtx.destination)}
+      if(!fxMaster){fxMaster=fxCtx.createGain();fxMaster.gain.value=1.48;fxComp=fxCtx.createDynamicsCompressor();fxComp.threshold.value=-18;fxComp.knee.value=16;fxComp.ratio.value=4;fxMaster.connect(fxComp);fxComp.connect(fxCtx.destination)}
       return fxCtx;
     }catch(_){return null}
   }
@@ -13554,6 +13602,40 @@ if(!stage || !overlay) return;
     else{tone(390,500,.07,.13,'triangle')}
   }
   window.aquilaPremiumGameFx=premiumFx;
+
+  function primePremiumAudioFromGesture(){
+    const c=fxContext();if(!c)return null;
+    try{
+      if(c.state==='suspended')c.resume().catch(()=>{});
+      const b=c.createBuffer(1,1,Math.max(8000,c.sampleRate||44100)),src=c.createBufferSource(),g=c.createGain();
+      g.gain.value=.00001;src.buffer=b;src.connect(g);g.connect(fxMaster);src.start(0);
+    }catch(_){}
+    return c;
+  }
+
+  /* iOS/Safari/PWA: unlock audio from the SAME physical gesture that enters or
+     controls a game. Attempts on pointerdown + touchend + click are intentional;
+     browsers ignore duplicates, while suspended contexts get another chance. */
+  function primeAllGameAudioFromGesture(e){
+    const gameSurface=e.target?.closest?.('.aquila-games-modal,.snake-game-modal,.chess-game-modal,.word-game-modal,.aquila-empire-modal,.aquila-empire-launcher');
+    if(!gameSurface)return;
+    primePremiumAudioFromGesture();
+    try{if(typeof window.aquilaPrimeSnakeAudio==='function')window.aquilaPrimeSnakeAudio()}catch(_){}
+    try{if(typeof primeAquilaEmpireAudioFromGesture==='function')primeAquilaEmpireAudioFromGesture()}catch(_){}
+  }
+  document.addEventListener('pointerdown',primeAllGameAudioFromGesture,true);
+  document.addEventListener('touchend',primeAllGameAudioFromGesture,{capture:true,passive:true});
+  document.addEventListener('click',primeAllGameAudioFromGesture,true);
+
+  /* Resume contexts after returning from background. Safari may suspend WebAudio
+     whenever the PWA/tab loses focus. */
+  function resumeGameAudioAfterForeground(){
+    try{if(fxCtx?.state==='suspended')fxCtx.resume().catch(()=>{})}catch(_){}
+    try{if(typeof window.aquilaPrimeSnakeAudio==='function'&&document.getElementById('snakeGameModal')?.classList.contains('is-open'))window.aquilaPrimeSnakeAudio()}catch(_){}
+    try{if(document.getElementById('aquilaEmpireModal')?.classList.contains('is-open')&&typeof primeAquilaEmpireAudioFromGesture==='function')primeAquilaEmpireAudioFromGesture()}catch(_){}
+  }
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)resumeGameAudioAfterForeground()});
+  window.addEventListener('pageshow',resumeGameAudioAfterForeground);
 
   document.addEventListener('click',function(e){
     const b=e.target.closest('.aquila-games-modal button,.chess-game-modal button,.word-game-modal button');if(!b)return;
