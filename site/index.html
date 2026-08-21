@@ -13111,7 +13111,280 @@ if(!stage || !overlay) return;
 
   function updateSnakeSoundButton(){const b=document.getElementById('snakeSoundButton');if(!b)return;b.classList.toggle('is-on',snakeSoundOn);b.innerHTML=`<span class="snake-top-icon">${snakeSoundOn?'🔊':'🔇'}</span> ${snakeSoundOn?'SOUND ON':'SOUND OFF'}`}
   function ensureSnakeAudio(){if(!snakeSoundOn)return null;try{snakeAudioContext=snakeAudioContext||new (window.AudioContext||window.webkitAudioContext)();if(snakeAudioContext.state==='suspended')snakeAudioContext.resume();return snakeAudioContext}catch(_){return null}}
-  function snakeTone(kind='roll'){const ctx=ensureSnakeAudio();if(!ctx)return;const now=ctx.currentTime;const osc=ctx.createOscillator(),gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);const f={roll:260,ladder:520,snake:145,win:660,join:390}[kind]||300;osc.frequency.setValueAtTime(f,now);if(kind==='ladder')osc.frequency.exponentialRampToValueAtTime(880,now+.2);if(kind==='snake')osc.frequency.exponentialRampToValueAtTime(85,now+.25);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.07,now+.015);gain.gain.exponentialRampToValueAtTime(.0001,now+.3);osc.start(now);osc.stop(now+.32)}
+  /* =========================================================
+     AQUILA SNAKE & LADDERS — PREMIUM GAME SOUND ENGINE
+     ========================================================= */
+
+  function snakeTone(kind = "roll") {
+    const ctx = ensureSnakeAudio();
+    if (!ctx || !snakeSoundOn) return;
+  
+    const now = ctx.currentTime;
+  
+    function tone({
+      type = "sine",
+      start = 300,
+      end = null,
+      volume = 0.18,
+      delay = 0,
+      duration = 0.18
+    }) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+  
+      osc.type = type;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+  
+      const t = now + delay;
+  
+      osc.frequency.setValueAtTime(start, t);
+  
+      if (end) {
+        osc.frequency.exponentialRampToValueAtTime(
+          Math.max(30, end),
+          t + duration
+        );
+      }
+  
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(
+        Math.max(0.001, volume),
+        t + 0.012
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        t + duration
+      );
+  
+      osc.start(t);
+      osc.stop(t + duration + 0.03);
+    }
+  
+    switch (kind) {
+  
+      /* 🎲 DICE ROLL */
+      case "roll":
+        tone({
+          type: "square",
+          start: 185,
+          end: 240,
+          volume: 0.16,
+          duration: 0.08
+        });
+  
+        tone({
+          type: "triangle",
+          start: 340,
+          end: 270,
+          volume: 0.13,
+          delay: 0.06,
+          duration: 0.1
+        });
+  
+        tone({
+          type: "square",
+          start: 220,
+          end: 300,
+          volume: 0.14,
+          delay: 0.13,
+          duration: 0.08
+        });
+        break;
+  
+  
+      /* 🦘 TOKEN HOP — one sound per square */
+      case "hop":
+        tone({
+          type: "triangle",
+          start: 330,
+          end: 430,
+          volume: 0.15,
+          duration: 0.07
+        });
+  
+        tone({
+          type: "sine",
+          start: 150,
+          end: 115,
+          volume: 0.08,
+          delay: 0.035,
+          duration: 0.07
+        });
+        break;
+  
+  
+      /* 🪜 LADDER CLIMB */
+      case "ladder":
+        tone({
+          type: "triangle",
+          start: 330,
+          end: 540,
+          volume: 0.22,
+          duration: 0.16
+        });
+  
+        tone({
+          type: "triangle",
+          start: 470,
+          end: 720,
+          volume: 0.23,
+          delay: 0.11,
+          duration: 0.17
+        });
+  
+        tone({
+          type: "sine",
+          start: 680,
+          end: 1100,
+          volume: 0.26,
+          delay: 0.23,
+          duration: 0.28
+        });
+  
+        tone({
+          type: "sine",
+          start: 1050,
+          end: 1450,
+          volume: 0.16,
+          delay: 0.39,
+          duration: 0.22
+        });
+        break;
+  
+  
+      /* 🐍 SNAKE ATTACK / DROP */
+      case "snake":
+        tone({
+          type: "sawtooth",
+          start: 480,
+          end: 110,
+          volume: 0.24,
+          duration: 0.34
+        });
+  
+        tone({
+          type: "square",
+          start: 155,
+          end: 65,
+          volume: 0.22,
+          delay: 0.14,
+          duration: 0.38
+        });
+  
+        tone({
+          type: "sawtooth",
+          start: 92,
+          end: 45,
+          volume: 0.17,
+          delay: 0.34,
+          duration: 0.38
+        });
+        break;
+  
+  
+      /* ⚠️ EXACT-100 MISS / BLOCKED */
+      case "blocked":
+        tone({
+          type: "square",
+          start: 210,
+          end: 165,
+          volume: 0.18,
+          duration: 0.14
+        });
+  
+        tone({
+          type: "square",
+          start: 175,
+          end: 120,
+          volume: 0.18,
+          delay: 0.16,
+          duration: 0.17
+        });
+        break;
+  
+  
+      /* 👥 PLAYER JOIN / READY */
+      case "join":
+        tone({
+          type: "sine",
+          start: 420,
+          end: 620,
+          volume: 0.15,
+          duration: 0.15
+        });
+  
+        tone({
+          type: "sine",
+          start: 620,
+          end: 820,
+          volume: 0.13,
+          delay: 0.12,
+          duration: 0.15
+        });
+        break;
+  
+  
+      /* 🔥 TURN START */
+      case "turn":
+        tone({
+          type: "triangle",
+          start: 350,
+          end: 520,
+          volume: 0.16,
+          duration: 0.11
+        });
+  
+        tone({
+          type: "triangle",
+          start: 520,
+          end: 760,
+          volume: 0.17,
+          delay: 0.10,
+          duration: 0.13
+        });
+        break;
+  
+  
+      /* 🏆 WINNER */
+      case "win":
+        tone({
+          type: "triangle",
+          start: 440,
+          end: 660,
+          volume: 0.22,
+          duration: 0.2
+        });
+  
+        tone({
+          type: "triangle",
+          start: 660,
+          end: 880,
+          volume: 0.24,
+          delay: 0.18,
+          duration: 0.22
+        });
+  
+        tone({
+          type: "sine",
+          start: 880,
+          end: 1320,
+          volume: 0.28,
+          delay: 0.38,
+          duration: 0.35
+        });
+  
+        tone({
+          type: "sine",
+          start: 1320,
+          end: 1760,
+          volume: 0.19,
+          delay: 0.67,
+          duration: 0.35
+        });
+        break;
+    }
+  }
 
   function squareCenter(n){const idx=n-1,row=Math.floor(idx/10),colInRow=idx%10;const col=row%2===0?colInRow:9-colInRow;return{x:(col+.5)*10,y:100-(row+.5)*10}}
   function buildSnakeRoutes(){
@@ -13169,13 +13442,51 @@ if(!stage || !overlay) return;
   }
   function showSnakeImpact(title,text){const b=document.getElementById('snakeImpactBanner');if(!b)return;document.getElementById('snakeImpactTitle').textContent=title;document.getElementById('snakeImpactText').textContent=text;b.classList.remove('show');void b.offsetWidth;b.classList.add('show')}
   async function animateSnakeAction(action,players){
-    if(!action||snakeLastAnimatedActionId===action.action_id)return;const type=String(action.action_type||'');if(!['dice_rolled','game_won'].includes(type))return;snakeLastAnimatedActionId=action.action_id;
-    const d=typeof action.action_data==='string'?JSON.parse(action.action_data):action.action_data||{};const player=players.find(p=>String(p.player_id)===String(action.player_id));if(!player)return;
-    const from=Number(d.from||0),landed=Number(d.landed??d.position??from),finalPos=Number(d.position??landed);if(from<0||landed<0)return;
+    if(!action||snakeLastAnimatedActionId===action.action_id)return;
+  
+    const type=String(action.action_type||'');
+  
+    if(!['dice_rolled','game_won'].includes(type))return;
+  
+    snakeLastAnimatedActionId=action.action_id;
+  
+    const d=
+      typeof action.action_data==='string'
+        ? JSON.parse(action.action_data)
+        : action.action_data||{};
+  
+    const player=players.find(
+      p=>String(p.player_id)===String(action.player_id)
+    );
+  
+    if(!player)return;
+  
+    const from=Number(d.from||0);
+    const landed=Number(d.landed??d.position??from);
+    const finalPos=Number(d.position??landed);
+  
+    /* EXACT-100 OVERSHOOT SOUND */
+    if (
+      Number(d.dice || 0) > 0 &&
+      from > 0 &&
+      landed === from &&
+      finalPos === from
+    ) {
+      showSnakeImpact(
+        '🎯 EXACT 100 REQUIRED!',
+        `${player.public_name || player.member_username || 'Player'} needs the exact roll to reach Square 100.`
+      );
+  
+      snakeTone('blocked');
+  
+      return;
+    }
+  
+    if(from<0||landed<0)return;
     let token=document.querySelector(`.snake-board-token[data-player-id="${CSS.escape(String(player.player_id))}"]`);if(!token)return;
     const startZone=document.querySelector(`.snake-cell[data-square="${Math.max(1,from)}"] .snake-cell-tokens`);if(from>0&&startZone)startZone.appendChild(token);
     const steps=[];for(let n=Math.max(1,from+1);n<=landed;n++)steps.push(n);
-    for(const n of steps){const z=document.querySelector(`.snake-cell[data-square="${n}"] .snake-cell-tokens`);if(!z)continue;z.appendChild(token);token.classList.remove('is-moving');void token.offsetWidth;token.classList.add('is-moving');const cell=z.closest('.snake-cell');cell?.classList.add('is-hot');snakeTone('roll');await sleep(105);cell?.classList.remove('is-hot')}
+    for(const n of steps){const z=document.querySelector(`.snake-cell[data-square="${n}"] .snake-cell-tokens`);if(!z)continue;z.appendChild(token);token.classList.remove('is-moving');void token.offsetWidth;token.classList.add('is-moving');const cell=z.closest('.snake-cell');cell?.classList.add('is-hot');snakeTone('hop');await sleep(145);cell?.classList.remove('is-hot')}
     if(finalPos!==landed){const z=document.querySelector(`.snake-cell[data-square="${finalPos}"] .snake-cell-tokens`);if(z){showSnakeImpact(finalPos>landed?'🪜 MASSIVE CLIMB!':'🐍 BRUTAL SNAKE!',`${player.public_name||player.member_username||'Player'}: ${landed} → ${finalPos}`);snakeTone(finalPos>landed?'ladder':'snake');await sleep(240);z.appendChild(token);token.classList.remove('is-moving');void token.offsetWidth;token.classList.add('is-moving')}}
     if(type==='game_won'){showSnakeImpact('🏆 SQUARE 100 CONQUERED!',`${player.public_name||player.member_username||'Player'} wins the battle!`);snakeTone('win')}
   }
