@@ -3868,6 +3868,101 @@
   @media(max-width:700px){.snake-top-actions button{font-size:0;width:38px;padding:6px}.snake-top-actions button .snake-top-icon{font-size:16px}.snake-resume-card.is-visible{grid-template-columns:1fr}.snake-board-routes{inset:4px;width:calc(100% - 8px);height:calc(100% - 8px)}.snake-final-standings{max-height:145px}.snake-final-row{padding:6px 7px;grid-template-columns:28px 1fr auto}.snake-final-rank{font-size:15px}}
   @media(prefers-reduced-motion:reduce){.snake-game-topbar:after,.snake-board-token:after,.snake-winner:before,.snake-winner:after,.snake-winner .trophy{animation:none!important}}
 
+
+
+  /* =========================================================
+     SNAKE & LADDERS PREMIUM V3 — BATTLE ARENA POLISH
+     Scoped only to Snake & Ladders. Keeps the board unobstructed.
+     ========================================================= */
+  .snake-game-modal .snake-board-column{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .snake-game-modal .snake-board-wrap{
+    overflow:visible;
+    border-color:#ffe66d;
+    background:
+      radial-gradient(circle at 50% 50%,rgba(59,130,246,.32),transparent 38%),
+      linear-gradient(145deg,#04142f,#020817 62%,#210a28);
+    box-shadow:0 30px 75px rgba(0,0,0,.62),0 0 24px rgba(56,189,248,.25),0 0 48px rgba(250,204,21,.20),inset 0 0 32px rgba(96,165,250,.14);
+  }
+  .snake-game-modal .snake-board{
+    background:radial-gradient(circle at 50% 50%,#0a2454,#020817 72%);
+    box-shadow:inset 0 0 30px rgba(56,189,248,.12);
+  }
+  .snake-game-modal .snake-cell{
+    border-color:rgba(255,255,255,.58);
+    color:#071b3d;
+    font-size:clamp(8px,.72vw,11px);
+    text-shadow:0 1px 0 rgba(255,255,255,.72);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -8px 18px rgba(15,23,42,.08);
+    transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+  }
+  .snake-game-modal .snake-cell:nth-child(6n+1){background:linear-gradient(145deg,#67e8f9,#38bdf8 54%,#60a5fa)!important}
+  .snake-game-modal .snake-cell:nth-child(6n+2){background:linear-gradient(145deg,#a7f3d0,#4ade80 54%,#22c55e)!important}
+  .snake-game-modal .snake-cell:nth-child(6n+3){background:linear-gradient(145deg,#fde68a,#fbbf24 54%,#f59e0b)!important}
+  .snake-game-modal .snake-cell:nth-child(6n+4){background:linear-gradient(145deg,#f9a8d4,#f472b6 54%,#ec4899)!important}
+  .snake-game-modal .snake-cell:nth-child(6n+5){background:linear-gradient(145deg,#c4b5fd,#a78bfa 54%,#8b5cf6)!important}
+  .snake-game-modal .snake-cell:nth-child(6n){background:linear-gradient(145deg,#fed7aa,#fb923c 54%,#f97316)!important}
+  .snake-game-modal .snake-cell-num{
+    min-width:20px;height:20px;display:grid;place-items:center;padding:0 4px;border:1px solid rgba(255,255,255,.62);border-radius:999px;
+    background:rgba(2,8,23,.72);color:#fff;text-shadow:0 1px 4px #000;box-shadow:0 2px 8px rgba(0,0,0,.28);font-weight:1000;
+  }
+  .snake-game-modal .snake-cell.is-ladder{
+    outline:2px solid rgba(34,255,172,.88);outline-offset:-3px;
+    box-shadow:inset 0 0 18px rgba(34,255,172,.48),0 0 12px rgba(34,255,172,.38);
+  }
+  .snake-game-modal .snake-cell.is-snake{
+    outline:2px solid rgba(255,55,117,.92);outline-offset:-3px;
+    box-shadow:inset 0 0 20px rgba(255,35,95,.48),0 0 13px rgba(255,55,117,.38);
+  }
+  .snake-game-modal .snake-cell.is-finish{
+    background:radial-gradient(circle at 50% 38%,#fff7b2,#ffd43b 45%,#f59e0b 100%)!important;
+    outline:3px solid #fff6a6;outline-offset:-4px;
+    box-shadow:inset 0 0 22px rgba(255,255,255,.7),0 0 28px rgba(250,204,21,.7)!important;
+    animation:snakeFinishGlow 1.5s ease-in-out infinite;
+  }
+  @keyframes snakeFinishGlow{50%{filter:brightness(1.18) saturate(1.18);box-shadow:inset 0 0 28px rgba(255,255,255,.82),0 0 42px rgba(250,204,21,.9)}}
+  .snake-game-modal .snake-cell-jump{opacity:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.55));font-size:clamp(14px,1.55vw,22px)}
+  .snake-game-modal .snake-route-ladder{stroke:#d9f99d;stroke-width:1.35;filter:drop-shadow(0 0 2.8px #22c55e) drop-shadow(0 0 5px rgba(250,204,21,.85));opacity:1}
+  .snake-game-modal .snake-route-rung{stroke:#fff7ae;stroke-width:.72;filter:drop-shadow(0 0 2px rgba(250,204,21,.95));opacity:1}
+  .snake-game-modal .snake-route-snake{stroke-width:2.15;filter:drop-shadow(0 0 2px #fb7185) drop-shadow(0 0 5px rgba(168,85,247,.72));opacity:1}
+  .snake-game-modal .snake-route-head{filter:drop-shadow(0 0 2px #fff) drop-shadow(0 1px 3px rgba(0,0,0,.8))}
+  .snake-game-modal .snake-board-token{
+    border-width:2px;box-shadow:inset -5px -6px 8px rgba(0,0,0,.35),inset 3px 3px 6px rgba(255,255,255,.65),0 6px 12px rgba(0,0,0,.58),0 0 10px var(--snake-token),0 0 18px var(--snake-token);
+  }
+
+  /* Dice/control deck lives BELOW the board so no square is hidden. */
+  .snake-game-modal .snake-board-center-fx{
+    position:static;inset:auto;z-index:auto;width:100%;display:block;margin:0;pointer-events:auto;
+  }
+  .snake-game-modal .snake-turn-panel{
+    width:100%;max-width:none;min-height:104px;margin:0;padding:12px 14px;
+    display:grid;grid-template-columns:minmax(150px,1fr) 88px minmax(180px,250px);grid-template-rows:auto auto;align-items:center;gap:6px 14px;
+    border:1px solid rgba(250,204,21,.72);border-radius:18px;
+    background:radial-gradient(circle at 52% 0,rgba(56,189,248,.16),transparent 34%),linear-gradient(135deg,rgba(3,28,72,.98),rgba(18,35,83,.98) 52%,rgba(74,16,61,.96));
+    box-shadow:0 18px 42px rgba(0,0,0,.48),0 0 22px rgba(56,189,248,.13),inset 0 1px 0 rgba(255,255,255,.12);
+    text-align:left;
+  }
+  .snake-game-modal .snake-turn-panel>span{grid-column:1;grid-row:1;align-self:end;color:#7dd3fc;font-size:9px;letter-spacing:.16em}
+  .snake-game-modal .snake-turn-panel>strong{grid-column:1;grid-row:2;align-self:start;margin:0;color:#fff;font-size:clamp(15px,1.5vw,20px);text-shadow:0 2px 10px rgba(0,0,0,.55)}
+  .snake-game-modal .snake-dice{grid-column:2;grid-row:1/3;width:72px;height:72px;margin:0;border:2px solid #fff08a;background:radial-gradient(circle at 35% 25%,#fff,#e0f2fe 58%,#93c5fd);box-shadow:0 10px 25px rgba(0,0,0,.42),0 0 18px rgba(56,189,248,.38),0 0 28px rgba(250,204,21,.22)}
+  .snake-game-modal .snake-roll-btn{grid-column:3;grid-row:1;min-height:45px;align-self:end;background:linear-gradient(135deg,#ef4444,#db2777 50%,#7c3aed);box-shadow:0 9px 22px rgba(219,39,119,.28),0 0 15px rgba(236,72,153,.18);font-size:11px;letter-spacing:.04em}
+  .snake-game-modal .snake-last-action{grid-column:3;grid-row:2;align-self:start;margin:0;color:#dbeafe;font-size:9px;line-height:1.45}
+  .snake-game-modal .snake-roll-btn:not(:disabled):hover{filter:brightness(1.13);transform:translateY(-1px);box-shadow:0 12px 28px rgba(219,39,119,.36),0 0 24px rgba(236,72,153,.28)}
+
+  .snake-game-modal .snake-card{border-color:rgba(125,211,252,.30);background:linear-gradient(145deg,rgba(5,29,72,.88),rgba(28,20,69,.82));box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 25px rgba(0,0,0,.23)}
+  .snake-game-modal .snake-card-title{color:#fde68a;text-shadow:0 0 12px rgba(250,204,21,.28)}
+  .snake-game-modal .snake-live-player.is-turn{border-color:#fde047;background:linear-gradient(135deg,rgba(250,204,21,.18),rgba(56,189,248,.12));box-shadow:0 0 16px rgba(250,204,21,.16)}
+  .snake-game-modal .snake-position{color:#67e8f9;text-shadow:0 0 9px rgba(34,211,238,.5)}
+
+  @media(max-width:700px){
+    .snake-game-modal .snake-cell{font-size:6px}
+    .snake-game-modal .snake-cell-num{min-width:14px;height:14px;padding:0 3px;font-size:6px}
+    .snake-game-modal .snake-turn-panel{min-height:0;grid-template-columns:1fr 58px;grid-template-rows:auto auto auto;padding:10px;gap:5px 9px}
+    .snake-game-modal .snake-turn-panel>span{grid-column:1;grid-row:1}
+    .snake-game-modal .snake-turn-panel>strong{grid-column:1;grid-row:2;font-size:12px}
+    .snake-game-modal .snake-dice{grid-column:2;grid-row:1/3;width:54px;height:54px;font-size:33px}
+    .snake-game-modal .snake-roll-btn{grid-column:1/3;grid-row:3;min-height:42px;margin-top:3px;font-size:9px}
+    .snake-game-modal .snake-last-action{grid-column:1/3;grid-row:4;font-size:7px}
+  }
 </style>
 
 </head>
@@ -8369,7 +8464,7 @@ if(!stage || !overlay) return;
           <div class="aquila-games-select-head"><span class="aquila-games-eyebrow">CHOOSE YOUR BATTLE</span><h3>SELECT A GAME</h3><p>Pick your arena, review the rules, then create or join a multiplayer room.</p></div>
           <div class="aquila-game-grid">
             <article class="aquila-game-card"><span class="aquila-game-badge">STRATEGY • 2–4 PLAYERS</span><div class="aquila-game-art">🏙️👑</div><h4>AQUILA EMPIRE</h4><p>Build, trade, acquire properties, survive obligations, and finish with the strongest empire.</p><div class="aquila-game-meta"><span>PROPERTY STRATEGY</span><span>LIVE MULTIPLAYER</span><span>VOICE</span><span>RANKINGS</span></div><div class="aquila-game-card-actions"><button class="details" type="button" onclick="showAquilaGameDetails('empire')">GAME DETAILS</button><button class="play" type="button" onclick="launchAquilaEmpireFromHub()">PLAY EMPIRE</button></div></article>
-            <article class="aquila-game-card snake-featured"><span class="aquila-game-badge">🔥 FEATURED • 2–6 PLAYERS</span><div class="aquila-game-art">🐍🪜🎲</div><h4>SNAKE & LADDERS</h4><p>A fast, unpredictable race to Square 100. Climb huge ladders, survive brutal snakes, steal momentum, and fight for the final square.</p><div class="aquila-game-meta"><span>2–6 PLAYERS</span><span>100-SQUARE BOARD</span><span>LIVE ROOMS</span><span>TURN-BASED</span><span>WINNER CEREMONY</span></div><div class="aquila-game-card-actions"><button class="details" type="button" onclick="showAquilaGameDetails('snake')">GAME DETAILS</button><button class="play" type="button" onclick="launchSnakeGameFromHub()">PLAY SNAKE & LADDERS</button></div></article>
+            <article class="aquila-game-card snake-featured"><span class="aquila-game-badge">🔥 FEATURED • 2–6 PLAYERS</span><div class="aquila-game-art">🐍🪜🎲</div><h4>SNAKE & LADDERS</h4><p>A longer, more intense Battle Difficulty race to Square 100. Climb tactical ladders, survive brutal upper-board snakes, protect every lead, and fight for an exact finish.</p><div class="aquila-game-meta"><span>2–6 PLAYERS</span><span>100-SQUARE BOARD</span><span>LIVE ROOMS</span><span>TURN-BASED</span><span>BATTLE DIFFICULTY</span><span>WINNER CEREMONY</span></div><div class="aquila-game-card-actions"><button class="details" type="button" onclick="showAquilaGameDetails('snake')">GAME DETAILS</button><button class="play" type="button" onclick="launchSnakeGameFromHub()">PLAY SNAKE & LADDERS</button></div></article>
           </div>
           <div class="aquila-games-cta"><button class="aquila-games-btn secondary" type="button" onclick="showAquilaGamesView('intro')">← BACK</button></div>
         </div>
@@ -8405,7 +8500,7 @@ if(!stage || !overlay) return;
       <section id="snakeGameScreen" class="snake-screen">
         <div class="snake-gameplay">
           <aside class="snake-side left"><div class="snake-card"><div class="snake-card-title">BATTLE PLAYERS</div><div id="snakeLivePlayers" class="snake-live-players"></div></div><div class="snake-card"><div class="snake-card-title">QUICK RULES</div><div class="snake-rules-list"><div>🎲 Roll only on your turn.</div><div>🪜 Land on a ladder base to climb instantly.</div><div>🐍 Land on a snake head and slide down.</div><div>🎯 You must land exactly on Square 100.</div><div>🏆 First player to reach 100 wins.</div></div></div></aside>
-          <main class="snake-board-column"><div class="snake-board-wrap"><div id="snakeBoard" class="snake-board"></div><svg id="snakeBoardRoutes" class="snake-board-routes" viewBox="0 0 100 100" aria-hidden="true"></svg><div id="snakeImpactBanner" class="snake-impact-banner"><strong id="snakeImpactTitle">BATTLE MOVE</strong><span id="snakeImpactText">The board has shifted.</span></div><div class="snake-board-center-fx"><div class="snake-turn-panel"><span>CURRENT TURN</span><strong id="snakeCurrentTurn">Preparing…</strong><div id="snakeDice" class="snake-dice">⚀</div><button id="snakeRollButton" class="snake-roll-btn" type="button" disabled>🎲 ROLL THE DICE</button><div id="snakeLastAction" class="snake-last-action">Waiting for the battle to begin…</div></div></div><div id="snakeWinnerStage" class="snake-winner" hidden><div class="trophy">🏆</div><span>SNAKE & LADDERS CHAMPION</span><strong id="snakeWinnerName">WINNER</strong><p id="snakeWinnerReason">First official member to conquer Square 100.</p><div id="snakeFinalStandings" class="snake-final-standings"></div><div class="snake-winner-actions"><button class="snake-primary" id="snakeReturnLobby" type="button">RETURN TO GAME LOBBY</button><button class="snake-secondary" id="snakeCloseFinished" type="button">CLOSE GAME</button></div></div></div></main>
+          <main class="snake-board-column"><div class="snake-board-wrap"><div id="snakeBoard" class="snake-board"></div><svg id="snakeBoardRoutes" class="snake-board-routes" viewBox="0 0 100 100" aria-hidden="true"></svg><div id="snakeImpactBanner" class="snake-impact-banner"><strong id="snakeImpactTitle">BATTLE MOVE</strong><span id="snakeImpactText">The board has shifted.</span></div><div id="snakeWinnerStage" class="snake-winner" hidden><div class="trophy">🏆</div><span>SNAKE & LADDERS CHAMPION</span><strong id="snakeWinnerName">WINNER</strong><p id="snakeWinnerReason">First official member to conquer Square 100.</p><div id="snakeFinalStandings" class="snake-final-standings"></div><div class="snake-winner-actions"><button class="snake-primary" id="snakeReturnLobby" type="button">RETURN TO GAME LOBBY</button><button class="snake-secondary" id="snakeCloseFinished" type="button">CLOSE GAME</button></div></div></div><div class="snake-board-center-fx"><div class="snake-turn-panel"><span>CURRENT TURN</span><strong id="snakeCurrentTurn">Preparing…</strong><div id="snakeDice" class="snake-dice">⚀</div><button id="snakeRollButton" class="snake-roll-btn" type="button" disabled>🎲 ROLL THE DICE</button><div id="snakeLastAction" class="snake-last-action">Waiting for the battle to begin…</div></div></div></main>
           <aside class="snake-side right"><div class="snake-card"><div class="snake-card-title">MATCH STATUS</div><div class="snake-rules-list"><div>ROOM: <strong id="snakeHudCode">------</strong></div><div>TURN: <strong id="snakeHudTurn">0</strong></div><div>PLAYERS: <strong id="snakeHudPlayers">0</strong></div></div></div><div class="snake-card"><div class="snake-card-title">LIVE ACTION LOG</div><div id="snakeActionLog" class="snake-action-log"></div></div><button id="snakeActiveLeave" class="snake-danger" type="button">LEAVE / FORFEIT MATCH</button></aside>
         </div>
       </section>
@@ -12980,9 +13075,9 @@ if(!stage || !overlay) return;
   let snakeSoundOn=localStorage.getItem('aquilaSnakeSound')!=='0',snakeAudioContext=null;
   const diceFaces=['⚀','⚁','⚂','⚃','⚄','⚅'];
   const tokenPalette=['#2563eb','#dc2626','#16a34a','#9333ea','#ea580c','#0891b2'];
-  const jumpMap={1:38,4:14,9:31,21:42,28:84,36:44,51:67,71:91,80:100,16:6,47:26,49:11,56:53,62:19,64:60,87:24,93:73,95:75,98:78};
-  const ladderStarts=new Set([1,4,9,21,28,36,51,71,80]);
-  const snakeHeads=new Set([16,47,49,56,62,64,87,93,95,98]);
+  const jumpMap={3:18,8:26,20:38,27:45,39:56,50:65,63:78,72:88,17:5,32:14,48:26,59:33,69:51,79:57,86:46,92:68,96:74,99:61};
+  const ladderStarts=new Set([3,8,20,27,39,50,63,72]);
+  const snakeHeads=new Set([17,32,48,59,69,79,86,92,96,99]);
 
   function snakeEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
   function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
@@ -13008,7 +13103,7 @@ if(!stage || !overlay) return;
   window.closeAquilaGameHub=function(){if(!HUB)return;HUB.classList.remove('is-open');HUB.setAttribute('aria-hidden','true');if(!SNAKE?.classList.contains('is-open'))document.body.classList.remove('aquila-games-open')};
   window.showAquilaGameDetails=function(game){
     const body=document.getElementById('aquilaGameDetailsBody');if(!body)return;
-    if(game==='snake') body.innerHTML=`<span class="aquila-games-eyebrow">🐍🪜 FEATURED MEMBER BATTLE</span><h3>SNAKE & LADDERS: THE RACE TO 100</h3><p>Enter a high-energy multiplayer race made for 2–6 official verified Aquila members. Everyone begins at the starting line with the same objective: survive the board, control your nerves, and become the first player to land exactly on Square 100. A single roll can change the entire battle. You can climb from the lower board into the lead in seconds—or hit a snake near the finish and watch the whole room catch up.</p><div class="aquila-game-detail-list"><div><b>🎯 THE OBJECTIVE</b><br>Reach Square 100 before everyone else. The finish is exact: if your roll goes beyond 100, you stay on your current square and the battle continues.</div><div><b>👥 2–6 PLAYER ROOMS</b><br>Create a public battle for the community or a private room for friends, then share the six-character room code.</div><div><b>🪜 MOMENTUM LADDERS</b><br>Land exactly on a ladder base and your token immediately climbs to the connected higher square. One ladder can completely reverse the leaderboard.</div><div><b>🐍 DANGER ZONES</b><br>Land on a snake head and you are sent down to its tail. The final section of the board contains some of the most brutal drops.</div><div><b>🎲 FAIR SERVER DICE</b><br>The browser does not decide your real roll or final position. Dice and movement are resolved by the multiplayer database function before every device receives the result.</div><div><b>⚡ LIVE TURN BATTLE</b><br>Every connected player sees the same current turn, positions, rolls, ladders, snakes, action log, and winner state as the room refreshes.</div><div><b>🔄 RECONNECT SAFE</b><br>Closing the game window does not automatically forfeit an active match. Reopen Snake & Ladders and use Resume Match to return to your current room.</div><div><b>🏆 FINAL CEREMONY</b><br>When somebody conquers Square 100, rolling stops immediately and the arena shows the champion plus the final player standings.</div></div><p><strong>Battle flow:</strong> create or join a room → every player marks READY → the host starts the match → the first turn is randomized → players roll one at a time → ladders and snakes resolve automatically → the first exact landing on 100 becomes champion. Game activity is for entertainment and community competition only; there is no entry fee, cash betting, or real-money reward attached to any roll, position, ranking, or win.</p><div class="aquila-games-cta"><button class="aquila-games-btn secondary" onclick="showAquilaGamesView('select')">← BACK TO GAMES</button><button class="aquila-games-btn primary" onclick="launchSnakeGameFromHub()">ENTER THE ARENA</button></div>`;
+    if(game==='snake') body.innerHTML=`<span class="aquila-games-eyebrow">🐍🪜 FEATURED MEMBER BATTLE</span><h3>SNAKE & LADDERS: THE RACE TO 100</h3><p>Enter a high-energy multiplayer race made for 2–6 official verified Aquila members. Everyone begins at the starting line with the same objective: survive the board, control your nerves, and become the first player to land exactly on Square 100. A single roll can change the entire battle. You can climb from the lower board into the lead in seconds—or hit a snake near the finish and watch the whole room catch up.</p><div class="aquila-game-detail-list"><div><b>🎯 THE OBJECTIVE</b><br>Reach Square 100 before everyone else. The finish is exact: if your roll goes beyond 100, you stay on your current square and the battle continues.</div><div><b>👥 2–6 PLAYER ROOMS</b><br>Create a public battle for the community or a private room for friends, then share the six-character room code.</div><div><b>🪜 MOMENTUM LADDERS</b><br>Land exactly on a ladder base and your token climbs to the connected higher square. Battle Difficulty uses shorter tactical climbs—there is no direct ladder to Square 100—so leads must be earned across the board.</div><div><b>🐍 DANGER ZONES</b><br>Land on a snake head and you are sent down to its tail. Battle Difficulty adds more danger in the upper half, including brutal late-game drops near the finish.</div><div><b>🎲 FAIR SERVER DICE</b><br>The browser does not decide your real roll or final position. Dice and movement are resolved by the multiplayer database function before every device receives the result.</div><div><b>⚡ LIVE TURN BATTLE</b><br>Every connected player sees the same current turn, positions, rolls, ladders, snakes, action log, and winner state as the room refreshes.</div><div><b>🔄 RECONNECT SAFE</b><br>Closing the game window does not automatically forfeit an active match. Reopen Snake & Ladders and use Resume Match to return to your current room.</div><div><b>🏆 FINAL CEREMONY</b><br>When somebody conquers Square 100, rolling stops immediately and the arena shows the champion plus the final player standings.</div></div><p><strong>Battle flow:</strong> create or join a room → every player marks READY → the host starts the match → the first turn is randomized → players roll one at a time → ladders and snakes resolve automatically → the first exact landing on 100 becomes champion. Game activity is for entertainment and community competition only; there is no entry fee, cash betting, or real-money reward attached to any roll, position, ranking, or win.</p><div class="aquila-games-cta"><button class="aquila-games-btn secondary" onclick="showAquilaGamesView('select')">← BACK TO GAMES</button><button class="aquila-games-btn primary" onclick="launchSnakeGameFromHub()">ENTER THE ARENA</button></div>`;
     else body.innerHTML=`<span class="aquila-games-eyebrow">🏙️ AQUILA EMPIRE</span><h3>BUILD • TRADE • RULE</h3><p>Aquila Empire is the strategic property battle already available to verified Aquila members. Acquire spaces, collect usage fees, trade with rivals, build upgrades, protect your Game Credits, and finish with the strongest final empire.</p><div class="aquila-game-detail-list"><div><b>🏙️ BUILD</b><br>Acquire strategic properties and upgrade your empire.</div><div><b>🤝 TRADE</b><br>Negotiate property offers with other players.</div><div><b>🎲 SERVER DICE</b><br>Movement and actions are controlled by the multiplayer game engine.</div><div><b>🏆 FINAL STANDINGS</b><br>Winner and podium are calculated from the official final match results.</div></div><div class="aquila-games-cta"><button class="aquila-games-btn secondary" onclick="showAquilaGamesView('select')">← BACK TO GAMES</button><button class="aquila-games-btn primary" onclick="launchAquilaEmpireFromHub()">PLAY EMPIRE</button></div>`;
     showAquilaGamesView('details');
   };
