@@ -16042,6 +16042,10 @@ if(!stage || !overlay) return;
             officialGcJoin.href=
               result.joinUrl;
           }
+
+          if(officialGcLogin){
+            officialGcLogin.hidden=true;
+          }
   
           if(officialGcUnlocked){
             officialGcUnlocked.hidden=false;
