@@ -1640,6 +1640,701 @@
       }
     }
 
+    /* =========================================================
+     AQUILA QUICK ACCESS MENU — FINAL
+     ========================================================= */
+  
+  .aquila-main-menu-button{
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    min-height:44px;
+    padding:10px 15px !important;
+  
+    border:1px solid rgba(255,216,107,.78) !important;
+    border-radius:13px !important;
+  
+    background:
+      linear-gradient(
+        145deg,
+        rgba(15,52,119,.95),
+        rgba(4,24,69,.98)
+      ) !important;
+  
+    color:#fff !important;
+    font-weight:950 !important;
+    letter-spacing:.05em;
+  
+    box-shadow:
+      0 8px 22px rgba(0,0,0,.25),
+      inset 0 1px 0 rgba(255,255,255,.15);
+  
+    cursor:pointer;
+  }
+  
+  .aquila-main-menu-button:hover{
+    transform:translateY(-1px);
+    border-color:#ffd86b !important;
+  
+    box-shadow:
+      0 10px 28px rgba(0,0,0,.32),
+      0 0 18px rgba(255,216,107,.14);
+  }
+  
+  .aquila-menu-icon{
+    font-size:17px;
+    line-height:1;
+  }
+  
+  .aquila-menu-label{
+    font-size:11px;
+  }
+  
+  
+  /* MODAL ROOT */
+  
+  .aquila-main-menu{
+    position:fixed;
+    inset:0;
+    z-index:999998;
+  
+    display:flex;
+    align-items:flex-start;
+    justify-content:flex-end;
+  
+    padding:
+      calc(82px + env(safe-area-inset-top,0px))
+      18px
+      18px;
+  
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+  
+    transition:
+      opacity .25s ease,
+      visibility .25s ease;
+  }
+  
+  .aquila-main-menu.is-open{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+  }
+  
+  .aquila-main-menu-backdrop{
+    position:absolute;
+    inset:0;
+  
+    background:
+      rgba(1,7,22,.70);
+  
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+  }
+  
+  
+  /* PANEL */
+  
+  .aquila-main-menu-panel{
+    position:relative;
+    z-index:2;
+  
+    width:min(455px,100%);
+    max-height:
+      calc(
+        100svh -
+        105px -
+        env(safe-area-inset-top,0px)
+      );
+  
+    overflow:auto;
+    overscroll-behavior:contain;
+  
+    padding:18px;
+  
+    border:
+      1px solid
+      rgba(255,216,107,.42);
+  
+    border-radius:24px;
+  
+    background:
+      radial-gradient(
+        circle at 85% 0%,
+        rgba(255,216,107,.10),
+        transparent 27%
+      ),
+      radial-gradient(
+        circle at 0% 25%,
+        rgba(37,99,235,.17),
+        transparent 31%
+      ),
+      linear-gradient(
+        155deg,
+        rgba(4,24,67,.985),
+        rgba(2,13,40,.99) 55%,
+        rgba(20,8,35,.99)
+      );
+  
+    box-shadow:
+      0 28px 90px rgba(0,0,0,.68),
+      inset 0 1px 0 rgba(255,255,255,.12);
+  
+    transform:
+      translateY(-10px)
+      scale(.985);
+  
+    transition:
+      transform .28s ease;
+  }
+  
+  .aquila-main-menu.is-open
+  .aquila-main-menu-panel{
+    transform:
+      translateY(0)
+      scale(1);
+  }
+  
+  
+  /* HEADER */
+  
+  .aquila-main-menu-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+  
+    padding:
+      4px
+      3px
+      16px;
+  
+    border-bottom:
+      1px solid
+      rgba(255,255,255,.09);
+  }
+  
+  .aquila-main-menu-head > div{
+    min-width:0;
+    display:grid;
+    gap:5px;
+  }
+  
+  .aquila-main-menu-kicker{
+    color:#ffd86b;
+    font-size:9px;
+    font-weight:950;
+    letter-spacing:.19em;
+  }
+  
+  .aquila-main-menu-head strong{
+    color:#fff;
+    font-size:21px;
+    line-height:1.12;
+  }
+  
+  .aquila-main-menu-head small{
+    color:#aebfda;
+    font-size:11px;
+    line-height:1.45;
+  }
+  
+  .aquila-main-menu-close{
+    width:38px;
+    height:38px;
+    flex:0 0 auto;
+  
+    display:grid;
+    place-items:center;
+  
+    border:
+      1px solid
+      rgba(255,255,255,.18);
+  
+    border-radius:11px;
+  
+    background:
+      rgba(255,255,255,.07);
+  
+    color:#fff;
+    font-size:25px;
+    line-height:1;
+  
+    cursor:pointer;
+  }
+  
+  
+  /* MAIN ITEMS */
+  
+  .aquila-main-menu-grid{
+    display:grid;
+    gap:9px;
+    margin-top:14px;
+  }
+  
+  .aquila-menu-card{
+    width:100%;
+    min-height:74px;
+  
+    display:grid;
+    grid-template-columns:
+      48px
+      minmax(0,1fr)
+      20px;
+  
+    align-items:center;
+    gap:11px;
+  
+    padding:11px 13px;
+  
+    border:
+      1px solid
+      rgba(147,197,253,.18);
+  
+    border-radius:16px;
+  
+    background:
+      rgba(255,255,255,.055);
+  
+    color:#fff;
+    text-align:left;
+  
+    cursor:pointer;
+  
+    transition:
+      transform .18s ease,
+      background .18s ease,
+      border-color .18s ease;
+  }
+  
+  .aquila-menu-card:hover{
+    transform:translateY(-1px);
+  
+    border-color:
+      rgba(255,216,107,.48);
+  
+    background:
+      rgba(255,255,255,.085);
+  }
+  
+  .aquila-menu-card.featured{
+    border-color:
+      rgba(255,216,107,.32);
+  
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255,216,107,.10),
+        rgba(255,255,255,.045)
+      );
+  }
+  
+  .aquila-menu-card.battle{
+    border-color:
+      rgba(239,68,68,.35);
+  
+    background:
+      linear-gradient(
+        135deg,
+        rgba(220,38,38,.15),
+        rgba(37,99,235,.09)
+      );
+  }
+  
+  .aquila-menu-card-icon{
+    width:46px;
+    height:46px;
+  
+    display:grid;
+    place-items:center;
+  
+    border:
+      1px solid
+      rgba(255,255,255,.12);
+  
+    border-radius:13px;
+  
+    background:
+      rgba(255,255,255,.07);
+  
+    font-size:22px;
+  }
+  
+  .aquila-menu-card-copy{
+    min-width:0;
+    display:grid;
+    gap:4px;
+  }
+  
+  .aquila-menu-card-copy strong{
+    color:#fff;
+  
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:.055em;
+  }
+  
+  .aquila-menu-card-copy small{
+    color:#9fb4d5;
+  
+    font-size:10px;
+    line-height:1.35;
+  }
+  
+  .aquila-menu-arrow{
+    color:#ffd86b;
+    font-size:25px;
+    font-weight:300;
+  }
+  
+  
+  /* SUBVIEWS */
+  
+  .aquila-menu-subview{
+    margin-top:14px;
+  }
+  
+  .aquila-menu-subview[hidden]{
+    display:none !important;
+  }
+  
+  .aquila-menu-back{
+    padding:0 0 12px;
+  
+    border:0;
+    background:none;
+  
+    color:#93c5fd;
+  
+    font-size:9px;
+    font-weight:950;
+    letter-spacing:.11em;
+  
+    cursor:pointer;
+  }
+  
+  .aquila-subview-heading{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  
+    margin-bottom:14px;
+    padding:13px;
+  
+    border:
+      1px solid
+      rgba(255,216,107,.20);
+  
+    border-radius:15px;
+  
+    background:
+      rgba(255,216,107,.055);
+  }
+  
+  .aquila-subview-heading > span{
+    font-size:27px;
+  }
+  
+  .aquila-subview-heading > div{
+    display:grid;
+    gap:3px;
+  }
+  
+  .aquila-subview-heading strong{
+    color:#fff;
+    font-size:13px;
+  }
+  
+  .aquila-subview-heading small{
+    color:#9fb4d5;
+    font-size:10px;
+  }
+  
+  
+  /* COMMUNITY LINKS */
+  
+  .aquila-community-links{
+    display:grid;
+    gap:9px;
+  }
+  
+  .aquila-community-links a{
+    min-height:65px;
+  
+    display:grid;
+    grid-template-columns:
+      38px
+      minmax(0,1fr)
+      20px;
+  
+    align-items:center;
+    gap:10px;
+  
+    padding:11px;
+  
+    border:
+      1px solid
+      rgba(147,197,253,.18);
+  
+    border-radius:14px;
+  
+    background:
+      rgba(255,255,255,.05);
+  
+    color:#fff;
+    text-decoration:none;
+  }
+  
+  .aquila-community-links a > span{
+    font-size:21px;
+  }
+  
+  .aquila-community-links a > div{
+    display:grid;
+    gap:3px;
+  }
+  
+  .aquila-community-links strong{
+    color:#fff;
+    font-size:11px;
+  }
+  
+  .aquila-community-links small{
+    color:#9fb4d5;
+    font-size:9px;
+  }
+  
+  .aquila-community-links b{
+    color:#ffd86b;
+  }
+  
+  
+  /* ROADMAP */
+  
+  .aquila-new-member-roadmap{
+    display:grid;
+    gap:8px;
+  }
+  
+  .aquila-roadmap-step{
+    width:100%;
+  
+    display:grid;
+    grid-template-columns:
+      38px
+      minmax(0,1fr);
+  
+    align-items:center;
+    gap:10px;
+  
+    padding:11px;
+  
+    border:
+      1px solid
+      rgba(147,197,253,.16);
+  
+    border-radius:13px;
+  
+    background:
+      rgba(255,255,255,.045);
+  
+    color:#fff;
+    text-align:left;
+  }
+  
+  .aquila-roadmap-step > span{
+    width:35px;
+    height:35px;
+  
+    display:grid;
+    place-items:center;
+  
+    border-radius:10px;
+  
+    background:
+      rgba(37,99,235,.17);
+  
+    color:#ffd86b;
+  
+    font-size:10px;
+    font-weight:950;
+  }
+  
+  .aquila-roadmap-step > div{
+    display:grid;
+    gap:3px;
+  }
+  
+  .aquila-roadmap-step strong{
+    color:#fff;
+    font-size:11px;
+  }
+  
+  .aquila-roadmap-step small{
+    color:#9fb4d5;
+    font-size:9px;
+  }
+  
+  .aquila-roadmap-step.actionable{
+    grid-template-columns:
+      38px
+      minmax(0,1fr)
+      auto;
+  
+    border-color:
+      rgba(255,216,107,.38);
+  
+    background:
+      rgba(255,216,107,.08);
+  
+    cursor:pointer;
+  }
+  
+  .aquila-roadmap-step.actionable b{
+    color:#ffd86b;
+    font-size:9px;
+  }
+  
+  
+  /* PLACEHOLDER */
+  
+  .aquila-menu-coming-soon{
+    padding:28px 15px;
+  
+    border:
+      1px dashed
+      rgba(147,197,253,.28);
+  
+    border-radius:15px;
+  
+    background:
+      rgba(255,255,255,.035);
+  
+    text-align:center;
+  }
+  
+  .aquila-menu-coming-soon span{
+    display:block;
+    margin-bottom:8px;
+    font-size:30px;
+  }
+  
+  .aquila-menu-coming-soon strong{
+    display:block;
+    color:#fff;
+  }
+  
+  .aquila-menu-coming-soon p{
+    margin:6px 0 0;
+    color:#9fb4d5;
+    font-size:10px;
+  }
+  
+  
+  /* MOBILE */
+  
+  @media(max-width:700px){
+  
+    .nav-actions{
+      gap:7px !important;
+    }
+  
+    .aquila-main-menu-button{
+      min-width:55px;
+      min-height:44px;
+  
+      padding:
+        8px 9px !important;
+  
+      flex-direction:column;
+      gap:2px;
+  
+      border-radius:12px !important;
+    }
+  
+    .aquila-menu-icon{
+      font-size:16px;
+    }
+  
+    .aquila-menu-label{
+      font-size:7px;
+      letter-spacing:.05em;
+    }
+  
+    .aquila-main-menu{
+      align-items:flex-end;
+  
+      padding:
+        0
+        0
+        env(safe-area-inset-bottom,0px);
+    }
+  
+    .aquila-main-menu-panel{
+      width:100%;
+      max-height:
+        min(
+          82svh,
+          720px
+        );
+  
+      padding:
+        17px
+        14px
+        calc(
+          18px +
+          env(safe-area-inset-bottom,0px)
+        );
+  
+      border-left:0;
+      border-right:0;
+      border-bottom:0;
+  
+      border-radius:
+        25px
+        25px
+        0
+        0;
+  
+      transform:
+        translateY(28px);
+    }
+  
+    .aquila-main-menu.is-open
+    .aquila-main-menu-panel{
+      transform:
+        translateY(0);
+    }
+  
+    .aquila-main-menu-head strong{
+      font-size:18px;
+    }
+  
+    .aquila-menu-card{
+      min-height:67px;
+    }
+  
+  }
+  
+  
+  /* EXTRA SMALL PHONES */
+  
+  @media(max-width:390px){
+  
+    .aquila-main-menu-button{
+      min-width:48px;
+      padding:
+        7px 6px !important;
+    }
+  
+    .aquila-menu-label{
+      font-size:6px;
+    }
+  
+  }
+
 </style>
 
     <style id="aquilaEmpireFinalLifecycleStyles">
