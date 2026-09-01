@@ -1799,6 +1799,207 @@ async function handleAssistant(request, env) {
   });
 }
 
+async function handleOfficialGcAccess(
+  request,
+  env
+) {
+
+  if (request.method !== "POST") {
+    return json(
+      {
+        success: false,
+        error: "Method not allowed."
+      },
+      405,
+      {
+        allow: "POST"
+      }
+    );
+  }
+
+  if (
+    !env.AI_AUTH_SECRET ||
+    !env.AQUILA_OFFICIAL_GC_URL
+  ) {
+    return json(
+      {
+        success: false,
+        error:
+          "Official GC access is not configured yet."
+      },
+      503
+    );
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json(
+      {
+        success: false,
+        error: "Invalid request."
+      },
+      400
+    );
+  }
+
+  const accessToken =
+    typeof body?.accessToken === "string"
+      ? body.accessToken.trim()
+      : "";
+
+  /*
+   * getVerifiedMember() supports:
+   * 1. Existing Aquila member cookie session
+   * 2. Live Chat Supabase bearer token
+   *
+   * Since the landing page currently sends
+   * accessToken in JSON, convert it to a
+   * Bearer authorization header for this check.
+   */
+  let memberRequest = request;
+
+  if (accessToken) {
+
+    const headers =
+      new Headers(
+        request.headers
+      );
+
+    headers.set(
+      "authorization",
+      `Bearer ${accessToken}`
+    );
+
+    memberRequest =
+      new Request(
+        request.url,
+        {
+          method: request.method,
+          headers
+        }
+      );
+
+  }
+
+  const member =
+    await getVerifiedMember(
+      memberRequest,
+      env
+    );
+
+  if (!member?.username) {
+    return json(
+      {
+        success: false,
+        error:
+          "Please log in to your Aquila member account first."
+      },
+      401,
+      {
+        "cache-control": "no-store"
+      }
+    );
+  }
+
+  /*
+   * Ask the existing Member Portal backend
+   * to check this member's investment.
+   *
+   * We will add the OFFICIAL_GC_ACCESS_CHECK
+   * action to Apps Script in the next step.
+   */
+  const response =
+    await fetch(
+      MEMBER_PORTAL_API_URL,
+      {
+        method: "POST",
+
+        headers: {
+          "content-type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+          action:
+            "OFFICIAL_GC_ACCESS_CHECK",
+
+          apiSecret:
+            env.AI_AUTH_SECRET,
+
+          username:
+            member.username
+        })
+      }
+    );
+
+  if (!response.ok) {
+    return json(
+      {
+        success: false,
+        error:
+          "Investment verification is temporarily unavailable."
+      },
+      502,
+      {
+        "cache-control": "no-store"
+      }
+    );
+  }
+
+  const result =
+    await response
+      .json()
+      .catch(() => null);
+
+  if (!result?.success) {
+    return json(
+      {
+        success: false,
+        error:
+          result?.message ||
+          "Unable to verify investment access."
+      },
+      502,
+      {
+        "cache-control": "no-store"
+      }
+    );
+  }
+
+  if (!result.eligible) {
+    return json(
+      {
+        success: true,
+        eligible: false
+      },
+      200,
+      {
+        "cache-control": "no-store"
+      }
+    );
+  }
+
+  /*
+   * The Official GC invite URL is returned
+   * only after successful eligibility check.
+   */
+  return json(
+    {
+      success: true,
+      eligible: true,
+      joinUrl:
+        env.AQUILA_OFFICIAL_GC_URL
+    },
+    200,
+    {
+      "cache-control": "no-store"
+    }
+  );
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
