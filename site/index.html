@@ -15917,6 +15917,10 @@ if(!stage || !overlay) return;
         if(officialGcUnlocked){
           officialGcUnlocked.hidden=true;
         }
+
+        if(officialGcLogin){
+          officialGcLogin.hidden=true;
+        }
   
         if(officialGcStatus){
   
@@ -16104,8 +16108,6 @@ if(!stage || !overlay) return;
               !loginRequired;
           }
         
-        }
-  
         }finally{
   
           officialGcVerify.disabled=false;
@@ -16122,19 +16124,26 @@ if(!stage || !overlay) return;
     officialGcLogin.addEventListener(
       "click",
       ()=>{
-  
+
         closeMenu();
-  
+
         setTimeout(
           ()=>{
-            openMemberPortalModal();
+            const existingDashboardLogin =
+              document.querySelector(
+                "[data-dashboard]"
+              );
+
+            if(existingDashboardLogin){
+              existingDashboardLogin.click();
+            }
           },
           150
         );
-  
+
       }
     );
-  
+
   }
 
 })();
