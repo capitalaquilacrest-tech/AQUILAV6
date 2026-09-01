@@ -15547,6 +15547,14 @@ if(!stage || !overlay) return;
       }
     });
 
+    if(communityHome){
+      communityHome.hidden=false;
+    }
+    
+    if(facebookGcPanel){
+      facebookGcPanel.hidden=true;
+    }
+
   }
 
 
@@ -15780,22 +15788,24 @@ if(!stage || !overlay) return;
 
   /* FACEBOOK GROUP CHAT SUBMENU */
 
+  const communityHome =
+    document.getElementById(
+      "aquilaCommunityHome"
+    );
+  
+  
   facebookGcButton
     ?.addEventListener(
       "click",
       ()=>{
   
-        const communityLinks =
-          communityView
-            ?.querySelector(
-              ".aquila-community-links"
-            );
-  
-        if(communityLinks){
-          communityLinks.hidden=true;
+        if(communityHome){
+          communityHome.hidden=true;
         }
   
-        facebookGcPanel.hidden=false;
+        if(facebookGcPanel){
+          facebookGcPanel.hidden=false;
+        }
   
       }
     );
@@ -15806,16 +15816,12 @@ if(!stage || !overlay) return;
       "click",
       ()=>{
   
-        facebookGcPanel.hidden=true;
+        if(facebookGcPanel){
+          facebookGcPanel.hidden=true;
+        }
   
-        const communityLinks =
-          communityView
-            ?.querySelector(
-              ".aquila-community-links"
-            );
-  
-        if(communityLinks){
-          communityLinks.hidden=false;
+        if(communityHome){
+          communityHome.hidden=false;
         }
   
       }
