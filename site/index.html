@@ -14747,5 +14747,296 @@ if(!stage || !overlay) return;
 })();
 </script>
 
+<script>
+/* =========================================================
+   AQUILA QUICK ACCESS MENU
+   ========================================================= */
+
+(function(){
+
+  const menu =
+    document.getElementById(
+      "aquilaMainMenu"
+    );
+
+  const menuButton =
+    document.getElementById(
+      "aquilaMainMenuButton"
+    );
+
+  if(!menu || !menuButton){
+    return;
+  }
+
+  const menuGrid =
+    menu.querySelector(
+      ".aquila-main-menu-grid"
+    );
+
+  const communityView =
+    document.getElementById(
+      "aquilaMenuCommunity"
+    );
+
+  const tutorialsView =
+    document.getElementById(
+      "aquilaMenuTutorials"
+    );
+
+  const newMemberView =
+    document.getElementById(
+      "aquilaMenuNewMember"
+    );
+
+
+  function showMainMenuView(){
+
+    if(menuGrid){
+      menuGrid.hidden=false;
+    }
+
+    [
+      communityView,
+      tutorialsView,
+      newMemberView
+    ].forEach(view=>{
+      if(view){
+        view.hidden=true;
+      }
+    });
+
+  }
+
+
+  function showSubmenu(name){
+
+    if(menuGrid){
+      menuGrid.hidden=true;
+    }
+
+    [
+      communityView,
+      tutorialsView,
+      newMemberView
+    ].forEach(view=>{
+      if(view){
+        view.hidden=true;
+      }
+    });
+
+    const map={
+      community:communityView,
+      tutorials:tutorialsView,
+      "new-member":newMemberView
+    };
+
+    if(map[name]){
+      map[name].hidden=false;
+    }
+
+  }
+
+
+  function setMenuOpen(open){
+
+    if(open){
+
+      /*
+       * Close the existing Aquila floating
+       * panels first so only one interface
+       * remains open.
+       */
+      document
+        .getElementById("notificationClose")
+        ?.click();
+
+      document
+        .getElementById("chatClose")
+        ?.click();
+
+      document
+        .getElementById("aiClose")
+        ?.click();
+
+      showMainMenuView();
+
+    }
+
+    menu.classList.toggle(
+      "is-open",
+      open
+    );
+
+    menu.setAttribute(
+      "aria-hidden",
+      String(!open)
+    );
+
+    menuButton.setAttribute(
+      "aria-expanded",
+      String(open)
+    );
+
+    /*
+     * Reuse the existing Aquila popup
+     * scroll-lock system.
+     */
+    window
+      .aquilaSetPagePopupLock
+      ?.(open);
+
+  }
+
+
+  function closeMenu(){
+    setMenuOpen(false);
+  }
+
+
+  menuButton.addEventListener(
+    "click",
+    ()=>{
+      const open=
+        !menu.classList.contains(
+          "is-open"
+        );
+
+      setMenuOpen(open);
+    }
+  );
+
+
+  menu
+    .querySelectorAll(
+      "[data-aquila-menu-close]"
+    )
+    .forEach(button=>{
+      button.addEventListener(
+        "click",
+        closeMenu
+      );
+    });
+
+
+  menu
+    .querySelectorAll(
+      "[data-aquila-menu-home]"
+    )
+    .forEach(button=>{
+      button.addEventListener(
+        "click",
+        showMainMenuView
+      );
+    });
+
+
+  menu
+    .querySelectorAll(
+      "[data-aquila-submenu]"
+    )
+    .forEach(button=>{
+      button.addEventListener(
+        "click",
+        ()=>{
+          showSubmenu(
+            button.dataset
+              .aquilaSubmenu
+          );
+        }
+      );
+    });
+
+
+  menu
+    .querySelectorAll(
+      "[data-aquila-scroll]"
+    )
+    .forEach(button=>{
+
+      button.addEventListener(
+        "click",
+        ()=>{
+
+          const selector=
+            button.dataset
+              .aquilaScroll;
+
+          const target=
+            document
+              .querySelector(
+                selector
+              );
+
+          closeMenu();
+
+          if(!target){
+            return;
+          }
+
+          setTimeout(()=>{
+
+            target.scrollIntoView({
+              behavior:"smooth",
+              block:"start"
+            });
+
+          },180);
+
+        }
+      );
+
+    });
+
+
+  menu
+    .querySelectorAll(
+      "[data-aquila-games]"
+    )
+    .forEach(button=>{
+
+      button.addEventListener(
+        "click",
+        ()=>{
+
+          closeMenu();
+
+          setTimeout(()=>{
+
+            if(
+              typeof window
+                .openAquilaGameHub ===
+              "function"
+            ){
+              window
+                .openAquilaGameHub();
+            }
+
+          },180);
+
+        }
+      );
+
+    });
+
+
+  document.addEventListener(
+    "keydown",
+    event=>{
+
+      if(
+        event.key==="Escape" &&
+        menu.classList.contains(
+          "is-open"
+        )
+      ){
+        closeMenu();
+      }
+
+    }
+  );
+
+})();
+</script>
+
 </body>
 </html>
