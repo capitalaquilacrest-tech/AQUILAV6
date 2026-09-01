@@ -2047,6 +2047,30 @@ export default {
       try { return await handleChatMemberLogin(request, env); }
       catch (error) { console.error("Community member login error", error); return json({ error: "Community member login is temporarily unavailable." }, 500); }
     }
+
+    if (url.pathname === "/api/official-gc/access") {
+      try {
+        return await handleOfficialGcAccess(
+          request,
+          env
+        );
+      } catch (error) {
+        console.error(
+          "Official GC access error",
+          error
+        );
+    
+        return json(
+          {
+            success: false,
+            error:
+              "Official GC verification is temporarily unavailable."
+          },
+          500
+        );
+      }
+    }
+    
     if (url.pathname === "/api/ai-auth/login") {
       try { return await handleMemberLogin(request, env); }
       catch (error) { console.error("AI member login error", error); return json({ error: "Member verification is temporarily unavailable." }, 500); }
