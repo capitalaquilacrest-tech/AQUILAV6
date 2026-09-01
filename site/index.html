@@ -4146,17 +4146,375 @@
           <span class="notification-bell" aria-hidden="true">🔔</span>
           <span class="notification-badge" id="notificationBadge" hidden>0</span>
         </button>
+      
         <button
-          class="btn aquila-empire-launcher"
-          type="button"
-          onclick="openAquilaGameHub()"
+          class="btn btn-primary"
+          data-dashboard
         >
-          🎲 PLAY
+          LOGIN DASHBOARD
         </button>
-        <button class="btn btn-primary" data-dashboard>LOGIN DASHBOARD</button>
+      
+        <button
+          class="btn aquila-main-menu-button"
+          id="aquilaMainMenuButton"
+          type="button"
+          aria-label="Open Aquila menu"
+          aria-expanded="false"
+          aria-controls="aquilaMainMenu"
+        >
+          <span class="aquila-menu-icon">☰</span>
+          <span class="aquila-menu-label">MENU</span>
+        </button>
       </div>
     </div>
   </nav>
+
+  <!-- ========================================
+       AQUILA QUICK ACCESS MENU
+  ========================================= -->
+  <div
+    class="aquila-main-menu"
+    id="aquilaMainMenu"
+    aria-hidden="true"
+  >
+    <div
+      class="aquila-main-menu-backdrop"
+      data-aquila-menu-close
+    ></div>
+  
+    <div
+      class="aquila-main-menu-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="aquilaMainMenuTitle"
+    >
+      <div class="aquila-main-menu-head">
+        <div>
+          <span class="aquila-main-menu-kicker">
+            AQUILA QUICK ACCESS
+          </span>
+  
+          <strong id="aquilaMainMenuTitle">
+            Where do you want to go?
+          </strong>
+  
+          <small>
+            Important Aquila tools and member resources.
+          </small>
+        </div>
+  
+        <button
+          class="aquila-main-menu-close"
+          type="button"
+          data-aquila-menu-close
+          aria-label="Close menu"
+        >
+          ×
+        </button>
+      </div>
+  
+      <div class="aquila-main-menu-grid">
+  
+        <!-- OFFICIAL COMMUNITY -->
+        <button
+          class="aquila-menu-card"
+          type="button"
+          data-aquila-submenu="community"
+        >
+          <span class="aquila-menu-card-icon">🌐</span>
+  
+          <span class="aquila-menu-card-copy">
+            <strong>OFFICIAL COMMUNITY</strong>
+            <small>
+              Telegram, Discord and Facebook community links
+            </small>
+          </span>
+  
+          <span class="aquila-menu-arrow">›</span>
+        </button>
+  
+  
+        <!-- VIDEO TUTORIALS -->
+        <button
+          class="aquila-menu-card"
+          type="button"
+          data-aquila-submenu="tutorials"
+        >
+          <span class="aquila-menu-card-icon">▶️</span>
+  
+          <span class="aquila-menu-card-copy">
+            <strong>VIDEO TUTORIALS & GUIDES</strong>
+            <small>
+              Step-by-step Aquila video tutorials
+            </small>
+          </span>
+  
+          <span class="aquila-menu-arrow">›</span>
+        </button>
+  
+  
+        <!-- INVESTMENT CALCULATOR -->
+        <button
+          class="aquila-menu-card featured"
+          type="button"
+          data-aquila-scroll="#options"
+        >
+          <span class="aquila-menu-card-icon">🧮</span>
+  
+          <span class="aquila-menu-card-copy">
+            <strong>INVESTMENT CALCULATOR</strong>
+            <small>
+              Calculate Passive Yield or Capital Reserve projections
+            </small>
+          </span>
+  
+          <span class="aquila-menu-arrow">›</span>
+        </button>
+  
+  
+        <!-- MEMBER BATTLE ARENA -->
+        <button
+          class="aquila-menu-card battle"
+          type="button"
+          data-aquila-games
+        >
+          <span class="aquila-menu-card-icon">🎮</span>
+  
+          <span class="aquila-menu-card-copy">
+            <strong>MEMBER BATTLE ARENA</strong>
+            <small>
+              Challenge and play with verified Aquila members
+            </small>
+          </span>
+  
+          <span class="aquila-menu-arrow">›</span>
+        </button>
+  
+  
+        <!-- NEW MEMBER GUIDE -->
+        <button
+          class="aquila-menu-card"
+          type="button"
+          data-aquila-submenu="new-member"
+        >
+          <span class="aquila-menu-card-icon">🚀</span>
+  
+          <span class="aquila-menu-card-copy">
+            <strong>NEW MEMBER GUIDE</strong>
+            <small>
+              New to Aquila? Start here
+            </small>
+          </span>
+  
+          <span class="aquila-menu-arrow">›</span>
+        </button>
+  
+      </div>
+  
+  
+      <!-- COMMUNITY SUBMENU -->
+      <div
+        class="aquila-menu-subview"
+        id="aquilaMenuCommunity"
+        hidden
+      >
+        <button
+          class="aquila-menu-back"
+          type="button"
+          data-aquila-menu-home
+        >
+          ← BACK TO MENU
+        </button>
+  
+        <div class="aquila-subview-heading">
+          <span>🌐</span>
+  
+          <div>
+            <strong>OFFICIAL COMMUNITY</strong>
+            <small>
+              Connect only through official Aquila channels.
+            </small>
+          </div>
+        </div>
+  
+        <div class="aquila-community-links">
+  
+          <a
+            href="https://t.me/aquilacrestcapital"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>✈️</span>
+            <div>
+              <strong>Telegram Community</strong>
+              <small>Official announcements and updates</small>
+            </div>
+            <b>↗</b>
+          </a>
+  
+          <a
+            href="https://discord.gg/9JHYkPZkXS"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>💬</span>
+            <div>
+              <strong>Discord Knowledge Hub</strong>
+              <small>Guides, resources and member channels</small>
+            </div>
+            <b>↗</b>
+          </a>
+  
+          <a
+            href="https://m.me/j/AbYdk_yzq3OXYb5o/?send_source=gc%3Acopy_invite_link_t"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>🔵</span>
+            <div>
+              <strong>Facebook Group Chat</strong>
+              <small>Official member community conversation</small>
+            </div>
+            <b>↗</b>
+          </a>
+  
+        </div>
+      </div>
+  
+  
+      <!-- TUTORIALS PLACEHOLDER -->
+      <div
+        class="aquila-menu-subview"
+        id="aquilaMenuTutorials"
+        hidden
+      >
+        <button
+          class="aquila-menu-back"
+          type="button"
+          data-aquila-menu-home
+        >
+          ← BACK TO MENU
+        </button>
+  
+        <div class="aquila-subview-heading">
+          <span>▶️</span>
+  
+          <div>
+            <strong>VIDEO TUTORIALS & GUIDES</strong>
+            <small>
+              Official step-by-step Aquila tutorials.
+            </small>
+          </div>
+        </div>
+  
+        <div class="aquila-menu-coming-soon">
+          <span>🎬</span>
+          <strong>Tutorial Library</strong>
+          <p>
+            We will connect your existing YouTube tutorials here next.
+          </p>
+        </div>
+      </div>
+  
+  
+      <!-- NEW MEMBER GUIDE -->
+      <div
+        class="aquila-menu-subview"
+        id="aquilaMenuNewMember"
+        hidden
+      >
+        <button
+          class="aquila-menu-back"
+          type="button"
+          data-aquila-menu-home
+        >
+          ← BACK TO MENU
+        </button>
+  
+        <div class="aquila-subview-heading">
+          <span>🚀</span>
+  
+          <div>
+            <strong>NEW MEMBER ROADMAP</strong>
+            <small>
+              Follow these steps to get started with Aquila.
+            </small>
+          </div>
+        </div>
+  
+        <div class="aquila-new-member-roadmap">
+  
+          <div class="aquila-roadmap-step">
+            <span>01</span>
+            <div>
+              <strong>Create Your Account</strong>
+              <small>
+                Register and secure your Aquila member access.
+              </small>
+            </div>
+          </div>
+  
+          <div class="aquila-roadmap-step">
+            <span>02</span>
+            <div>
+              <strong>Complete ID Verification</strong>
+              <small>
+                Verify your identity to unlock verified-member access.
+              </small>
+            </div>
+          </div>
+  
+          <div class="aquila-roadmap-step">
+            <span>03</span>
+            <div>
+              <strong>Understand Your Options</strong>
+              <small>
+                Learn about Passive Yield and Capital Reserve.
+              </small>
+            </div>
+          </div>
+  
+          <button
+            class="aquila-roadmap-step actionable"
+            type="button"
+            data-aquila-scroll="#options"
+          >
+            <span>04</span>
+            <div>
+              <strong>Try the Investment Calculator</strong>
+              <small>
+                Review projected values before making a decision.
+              </small>
+            </div>
+            <b>OPEN ›</b>
+          </button>
+  
+          <div class="aquila-roadmap-step">
+            <span>05</span>
+            <div>
+              <strong>Start & Track</strong>
+              <small>
+                Use your Dashboard to monitor account activity.
+              </small>
+            </div>
+          </div>
+  
+          <div class="aquila-roadmap-step">
+            <span>06</span>
+            <div>
+              <strong>Join the Community</strong>
+              <small>
+                Stay connected through official Aquila channels.
+              </small>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  <!-- END AQUILA QUICK ACCESS MENU -->
 
   <div
     class="notification-panel"
