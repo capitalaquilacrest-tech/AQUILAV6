@@ -5905,8 +5905,12 @@
         </div>
   
         <div class="aquila-new-member-roadmap">
-  
-          <div class="aquila-roadmap-step">
+
+          <button
+            class="aquila-roadmap-step actionable"
+            type="button"
+            data-aquila-roadmap-account
+          >
             <span>01</span>
             <div>
               <strong>Create Your Account</strong>
@@ -5914,19 +5918,29 @@
                 Register and secure your Aquila member access.
               </small>
             </div>
-          </div>
-  
-          <div class="aquila-roadmap-step">
+            <b>OPEN ›</b>
+          </button>
+
+          <button
+            class="aquila-roadmap-step actionable"
+            type="button"
+            data-aquila-roadmap-account
+          >
             <span>02</span>
             <div>
               <strong>Complete ID Verification</strong>
               <small>
-                Verify your identity to unlock verified-member access.
+                Open the Member Portal and complete your identity verification.
               </small>
             </div>
-          </div>
-  
-          <div class="aquila-roadmap-step">
+            <b>OPEN ›</b>
+          </button>
+
+          <button
+            class="aquila-roadmap-step actionable"
+            type="button"
+            data-aquila-roadmap-tutorials
+          >
             <span>03</span>
             <div>
               <strong>Understand Your Options</strong>
@@ -5934,8 +5948,9 @@
                 Learn about Passive Yield and Capital Reserve.
               </small>
             </div>
-          </div>
-  
+            <b>LEARN ›</b>
+          </button>
+
           <button
             class="aquila-roadmap-step actionable"
             type="button"
@@ -5950,8 +5965,12 @@
             </div>
             <b>OPEN ›</b>
           </button>
-  
-          <div class="aquila-roadmap-step">
+
+          <button
+            class="aquila-roadmap-step actionable"
+            type="button"
+            data-aquila-roadmap-account
+          >
             <span>05</span>
             <div>
               <strong>Start & Track</strong>
@@ -5959,9 +5978,14 @@
                 Use your Dashboard to monitor account activity.
               </small>
             </div>
-          </div>
-  
-          <div class="aquila-roadmap-step">
+            <b>OPEN ›</b>
+          </button>
+
+          <button
+            class="aquila-roadmap-step actionable"
+            type="button"
+            data-aquila-roadmap-community
+          >
             <span>06</span>
             <div>
               <strong>Join the Community</strong>
@@ -5969,8 +5993,10 @@
                 Stay connected through official Aquila channels.
               </small>
             </div>
-          </div>
-  
+            <b>OPEN ›</b>
+          </button>
+
+        </div>
         </div>
       </div>
   
@@ -15842,6 +15868,76 @@ if(!stage || !overlay) return;
 
           },180);
 
+        }
+      );
+
+    });
+
+
+  /* NEW MEMBER ROADMAP ACTIONS */
+
+  menu
+    .querySelectorAll(
+      "[data-aquila-roadmap-account]"
+    )
+    .forEach(button=>{
+
+      button.addEventListener(
+        "click",
+        ()=>{
+
+          closeMenu();
+
+          setTimeout(
+            ()=>{
+              const existingDashboardLogin =
+                document.querySelector(
+                  "[data-dashboard]"
+                );
+
+              if(existingDashboardLogin){
+                existingDashboardLogin.click();
+              }
+            },
+            150
+          );
+
+        }
+      );
+
+    });
+
+
+  menu
+    .querySelectorAll(
+      "[data-aquila-roadmap-tutorials]"
+    )
+    .forEach(button=>{
+
+      button.addEventListener(
+        "click",
+        ()=>{
+          showSubmenu(
+            "tutorials"
+          );
+        }
+      );
+
+    });
+
+
+  menu
+    .querySelectorAll(
+      "[data-aquila-roadmap-community]"
+    )
+    .forEach(button=>{
+
+      button.addEventListener(
+        "click",
+        ()=>{
+          showSubmenu(
+            "community"
+          );
         }
       );
 
