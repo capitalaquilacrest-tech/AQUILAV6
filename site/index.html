@@ -15585,6 +15585,18 @@ if(!stage || !overlay) return;
       map[name].hidden=false;
     }
 
+    if(name==="community"){
+
+      if(communityHome){
+        communityHome.hidden=false;
+      }
+    
+      if(facebookGcPanel){
+        facebookGcPanel.hidden=true;
+      }
+    
+    }
+
   }
 
 
