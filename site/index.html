@@ -15859,6 +15859,182 @@ if(!stage || !overlay) return;
       }
     );
 
+  officialGcVerify
+    ?.addEventListener(
+      "click",
+      async ()=>{
+  
+        officialGcVerify.disabled=true;
+        officialGcVerify.textContent=
+          "CHECKING ACCESS…";
+  
+        if(officialGcUnlocked){
+          officialGcUnlocked.hidden=true;
+        }
+  
+        if(officialGcStatus){
+  
+          officialGcStatus
+            .classList.remove(
+              "is-error",
+              "is-success"
+            );
+  
+          officialGcStatus.innerHTML=`
+            <span>⏳</span>
+            <p>
+              Checking your Aquila account
+              and investment access…
+            </p>
+          `;
+  
+        }
+  
+        try{
+  
+          const accessToken =
+            typeof window
+              .getAquilaChatAccessToken
+              === "function"
+              ? window
+                  .getAquilaChatAccessToken()
+              : "";
+  
+          if(!accessToken){
+  
+            throw new Error(
+              "Please log in to your Aquila member account first."
+            );
+  
+          }
+  
+          const response =
+            await fetch(
+              "/api/official-gc/access",
+              {
+                method:"POST",
+  
+                headers:{
+                  "content-type":
+                    "application/json"
+                },
+  
+                body:JSON.stringify({
+                  accessToken
+                })
+              }
+            );
+  
+          const result =
+            await response
+              .json()
+              .catch(()=>({}));
+  
+          if(
+            !response.ok ||
+            !result.success
+          ){
+  
+            throw new Error(
+              result.error ||
+              "Unable to verify your access."
+            );
+  
+          }
+  
+          if(!result.eligible){
+  
+            if(officialGcStatus){
+  
+              officialGcStatus
+                .classList.add(
+                  "is-error"
+                );
+  
+              officialGcStatus.innerHTML=`
+                <span>🔒</span>
+                <p>
+                  No investment history was detected
+                  for this account.
+                  You may join one of the Observer
+                  Group Chats below.
+                </p>
+              `;
+  
+            }
+  
+            return;
+  
+          }
+  
+          if(!result.joinUrl){
+  
+            throw new Error(
+              "Official GC access was verified, but the invite link is unavailable."
+            );
+  
+          }
+  
+          if(officialGcStatus){
+  
+            officialGcStatus
+              .classList.add(
+                "is-success"
+              );
+  
+            officialGcStatus.innerHTML=`
+              <span>✅</span>
+              <p>
+                Investment history verified.
+                Official GC access unlocked.
+              </p>
+            `;
+  
+          }
+  
+          if(officialGcJoin){
+            officialGcJoin.href=
+              result.joinUrl;
+          }
+  
+          if(officialGcUnlocked){
+            officialGcUnlocked.hidden=false;
+          }
+  
+          officialGcVerify.hidden=true;
+  
+        }catch(error){
+  
+          if(officialGcStatus){
+  
+            officialGcStatus
+              .classList.add(
+                "is-error"
+              );
+  
+            officialGcStatus.innerHTML=`
+              <span>⚠️</span>
+              <p>
+                ${String(
+                  error?.message ||
+                  "Unable to verify access."
+                )}
+              </p>
+            `;
+  
+          }
+  
+        }finally{
+  
+          officialGcVerify.disabled=false;
+          officialGcVerify.textContent=
+            "VERIFY MY ACCESS";
+  
+        }
+  
+      }
+    );
+
 })();
 </script>
 
