@@ -16050,25 +16050,57 @@ if(!stage || !overlay) return;
           officialGcVerify.hidden=true;
   
         }catch(error){
-  
+
+          const message =
+            String(
+              error?.message ||
+              "Unable to verify access."
+            );
+        
+          const loginRequired =
+            message
+              .toLowerCase()
+              .includes(
+                "please log in"
+              );
+        
           if(officialGcStatus){
-  
+        
             officialGcStatus
               .classList.add(
                 "is-error"
               );
-  
-            officialGcStatus.innerHTML=`
-              <span>⚠️</span>
-              <p>
-                ${String(
-                  error?.message ||
-                  "Unable to verify access."
-                )}
-              </p>
-            `;
-  
+        
+            if(loginRequired){
+        
+              officialGcStatus.innerHTML=`
+                <span>🔒</span>
+                <p>
+                  Member login is required
+                  before Official GC access
+                  can be verified.
+                </p>
+              `;
+        
+            }else{
+        
+              officialGcStatus.innerHTML=`
+                <span>⚠️</span>
+                <p>
+                  ${message}
+                </p>
+              `;
+        
+            }
+        
           }
+        
+          if(officialGcLogin){
+            officialGcLogin.hidden=
+              !loginRequired;
+          }
+        
+        }
   
         }finally{
   
