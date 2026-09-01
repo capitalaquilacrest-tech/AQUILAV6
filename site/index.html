@@ -5480,6 +5480,9 @@
         id="aquilaMenuCommunity"
         hidden
       >
+
+        <div id="aquilaCommunityHome">
+        
         <button
           class="aquila-menu-back"
           type="button"
@@ -5544,6 +5547,7 @@
             <b>›</b>
           </button>
   
+        </div>
         </div>
 
         <!-- FACEBOOK GROUP CHAT SUBVIEW -->
@@ -15510,6 +15514,21 @@ if(!stage || !overlay) return;
       "aquilaMenuNewMember"
     );
 
+  const facebookGcButton =
+    document.getElementById(
+      "aquilaFacebookGcButton"
+    );
+  
+  const facebookGcPanel =
+    document.getElementById(
+      "aquilaFacebookGcPanel"
+    );
+  
+  const facebookGcBack =
+    document.getElementById(
+      "aquilaFacebookGcBack"
+    );
+
 
   function showMainMenuView(){
 
@@ -15522,6 +15541,7 @@ if(!stage || !overlay) return;
       tutorialsView,
       newMemberView
     ].forEach(view=>{
+      
       if(view){
         view.hidden=true;
       }
@@ -15541,6 +15561,7 @@ if(!stage || !overlay) return;
       tutorialsView,
       newMemberView
     ].forEach(view=>{
+      
       if(view){
         view.hidden=true;
       }
@@ -15756,6 +15777,49 @@ if(!stage || !overlay) return;
 
     }
   );
+
+  /* FACEBOOK GROUP CHAT SUBMENU */
+
+  facebookGcButton
+    ?.addEventListener(
+      "click",
+      ()=>{
+  
+        const communityLinks =
+          communityView
+            ?.querySelector(
+              ".aquila-community-links"
+            );
+  
+        if(communityLinks){
+          communityLinks.hidden=true;
+        }
+  
+        facebookGcPanel.hidden=false;
+  
+      }
+    );
+  
+  
+  facebookGcBack
+    ?.addEventListener(
+      "click",
+      ()=>{
+  
+        facebookGcPanel.hidden=true;
+  
+        const communityLinks =
+          communityView
+            ?.querySelector(
+              ".aquila-community-links"
+            );
+  
+        if(communityLinks){
+          communityLinks.hidden=false;
+        }
+  
+      }
+    );
 
 })();
 </script>
