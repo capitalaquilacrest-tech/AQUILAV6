@@ -16112,6 +16112,26 @@ if(!stage || !overlay) return;
   
       }
     );
+  
+  if(officialGcLogin){
+
+    officialGcLogin.addEventListener(
+      "click",
+      ()=>{
+  
+        closeMenu();
+  
+        setTimeout(
+          ()=>{
+            openMemberPortalModal();
+          },
+          150
+        );
+  
+      }
+    );
+  
+  }
 
 })();
 </script>
