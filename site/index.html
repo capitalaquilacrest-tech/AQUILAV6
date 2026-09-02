@@ -16609,11 +16609,33 @@ if(!stage || !overlay) return;
   }
 
   function openLogin(){
-    const loginButton = document.querySelector("[data-dashboard]");
+    /*
+      Close Quick Access first so the Member Login is immediately visible.
+      This uses the existing menu close control and existing popup-lock cleanup.
+    */
+    const menuCloseButton =
+      document.querySelector(
+        "#aquilaMainMenu [data-aquila-menu-close]"
+      );
+
+    if(menuCloseButton){
+      menuCloseButton.click();
+    }
+
+    const loginButton =
+      document.querySelector("[data-dashboard]");
+
     if(loginButton){
-      loginButton.click();
+      /*
+        Give the menu a moment to release its overlay/scroll lock
+        before opening the existing dashboard login flow.
+      */
+      setTimeout(function(){
+        loginButton.click();
+      }, 100);
       return;
     }
+
     window.location.href = BASE_URL;
   }
 
