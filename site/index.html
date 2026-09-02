@@ -7333,6 +7333,37 @@
       }
     }
 
+    function addReferralToDashboardUrl(url) {
+      try {
+        const referral =
+          new URLSearchParams(window.location.search)
+            .get("ref");
+    
+        if (!referral) {
+          return url;
+        }
+    
+        const targetUrl = new URL(url);
+    
+        targetUrl.searchParams.set(
+          "ref",
+          String(referral)
+            .trim()
+            .toUpperCase()
+        );
+    
+        return targetUrl.toString();
+    
+      } catch (error) {
+        console.warn(
+          "Referral URL forwarding skipped:",
+          error
+        );
+    
+        return url;
+      }
+    }
+
     document.querySelectorAll("[data-dashboard]").forEach(button => {
       button.addEventListener("click", async () => {
         if (!DASHBOARD_URL || DASHBOARD_URL.includes("PASTE_YOUR")) {
@@ -7381,13 +7412,17 @@
           ) {
             memberPortalFrame.setAttribute(
               "src",
-              result.dashboardUrl
+              addReferralToDashboardUrl(
+                result.dashboardUrl
+              )
             );
           } else {
             memberPortalFrame.setAttribute(
               "src",
-              memberPortalFrame.dataset.src ||
-              DASHBOARD_URL
+              addReferralToDashboardUrl(
+                memberPortalFrame.dataset.src ||
+                DASHBOARD_URL
+              )
             );
           }
 
@@ -7401,8 +7436,10 @@
 
           memberPortalFrame.setAttribute(
             "src",
-            memberPortalFrame.dataset.src ||
-            DASHBOARD_URL
+            addReferralToDashboardUrl(
+              memberPortalFrame.dataset.src ||
+              DASHBOARD_URL
+            )
           );
 
           openMemberPortalModal();
