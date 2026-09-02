@@ -16690,6 +16690,50 @@ if(!stage || !overlay) return;
   }catch(error){
     console.error("Referral registration could not be opened:", error);
   }
+
+  /*
+    After account creation, the Member Portal already sends its official
+    Landing SSO ticket. The landing page keeps that authenticated session,
+    but the temporary referral-registration section must disappear instead
+    of showing the dashboard inside this inline iframe.
+  */
+  window.addEventListener("message", function(event){
+    let trustedPortalOrigin = false;
+
+    try{
+      const hostname = new URL(event.origin).hostname;
+      trustedPortalOrigin =
+        hostname === "script.google.com" ||
+        hostname.endsWith(".googleusercontent.com");
+    }catch(_){
+      trustedPortalOrigin = false;
+    }
+
+    if(!trustedPortalOrigin) return;
+    if(event.data?.type !== "AQUILA_REFERRAL_FLOW_COMPLETE") return;
+
+    section.classList.remove("is-visible");
+    section.setAttribute("aria-hidden", "true");
+
+    frame.removeAttribute("src");
+
+    /*
+      The member remains logged in on the landing page.
+      Existing auth listeners update VIEW DASHBOARD, Live Chat and AI.
+    */
+    requestAnimationFrame(function(){
+      const nextSection =
+        document.getElementById("decision-film") ||
+        document.querySelector(".decision-hero");
+
+      if(nextSection){
+        nextSection.scrollIntoView({
+          behavior:"smooth",
+          block:"start"
+        });
+      }
+    });
+  });
 })();
 </script>
 
