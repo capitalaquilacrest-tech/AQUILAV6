@@ -5303,6 +5303,101 @@
 @media(prefers-reduced-motion:reduce){.aquila-empire-board-viewers .aquila-empire-viewer-eye{animation:none!important}}
 </style>
 
+
+  <style id="aquilaReferralFeatureStyles">
+    .aquila-referral-card{
+      position:relative;
+      overflow:visible;
+      cursor:default;
+      isolation:isolate;
+      border:1px solid transparent !important;
+      background:
+        linear-gradient(135deg,rgba(8,23,52,.98),rgba(28,20,65,.98)) padding-box,
+        linear-gradient(120deg,#ff3b30,#ff9500,#ffd60a,#30d158,#64d2ff,#0a84ff,#bf5af2,#ff375f,#ff3b30) border-box !important;
+      box-shadow:
+        0 0 14px rgba(100,210,255,.28),
+        0 0 28px rgba(191,90,242,.18),
+        inset 0 0 18px rgba(255,255,255,.035) !important;
+      animation:aquilaReferralGlow 4.2s linear infinite;
+    }
+    .aquila-referral-card::before{
+      content:"";
+      position:absolute;
+      inset:-3px;
+      z-index:-1;
+      border-radius:inherit;
+      background:conic-gradient(from 0deg,#ff3b30,#ff9500,#ffd60a,#30d158,#64d2ff,#0a84ff,#bf5af2,#ff375f,#ff3b30);
+      filter:blur(9px);
+      opacity:.42;
+      animation:aquilaReferralSpin 4.2s linear infinite;
+      pointer-events:none;
+    }
+    .aquila-referral-card .aquila-menu-card-copy{
+      min-width:0;
+    }
+    .aquila-referral-url{
+      display:block;
+      margin-top:5px;
+      max-width:100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      color:#93c5fd;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+    .aquila-referral-action{
+      flex:0 0 auto;
+      border:1px solid rgba(255,255,255,.24);
+      border-radius:11px;
+      padding:9px 12px;
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.04em;
+      cursor:pointer;
+      transition:transform .18s ease,background .18s ease,border-color .18s ease;
+    }
+    .aquila-referral-action:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.16);
+      border-color:rgba(255,255,255,.4);
+    }
+    .aquila-referral-action.copied{
+      background:rgba(48,209,88,.18);
+      border-color:rgba(48,209,88,.6);
+      color:#b7f7c8;
+    }
+    @keyframes aquilaReferralSpin{
+      to{transform:rotate(360deg)}
+    }
+    @keyframes aquilaReferralGlow{
+      0%,100%{box-shadow:0 0 13px rgba(255,59,48,.30),0 0 27px rgba(10,132,255,.18),inset 0 0 18px rgba(255,255,255,.035)}
+      33%{box-shadow:0 0 16px rgba(48,209,88,.30),0 0 30px rgba(255,214,10,.18),inset 0 0 18px rgba(255,255,255,.035)}
+      66%{box-shadow:0 0 16px rgba(191,90,242,.32),0 0 30px rgba(100,210,255,.20),inset 0 0 18px rgba(255,255,255,.035)}
+    }
+    @media (max-width:640px){
+      .aquila-referral-card{
+        align-items:center;
+      }
+      .aquila-referral-action{
+        padding:8px 10px;
+        font-size:10px;
+      }
+      .aquila-referral-url{
+        font-size:10px;
+      }
+    }
+    @media (prefers-reduced-motion:reduce){
+      .aquila-referral-card,
+      .aquila-referral-card::before{
+        animation:none;
+      }
+    }
+  </style>
+
 </head>
 <body>
   <div class="intro" id="intro">
@@ -5408,6 +5503,32 @@
       </div>
   
       <div class="aquila-main-menu-grid">
+
+        <!-- MY REFERRAL LINK -->
+        <div
+          class="aquila-menu-card aquila-referral-card"
+          id="aquilaReferralCard"
+          role="group"
+          aria-label="My Referral Link"
+        >
+          <span class="aquila-menu-card-icon">🔗</span>
+
+          <span class="aquila-menu-card-copy">
+            <strong id="aquilaReferralTitle">REFERRAL LINK</strong>
+            <small id="aquilaReferralSubtitle">
+              Log in to access your personal referral link.
+            </small>
+            <span class="aquila-referral-url" id="aquilaReferralUrl" hidden></span>
+          </span>
+
+          <button
+            class="aquila-referral-action"
+            id="aquilaReferralAction"
+            type="button"
+          >
+            LOG IN
+          </button>
+        </div>
   
         <!-- OFFICIAL COMMUNITY -->
         <button
@@ -5905,12 +6026,8 @@
         </div>
   
         <div class="aquila-new-member-roadmap">
-
-          <button
-            class="aquila-roadmap-step actionable"
-            type="button"
-            data-aquila-roadmap-account
-          >
+  
+          <div class="aquila-roadmap-step">
             <span>01</span>
             <div>
               <strong>Create Your Account</strong>
@@ -5918,29 +6035,19 @@
                 Register and secure your Aquila member access.
               </small>
             </div>
-            <b>OPEN ›</b>
-          </button>
-
-          <button
-            class="aquila-roadmap-step actionable"
-            type="button"
-            data-aquila-roadmap-account
-          >
+          </div>
+  
+          <div class="aquila-roadmap-step">
             <span>02</span>
             <div>
               <strong>Complete ID Verification</strong>
               <small>
-                Open the Member Portal and complete your identity verification.
+                Verify your identity to unlock verified-member access.
               </small>
             </div>
-            <b>OPEN ›</b>
-          </button>
-
-          <button
-            class="aquila-roadmap-step actionable"
-            type="button"
-            data-aquila-roadmap-tutorials
-          >
+          </div>
+  
+          <div class="aquila-roadmap-step">
             <span>03</span>
             <div>
               <strong>Understand Your Options</strong>
@@ -5948,9 +6055,8 @@
                 Learn about Passive Yield and Capital Reserve.
               </small>
             </div>
-            <b>LEARN ›</b>
-          </button>
-
+          </div>
+  
           <button
             class="aquila-roadmap-step actionable"
             type="button"
@@ -5965,12 +6071,8 @@
             </div>
             <b>OPEN ›</b>
           </button>
-
-          <button
-            class="aquila-roadmap-step actionable"
-            type="button"
-            data-aquila-roadmap-account
-          >
+  
+          <div class="aquila-roadmap-step">
             <span>05</span>
             <div>
               <strong>Start & Track</strong>
@@ -5978,14 +6080,9 @@
                 Use your Dashboard to monitor account activity.
               </small>
             </div>
-            <b>OPEN ›</b>
-          </button>
-
-          <button
-            class="aquila-roadmap-step actionable"
-            type="button"
-            data-aquila-roadmap-community
-          >
+          </div>
+  
+          <div class="aquila-roadmap-step">
             <span>06</span>
             <div>
               <strong>Join the Community</strong>
@@ -5993,10 +6090,8 @@
                 Stay connected through official Aquila channels.
               </small>
             </div>
-            <b>OPEN ›</b>
-          </button>
-
-        </div>
+          </div>
+  
         </div>
       </div>
   
@@ -15874,76 +15969,6 @@ if(!stage || !overlay) return;
     });
 
 
-  /* NEW MEMBER ROADMAP ACTIONS */
-
-  menu
-    .querySelectorAll(
-      "[data-aquila-roadmap-account]"
-    )
-    .forEach(button=>{
-
-      button.addEventListener(
-        "click",
-        ()=>{
-
-          closeMenu();
-
-          setTimeout(
-            ()=>{
-              const existingDashboardLogin =
-                document.querySelector(
-                  "[data-dashboard]"
-                );
-
-              if(existingDashboardLogin){
-                existingDashboardLogin.click();
-              }
-            },
-            150
-          );
-
-        }
-      );
-
-    });
-
-
-  menu
-    .querySelectorAll(
-      "[data-aquila-roadmap-tutorials]"
-    )
-    .forEach(button=>{
-
-      button.addEventListener(
-        "click",
-        ()=>{
-          showSubmenu(
-            "tutorials"
-          );
-        }
-      );
-
-    });
-
-
-  menu
-    .querySelectorAll(
-      "[data-aquila-roadmap-community]"
-    )
-    .forEach(button=>{
-
-      button.addEventListener(
-        "click",
-        ()=>{
-          showSubmenu(
-            "community"
-          );
-        }
-      );
-
-    });
-
-
   document.addEventListener(
     "keydown",
     event=>{
@@ -16242,6 +16267,119 @@ if(!stage || !overlay) return;
 
   }
 
+})();
+</script>
+
+
+<script id="aquilaReferralFeatureScript">
+(function(){
+  const BASE_URL = "https://aquilacrestcapital.com/";
+  const card = document.getElementById("aquilaReferralCard");
+  const title = document.getElementById("aquilaReferralTitle");
+  const subtitle = document.getElementById("aquilaReferralSubtitle");
+  const urlEl = document.getElementById("aquilaReferralUrl");
+  const action = document.getElementById("aquilaReferralAction");
+
+  if(!card || !title || !subtitle || !urlEl || !action) return;
+
+  let referralUsername = "";
+
+  function cleanUsername(value){
+    return String(value || "").trim().toUpperCase();
+  }
+
+  function buildReferralUrl(username){
+    return BASE_URL + "?ref=" + encodeURIComponent(cleanUsername(username));
+  }
+
+  function render(){
+    if(referralUsername){
+      const referralUrl = buildReferralUrl(referralUsername);
+      title.textContent = "MY REFERRAL LINK";
+      subtitle.textContent = "Share your personal invite link.";
+      urlEl.textContent = referralUrl;
+      urlEl.hidden = false;
+      action.textContent = "COPY LINK";
+      action.dataset.mode = "copy";
+      card.dataset.loggedIn = "true";
+    }else{
+      title.textContent = "REFERRAL LINK";
+      subtitle.textContent = "Log in to access your personal referral link.";
+      urlEl.textContent = "";
+      urlEl.hidden = true;
+      action.textContent = "LOG IN";
+      action.dataset.mode = "login";
+      card.dataset.loggedIn = "false";
+    }
+  }
+
+  async function copyReferralLink(){
+    if(!referralUsername) return;
+    const referralUrl = buildReferralUrl(referralUsername);
+    try{
+      if(navigator.clipboard && window.isSecureContext){
+        await navigator.clipboard.writeText(referralUrl);
+      }else{
+        const temp = document.createElement("textarea");
+        temp.value = referralUrl;
+        temp.setAttribute("readonly","");
+        temp.style.position = "fixed";
+        temp.style.opacity = "0";
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+      }
+      action.textContent = "COPIED ✓";
+      action.classList.add("copied");
+      setTimeout(()=>{
+        action.textContent = "COPY LINK";
+        action.classList.remove("copied");
+      },1800);
+    }catch(_){
+      action.textContent = "COPY FAILED";
+      setTimeout(()=>{ action.textContent = "COPY LINK"; },1800);
+    }
+  }
+
+  function openLogin(){
+    const loginButton = document.querySelector("[data-dashboard]");
+    if(loginButton){
+      loginButton.click();
+      return;
+    }
+    window.location.href = BASE_URL;
+  }
+
+  action.addEventListener("click", function(event){
+    event.stopPropagation();
+    if(action.dataset.mode === "copy"){
+      copyReferralLink();
+    }else{
+      openLogin();
+    }
+  });
+
+  window.addEventListener("aquila:chat-identity-changed", function(event){
+    const identity = event.detail || {};
+    const role = String(identity.role || "").trim().toUpperCase();
+    referralUsername = role === "ACC ADMIN"
+      ? ""
+      : cleanUsername(identity.username);
+    render();
+  });
+
+  [
+    "aquila:ai-member-logout",
+    "aquila:chat-member-logout"
+  ].forEach(function(eventName){
+    window.addEventListener(eventName, function(){
+      referralUsername = "";
+      render();
+    });
+  });
+
+  render();
 })();
 </script>
 
