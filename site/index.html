@@ -5426,6 +5426,154 @@
     }
   </style>
 
+
+  <style id="aquila-referral-inline-registration-style">
+    #aquilaReferralRegistrationSection{
+      display:none;
+      position:relative;
+      overflow:hidden;
+      padding:118px 22px 58px;
+      background:
+        radial-gradient(circle at 18% 28%,rgba(37,99,235,.22),transparent 30%),
+        radial-gradient(circle at 86% 24%,rgba(220,38,38,.18),transparent 28%),
+        radial-gradient(circle at 50% 0,rgba(250,204,21,.10),transparent 30%),
+        linear-gradient(180deg,#020817 0%,#041333 62%,#020817 100%);
+      color:#fff;
+      isolation:isolate;
+    }
+    #aquilaReferralRegistrationSection.is-visible{display:block;}
+    #aquilaReferralRegistrationSection::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+      background-size:58px 58px;
+      mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 85%,transparent);
+    }
+    .aquila-referral-registration-inner{
+      position:relative;
+      z-index:2;
+      width:min(1220px,100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:minmax(0,.82fr) minmax(480px,1.18fr);
+      gap:28px;
+      align-items:start;
+    }
+    .aquila-referral-invite-copy{
+      position:sticky;
+      top:105px;
+      padding:30px;
+      border:1px solid rgba(255,216,107,.28);
+      border-radius:26px;
+      background:linear-gradient(145deg,rgba(4,28,76,.84),rgba(4,14,40,.80));
+      box-shadow:0 25px 70px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.08);
+      text-align:left;
+    }
+    .aquila-referral-invite-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 11px;
+      border:1px solid rgba(255,216,107,.40);
+      border-radius:999px;
+      color:#ffe39a;
+      background:rgba(255,216,107,.08);
+      font-size:10px;
+      font-weight:950;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+    .aquila-referral-invite-copy h2{
+      margin:18px 0 10px;
+      color:#fff;
+      font-size:clamp(32px,4vw,54px);
+      line-height:.95;
+      letter-spacing:-.045em;
+    }
+    .aquila-referral-invite-copy h2 em{font-style:normal;color:#ffd86b;}
+    .aquila-referral-invite-copy p{
+      margin:0;
+      color:#c7d7ee;
+      font-size:14px;
+      line-height:1.7;
+    }
+    .aquila-referral-sponsor-badge{
+      display:grid;
+      gap:3px;
+      margin:20px 0;
+      padding:14px 16px;
+      border:1px solid rgba(74,222,128,.35);
+      border-radius:15px;
+      background:rgba(22,163,74,.10);
+    }
+    .aquila-referral-sponsor-badge span{
+      color:#86efac;
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    .aquila-referral-sponsor-badge strong{
+      color:#fff;
+      font-size:21px;
+      letter-spacing:.08em;
+    }
+    .aquila-referral-engine-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:17px;
+    }
+    .aquila-referral-engine-chips span{
+      padding:7px 9px;
+      border:1px solid rgba(147,197,253,.20);
+      border-radius:999px;
+      background:rgba(37,99,235,.10);
+      color:#dbeafe;
+      font-size:9px;
+      font-weight:850;
+    }
+    .aquila-referral-form-shell{
+      overflow:hidden;
+      border:1px solid rgba(255,216,107,.52);
+      border-radius:27px;
+      background:#f7f9fd;
+      box-shadow:0 32px 90px rgba(0,0,0,.46),0 0 35px rgba(250,204,21,.08);
+    }
+    .aquila-referral-form-topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:13px 17px;
+      background:linear-gradient(90deg,#082d73,#0d4db4 54%,#7f1d2d);
+      color:#fff;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+    #aquilaReferralRegistrationFrame{
+      display:block;
+      width:100%;
+      height:820px;
+      border:0;
+      background:#f7f9fd;
+    }
+    @media(max-width:900px){
+      #aquilaReferralRegistrationSection{padding:105px 12px 38px;}
+      .aquila-referral-registration-inner{grid-template-columns:1fr;gap:16px;}
+      .aquila-referral-invite-copy{position:relative;top:auto;padding:20px;border-radius:20px;}
+      .aquila-referral-invite-copy h2{font-size:34px;}
+      #aquilaReferralRegistrationFrame{height:860px;}
+    }
+  </style>
+
 </head>
 <body>
   <div class="intro" id="intro">
@@ -6187,6 +6335,42 @@
       hidden
     ></div>
   </div>
+
+
+  <section id="aquilaReferralRegistrationSection" aria-hidden="true">
+    <div class="aquila-referral-registration-inner">
+      <div class="aquila-referral-invite-copy">
+        <span class="aquila-referral-invite-kicker">✦ PERSONAL INVITATION</span>
+        <h2>CREATE YOUR <em>ACCOUNT</em></h2>
+        <p>
+          You opened a verified Aquila referral link. Complete your account details here — no need to search for the registration page.
+        </p>
+        <div class="aquila-referral-sponsor-badge">
+          <span>Referred by</span>
+          <strong id="aquilaInlineReferralSponsor">—</strong>
+        </div>
+        <p>
+          After registration, you can choose whether to complete Identity Verification immediately or do it later from your member account.
+        </p>
+        <div class="aquila-referral-engine-chips" aria-hidden="true">
+          <span>⚡ Hydropower</span><span>🌬️ Wind</span><span>☀️ Solar</span><span>🏗️ Infrastructure</span>
+        </div>
+      </div>
+
+      <div class="aquila-referral-form-shell">
+        <div class="aquila-referral-form-topbar">
+          <span>ACC SECURE REGISTRATION</span>
+          <span>REFERRAL MODE</span>
+        </div>
+        <iframe
+          id="aquilaReferralRegistrationFrame"
+          title="Aquila Crest Capital Referral Registration"
+          loading="eager"
+          referrerpolicy="no-referrer"
+        ></iframe>
+      </div>
+    </div>
+  </section>
 
   <section class="decision-hero" id="decision-film">
     <div class="decision-atmosphere" aria-hidden="true">
@@ -16445,6 +16629,45 @@ if(!stage || !overlay) return;
   });
 
   render();
+})();
+</script>
+
+
+<script id="aquilaInlineReferralRegistrationScript">
+(function(){
+  const section = document.getElementById("aquilaReferralRegistrationSection");
+  const frame = document.getElementById("aquilaReferralRegistrationFrame");
+  const sponsorEl = document.getElementById("aquilaInlineReferralSponsor");
+
+  if(!section || !frame || !sponsorEl) return;
+
+  const rawRef = new URLSearchParams(window.location.search).get("ref");
+  const referral = String(rawRef || "").trim().toUpperCase();
+
+  /* Normal website visit: keep the landing page exactly as before. */
+  if(!referral) return;
+
+  sponsorEl.textContent = referral;
+  section.classList.add("is-visible");
+  section.setAttribute("aria-hidden", "false");
+
+  const portalFrame = document.getElementById("memberPortalFrame");
+  const baseUrl =
+    (typeof DASHBOARD_URL !== "undefined" && DASHBOARD_URL) ||
+    (portalFrame && portalFrame.dataset ? portalFrame.dataset.src : "");
+
+  if(!baseUrl) return;
+
+  try{
+    const target = new URL(baseUrl);
+    target.searchParams.set("ref", referral);
+    target.searchParams.set("mode", "referral");
+    target.searchParams.set("embed", "1");
+    target.searchParams.set("refresh", Date.now().toString());
+    frame.src = target.toString();
+  }catch(error){
+    console.error("Referral registration could not be opened:", error);
+  }
 })();
 </script>
 
