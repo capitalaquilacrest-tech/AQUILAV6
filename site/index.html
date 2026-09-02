@@ -5349,17 +5349,45 @@
     }
     .aquila-referral-action{
       flex:0 0 auto;
+      min-width:78px;
+      max-width:92px;
+      padding:8px 10px;
       border:1px solid rgba(255,255,255,.24);
       border-radius:11px;
-      padding:9px 12px;
       background:rgba(255,255,255,.10);
       color:#fff;
-      font-size:11px;
+      font-size:10px;
       font-weight:900;
-      letter-spacing:.04em;
+      line-height:1.15;
+      text-align:center;
+      white-space:normal;
       cursor:pointer;
+      box-sizing:border-box;
       transition:transform .18s ease,background .18s ease,border-color .18s ease;
     }
+
+    .aquila-referral-card{
+      grid-template-columns:46px minmax(0,1fr) 82px !important;
+      column-gap:12px;
+    }
+
+    @media (max-width:640px){
+      .aquila-referral-card{
+        grid-template-columns:46px minmax(0,1fr) 72px !important;
+      }
+    
+      .aquila-referral-action{
+        min-width:68px;
+        max-width:72px;
+        padding:7px 6px;
+        font-size:9px;
+      }
+    
+      .aquila-referral-url{
+        font-size:9px;
+      }
+    }
+    
     .aquila-referral-action:hover{
       transform:translateY(-1px);
       background:rgba(255,255,255,.16);
