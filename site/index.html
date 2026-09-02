@@ -2856,11 +2856,11 @@
 
   <link rel="canonical" href="https://aquilacrestcapital.com/">
 
+  <!-- Referral-safe social sharing: no static og:url so Messenger keeps ?ref=USERNAME -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Aquila Crest Capital">
   <meta property="og:title" content="Aquila Crest Capital | Official Website">
   <meta property="og:description" content="Explore the official Aquila Crest Capital website, leadership center, platform information, community channels, and member portal.">
-  <meta property="og:url" content="https://aquilacrestcapital.com/">
   <meta property="og:image" content="https://aquilacrestcapital.com/assets/og-image.jpg">
   <meta property="og:image:secure_url" content="https://aquilacrestcapital.com/assets/og-image.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -2877,7 +2877,7 @@
     content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
   >
   <meta name="theme-color" content="#071d49">
-  <link rel="canonical" href="https://aquilacrestcapital.com/">
+  
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-v11.png">
@@ -2891,7 +2891,6 @@
   <meta property="og:title" content="Aquila Crest Capital — Official Digital Member Platform">
   <meta property="og:description" content="Access the official Aquila Crest Capital member ecosystem, community channels, platform information, and member portal.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://aquilacrestcapital.com/">
   <meta property="og:image" content="https://aquilacrestcapital.com/assets/og-cover.png">
   <meta name="twitter:card" content="summary_large_image">
   
@@ -16663,7 +16662,16 @@ if(!stage || !overlay) return;
 
   if(!section || !frame || !sponsorEl) return;
 
-  const rawRef = new URLSearchParams(window.location.search).get("ref");
+  const searchRef =
+    new URLSearchParams(window.location.search).get("ref");
+
+  const hashText =
+    String(window.location.hash || "").replace(/^#/, "");
+
+  const hashRef =
+    new URLSearchParams(hashText).get("ref");
+
+  const rawRef = searchRef || hashRef;
   const referral = String(rawRef || "").trim().toUpperCase();
 
   /* Normal website visit: keep the landing page exactly as before. */
